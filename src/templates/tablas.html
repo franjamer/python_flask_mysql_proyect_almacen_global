@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Tablas en la Base de Datos{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">Tablas en la Base de Datos</h2>
+    <ul id="lista-tablas">
+        {% for tabla in tablas %}
+        <li>
+            <a href="#" onclick="mostrarColumnas('{{ tabla }}'); return false;">{{ tabla }}</a>
+        </li>
+        {% endfor %}
+    </ul>
+    <div id="columnas-tabla" class="mt-4"></div>
+</div>
+<script>
+function mostrarColumnas(tabla) {
+    fetch('/columnas_tabla', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({tabla: tabla})
+    })
+    .then(response => response.json())
+    .then(data => {
+        let html = "<h4>Columnas de la tabla <b>" + tabla + "</b>:</h4><ul>";
+        data.columnas.forEach(function(col) {
+            html += "<li>" + col + "</li>";
+        });
+        html += "</ul>";
+
+        // Mostrar contenido de la tabla
+        html += "<h5>Contenido (máx 20 filas):</h5>";
+        if (data.filas.length === 0) {
+            html += "<p><i>La tabla está vacía.</i></p>";
+        } else {
+            html += "<table class='table table-bordered table-sm'><thead><tr>";
+            data.columnas.forEach(function(col) {
+                html += "<th>" + col + "</th>";
+            });
+            html += "</tr></thead><tbody>";
+            data.filas.forEach(function(fila) {
+                html += "<tr>";
+                fila.forEach(function(valor) {
+                    html += "<td>" + (valor === null ? "" : valor) + "</td>";
+                });
+                html += "</tr>";
+            });
+            html += "</tbody></table>";
+        }
+
+        document.getElementById('columnas-tabla').innerHTML = html;
+    });
+}
+</script>
+
+{% endblock %}

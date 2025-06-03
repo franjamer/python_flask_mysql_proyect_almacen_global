@@ -1,0 +1,27 @@
+<!-- html parcial del modal que se abre cuando hacemos click en el botón editar. -->
+<div class="modal fade"id="btn-Editar{{user.idusuario}}" tabindex="-1"aria-labelledby="exampleModalLabel aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="exampleModalLabel">{{user.username}}</h1>
+                <button type="button"class="btn-close"data-bs-dismiss="modal"aria-label="Close">
+                    
+                </button>
+            </div>
+        <div class="modal-body">
+            <form action="{{ url_for('users_bp.edit', id=user.idusuario) }}" method="POST">
+                <label for="">Username</label>
+                <input type="text" class="form-control  mb-3" name="username" value="{{user.codigo_operador}}"
+                >
+                <label for="">Contraseña</label>
+                <input type="password"class="form-control mb-3"name="password"value="{{user.password}}">
+                <label for="">Autorización</label>
+                <input type="text"class="form-control mb-3"name="autorizacion"value="{{user.autorizacion}}">
+        </div>
+        <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+        </div>
+            </form>
+        </div>
+    </div>
+</div>

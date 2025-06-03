@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}Movimientos{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h2 class="mb-4">MOVIMIENTOS</h2>
+    <!-- Formulario para añadir movimiento -->
+    <form method="POST" action="{{ url_for('movimientos_bp.add_movimiento') }}" class="mb-5">
+        <div class="row g-3">
+            <div class="col-md-4">
+                <select name="nombre_pieza_repuesto" class="form-select" required>
+                    {% for pieza in piezas %}
+                    <option value="{{ pieza['nombre'] }}">{{ pieza['nombre'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <select name="tipo_de_movimiento" class="form-select" required>
+                    <option value="salida">Salida</option>
+                    <option value="entrada">Entrada</option>
+                    <option value="inventario">Inventario</option>
+                </select>
+            </div>
+            <div class="col-md-1">
+                <input
+                    type="number"
+                    name="cantidad"
+                    class="form-control"
+                    placeholder="Cantidad"
+                    required
+                >
+            </div>
+            <div class="col-md-2">
+                <input
+                    type="text"
+                    name="unidad_de_cantidad"
+                    class="form-control"
+                    placeholder="Unidad"
+                >
+            </div>
+            <div class="col-md-2">
+                <select name="codigo_usuario" class="form-select" required>
+                    {% for usuario in usuarios %}
+                    <option value="{{ usuario['codigo_operador'] }}">{{ usuario['codigo_operador'] }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <input type="date" name="fecha_movimiento" class="form-control">
+            </div>
+            <div class="col-md-1">
+                <input
+                    type="number"
+                    id="stock_actual"
+                    name="stock_tras_movimiento"
+                    class="form-control"
+                    value=""
+                    readonly
+                    placeholder="Stock"
+                >
+                <script>
+                    function actualizarStock() {
+                    var select = document.getElementById                ('nombre_pieza_repuesto');
+                    var stock = select.options[select.selectedIndex].               getAttribute('data-stock');
+                    document.getElementById('stock_actual').value = stock;
+                    var aviso = document.getElementById('aviso_stock');
+                    if (parseInt(stock) === 0) {
+                        aviso.textContent = "¡No hay existencias de este elemento!";
+                        } else {
+                            aviso.textContent = "";
+                        }
+                }
+                    window.onload = actualizarStock;
+                </script>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary">Añadir</button>
+            </div>
+        </div>
+        
+    </form>
+    <!-- Tabla de movimientos -->
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre pieza/repuesto</th>
+                <th>Tipo de movimiento</th>
+                <th>Cantidad</th>
+                <th>Unidad</th>
+                <th>Código usuario</th>
+                <th>Fecha</th>
+                <th>Stock tras movimiento</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mov in movimientos %}
+            <tr>
+                <td>{{ mov['idmovimientos'] }}</td>
+                <td>{{ mov['nombre_pieza_repuesto'] }}</td>
+                <td>{{ mov['tipo_de_movimiento'] }}</td>
+                <td>{{ mov['cantidad'] }}</td>
+                <td>{{ mov['unidad_de_cantidad'] }}</td>
+                <td>{{ mov['codigo_usuario'] }}</td>
+                <td>{{ mov['fecha_movimiento'] }}</td>
+                <td>{{ mov['stock_tras_movimiento'] }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">Volver al menú principal</a>
+</div>
+{% endblock %}

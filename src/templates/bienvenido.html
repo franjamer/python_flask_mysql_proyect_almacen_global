@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Bienvenido{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column align-items-center justify-content-center" style="height: 70vh;">
+    <h1 class="mb-4">Bienvenido a la aplicación</h1>
+    <form action="{{ url_for('home_bp.menu') }}" method="get">
+        <button type="submit" class="btn btn-primary btn-lg">
+            <a href="{{ url_for('home_bp.menu') }}" class="btn btn-primary">Entrar</a>
+        </button>
+    </form>
+</div>
+{% endblock %}

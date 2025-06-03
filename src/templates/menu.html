@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Menú{% endblock %}
+
+{% block content %}
+<div class="d-flex flex-column align-items-center justify-content-center" style="height: 70vh;">
+    <h2 class="mb-4">Menú principal</h2>
+    <button type="submit" class="btn">
+        <a href="{{ url_for('home_bp.usuarios') }}" class="btn btn-success btn-lg mb-2">Usuarios</a>
+    </button>
+    <button type="submit" class="btn">
+        <a href="{{ url_for('home_bp.busqueda') }}" class="btn btn-success btn-lg mb-2">Busqueda</a>
+    </button>
+    <button type="submit" class="btn">
+        <a href="{{ url_for('home_bp.repuestos') }}" class="btn btn-success btn-lg mb-2">Repuestos</a>
+    </button>
+    <button type="submit" class="btn">
+        <a href="{{ url_for('pedidos_bp.pedidos') }}" class="btn btn-success btn-lg mb-2">Pedidos</a>
+    </button>
+    <button type="submit" class="btn">
+        <a href="{{ url_for('home_bp.movimientos') }}" class="btn btn-success btn-lg mb-2">Movimientos</a>
+    </button>
+    <!-- Puedes añadir más botones aquí -->
+</div>
+{% endblock %}

@@ -1,0 +1,27 @@
+<div class="container">
+    <div class="card shadow">
+        <div class="card-body">
+            <form action="{{ url_for('users_bp.addUser') }}" method="POST" class="mb-4">
+                <div class="mb-3">
+                    <label for="username" class="form-label mb-3">Usuario</label>
+                    <input
+                        type="text"
+                        class="form-control mb-3"
+                        id="username"
+                        name="username"
+                        required
+                    >
+                </div>
+                <div class="mb-3">
+                    <label for="password" class="form-label mb-3">Contraseña</label>
+                    <input
+                        type="password"
+                        class="form-control mb-3"
+                        id="password"
+                        name="password"
+                        required
+                    >
+                </div>
+                <button type="submit" class="btn btn-primary mb-3 mt-4">Agregar usuario</button>
+            </form>
+            <!-- <h1 class="text-center mt-5 mb-6 text-primary">PYTHON-FLASK-MYSQL</h1> -->
