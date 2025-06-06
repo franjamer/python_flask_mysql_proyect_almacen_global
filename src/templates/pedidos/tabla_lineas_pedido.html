@@ -1,0 +1,47 @@
+{% if lineas %}
+<h4>Detalle del pedido</h4>
+<table class="table table-dark table-sm table-bordered table-striped">
+    <thead>
+        <tr>
+            <th style="width: 25%;">Referencia repuesto</th>
+            <th style="width: 15%;">Pedida</th>
+            <th style="width: 15%;">Recibida</th>
+            <th style="width: 25%;">Fecha recibido</th>
+            <th style="width: 10%;">Completo</th>
+            <th style="width: 10%;">Acción</th>
+            <th style="width: 10%;">Eliminar</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for linea in lineas %}
+        <tr>
+            <form method="post" action="{{ url_for('pedidos_bp.actualizar_linea', linea_id=linea[0], pedido_id=request.args.get('pedido_id')) }}">
+                <td>{{ linea[2] }}</td>
+                <td>
+                    <input type="number" name="cantidad_pedida" value="{{ linea[3] }}" min="1" class="form-control form-control-sm" required>
+                </td>
+                <td>
+                    <input type="number" name="cantidad_recibida" value="{{ linea[4] }}" min="0" class="form-control form-control-sm">
+                </td>
+                <td>
+                    <input type="date" name="fecha_recibido" value="{{ linea[5]|default('', true) }}" class="form-control form-control-sm">
+                </td>
+                <td>
+                    {{ 'Sí' if linea[6] else 'No' }}
+                </td>
+                <td>
+                    <button type="submit" class="btn btn-warning btn-sm">Actualizar</button>
+                </td>
+            </form>
+            <td>
+                {% if lineas|length > 1 %}
+                <form method="post" action="{{ url_for('pedidos_bp.eliminar_linea', linea_id=linea[0], pedido_id=request.args.get('pedido_id')) }}" style="display:inline;" onsubmit="return confirm('¿Seguro que deseas eliminar esta línea?');">
+                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}

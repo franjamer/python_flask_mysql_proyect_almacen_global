@@ -1,0 +1,72 @@
+<form method="post" class="mb-4">
+    <div class="row">
+        <div class="col-md-4">
+            <label for="referencia_pedido">Referencia del pedido</label>
+            <input
+                type="text"
+                class="form-control"
+                name="referencia_pedido"
+                required
+            >
+        </div>
+        <div class="col-md-4">
+            <label for="fecha_creacion">Fecha creación</label>
+            <input
+                type="date"
+                class="form-control"
+                name="fecha_creacion"
+                required
+            >
+        </div>
+    </div>
+    <hr>
+    <h5>Líneas de pedido</h5>
+    <div id="lineas-pedido">
+        <div class="row linea-pedido mb-2">
+            <div class="col-md-3">
+                <label>Referencia repuesto</label>
+                <select class="form-control" name="referencia_articulo[]" required>
+                    <option value="">Selecciona un repuesto</option>
+                    {% for ref, nombre in inventario %}
+                    <option value="{{ ref }}">{{ ref }} - {{ nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2">
+                <label>Cantidad pedida</label>
+                <input
+                    type="number"
+                    class="form-control"
+                    name="cantidad_pedida[]"
+                    min="1"
+                    value="1"
+                    required
+                >
+            </div>
+            <div class="col-md-2">
+                <label>Cantidad recibida</label>
+                <input
+                    type="number"
+                    class="form-control"
+                    name="cantidad_recibida[]"
+                    min="0"
+                    value="0"
+                >
+            </div>
+            <div class="col-md-3">
+                <label>Fecha recibido</label>
+                <input type="date" class="form-control" name="fecha_recibido[]">
+            </div>
+        </div>
+    </div>
+    <button type="button" onclick="agregarLinea()">Añadir línea</button>
+    <button type="submit" class="btn btn-primary mt-3">Guardar pedido</button>
+</form>
+<script>
+function agregarLinea() {
+    var container = document.getElementById('lineas-pedido');
+    var linea = container.querySelector('.linea-pedido').cloneNode(true);
+    linea.querySelectorAll('input, select').forEach(function(el) { el.value = ''; });
+    container.appendChild(linea);
+}
+</script>

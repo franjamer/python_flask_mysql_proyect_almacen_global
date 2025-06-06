@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-5">
+    <a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
+    <h2>Inventario</h2>
+    {% if mensaje_error %}
+    <div class="alert alert-danger">{{ mensaje_error }}</div>
+    {% endif %}
+    <!-- Formulario para añadir nuevo repuesto -->
+    <form method="post" class="mb-4">
+        <div class="row">
+            {% for col in columnas %}
+                {% if col != 'id' %}
+                <div class="col-md-2 mb-2">
+                    <input type="text" name="{{ col }}" class="form-control" placeholder="{{ col|capitalize }}"
+                        {% if col in ['referencia', 'categoria'] %}required{% endif %}>
+                </div>
+                {% endif %}
+            {% endfor %}
+            <div class="col-md-2 mb-2">
+                <button type="submit" class="btn btn-success">Añadir</button>
+            </div>
+        </div>
+    </form>
+    <!-- Tabla de inventario -->
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                {% for col in columnas %}
+                <th>{{ col|capitalize }}</th>
+                {% endfor %}
+                <th>Modificar</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for repuesto in repuestos %}
+            <tr>
+                <form method="post" action="{{ url_for('inventario_bp.modificar_repuesto', referencia=repuesto[1]) }}">
+                    {% for i in range(columnas|length) %}
+                        {% if columnas[i] == 'id' %}
+                            <td><input type="text" name="{{ columnas[i] }}" value="{{ repuesto[i] }}" class="form-control" readonly></td>
+                        {% elif columnas[i] == 'referencia' %}
+                            <td><input type="text" name="{{ columnas[i] }}" value="{{ repuesto[i] }}" class="form-control" readonly></td>
+                        {% else %}
+                            <td><input type="text" name="{{ columnas[i] }}" value="{{ repuesto[i] }}" class="form-control"></td>
+                        {% endif %}
+                    {% endfor %}
+                    <td>
+                        <button type="submit" class="btn btn-warning btn-sm">Modificar</button>
+                    </td>
+                </form>
+                <td>
+                    <form method="post" action="{{ url_for('inventario_bp.eliminar_repuesto', referencia=repuesto[1]) }}" onsubmit="return confirm('¿Seguro que deseas eliminar este repuesto?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
