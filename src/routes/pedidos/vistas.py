@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template, request, redirect, url_for
+from flask import Blueprint, render_template, request, redirect, url_for, session
 from .utils import validar_pedido, obtener_nombre_articulo
+from routes.roles import puede_crud_pedidos, puede_eliminar_pedidos
 import database as db
 
 pedidos_bp = Blueprint('pedidos_bp', __name__)
@@ -11,6 +12,8 @@ def pedidos():
     mensaje_error = None
 
     if request.method == 'POST':
+        if not puede_crud_pedidos(session.get('rol')):
+            return redirect(url_for('pedidos_bp.pedidos'))
         mensaje_error = validar_pedido(request.form)
         if not mensaje_error:
             referencia_pedido = request.form['referencia_pedido']
@@ -62,10 +65,20 @@ def pedidos():
 
     cursor.close()
     conn.close()
-    return render_template('pedidos.html', pedidos=pedidos, inventario=inventario, lineas=lineas, mensaje_error=mensaje_error)
+    return render_template(
+        'pedidos.html',
+        pedidos=pedidos,
+        inventario=inventario,
+        lineas=lineas,
+        mensaje_error=mensaje_error,
+        puede_crud_pedidos=puede_crud_pedidos,
+        puede_eliminar_pedidos=puede_eliminar_pedidos
+    )
 
 @pedidos_bp.route('/actualizar_linea/<int:linea_id>', methods=['POST'])
 def actualizar_linea(linea_id):
+    if not puede_crud_pedidos(session.get('rol')):
+        return redirect(url_for('pedidos_bp.pedidos'))
     cantidad_pedida = int(request.form['cantidad_pedida'])
     cantidad_recibida = int(request.form['cantidad_recibida'])
     fecha_recibido = request.form.get('fecha_recibido')
@@ -101,6 +114,8 @@ def actualizar_linea(linea_id):
 
 @pedidos_bp.route('/eliminar_pedido/<int:pedido_id>', methods=['POST'])
 def eliminar_pedido(pedido_id):
+    if not puede_eliminar_pedidos(session.get('rol')):
+        return redirect(url_for('pedidos_bp.pedidos'))
     conn = db.get_connection()
     cursor = conn.cursor()
     cursor.execute("DELETE FROM lineas_pedido_tabla WHERE pedido_id = %s", (pedido_id,))
@@ -112,6 +127,8 @@ def eliminar_pedido(pedido_id):
 
 @pedidos_bp.route('/eliminar_linea/<int:linea_id>', methods=['POST'])
 def eliminar_linea(linea_id):
+    if not puede_eliminar_pedidos(session.get('rol')):
+        return redirect(url_for('pedidos_bp.pedidos'))
     conn = db.get_connection()
     cursor = conn.cursor()
     cursor.execute("SELECT pedido_id FROM lineas_pedido_tabla WHERE id = %s", (linea_id,))
@@ -132,6 +149,8 @@ def eliminar_linea(linea_id):
 
 @pedidos_bp.route('/modificar_pedido/<int:pedido_id>', methods=['GET', 'POST'])
 def modificar_pedido(pedido_id):
+    if not puede_crud_pedidos(session.get('rol')):
+        return redirect(url_for('pedidos_bp.pedidos'))
     conn = db.get_connection()
     cursor = conn.cursor()
     mensaje_error = None

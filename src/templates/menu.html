@@ -1,28 +1,53 @@
 {% extends "base.html" %}
-
-{% block title %}Menú{% endblock %}
-
 {% block content %}
-<div class="d-flex flex-column align-items-center justify-content-center" style="height: 70vh;">
-    <h2 class="mb-4">Menú principal</h2>
-    <button type="submit" class="btn">
-        <a href="{{ url_for('home_bp.usuarios') }}" class="btn btn-success btn-lg mb-2">Usuarios</a>
-    </button>
-    <button type="submit" class="btn">
-        <a href="{{ url_for('home_bp.busqueda') }}" class="btn btn-success btn-lg mb-2">Busqueda</a>
-    </button>
-    <button type="submit" class="btn">
-        <a href="{{ url_for('inventario_bp.inventario') }}" class="btn btn-success btn-lg mb-2">Inventario</a>
-    </button>
-    <button type="submit" class="btn">
-        <a href="{{ url_for('pedidos_bp.pedidos') }}" class="btn btn-success btn-lg mb-2">Pedidos</a>
-    </button>
-    <button type="submit" class="btn">
-        <a href="{{ url_for('home_bp.movimientos') }}" class="btn btn-success btn-lg mb-2">Movimientos</a>
-    </button>
-    <button type="submit" class="btn">
-        <a href="{{ url_for('tablas_bp.mostrar_tablas') }}" class="btn btn-success">Ver tablas de BD</a>
-    </button>
-    <!-- Puedes añadir más botones aquí -->
+<div class="main-bg">
+    <div class="sidebar">
+        <div class="menu-btns">
+            <!-- Búsqueda: siempre activo -->
+            <a href="{{ url_for('home_bp.busqueda') }}" class="menu-btn">Búsqueda</a>
+            <!-- Movimientos: siempre activo -->
+            <a href="{{ url_for('home_bp.movimientos') }}" class="menu-btn">Movimientos</a>
+            <!-- Pedidos -->
+            {% if session.get('rol') == 'admin' or session.get('rol') == 'pedidos' %}
+            <a href="{{ url_for('pedidos_bp.pedidos') }}" class="menu-btn">Pedidos</a>
+            {% else %}
+            <a
+                class="menu-btn disabled-btn"
+                tabindex="-1"
+                aria-disabled="true"
+                onclick="return false;"
+            >Pedidos</a>
+            {% endif %}
+            <!-- Inventario -->
+            {% if session.get('rol') == 'admin' %}
+            <a href="{{ url_for('inventario_bp.inventario') }}" class="menu-btn">Inventario</a>
+            {% elif session.get('rol') == 'pedidos' %}
+            <a
+                class="menu-btn disabled-btn"
+                tabindex="-1"
+                aria-disabled="true"
+                onclick="return false;"
+            >Inventario</a>
+            {% else %}
+            <a
+                class="menu-btn disabled-btn"
+                tabindex="-1"
+                aria-disabled="true"
+                onclick="return false;"
+            >Inventario</a>
+            {% endif %}
+        </div>
+    </div>
+    <div class="main-content">
+        <h1 class="titulo-principal">Almacén de Repuestos</h1>
+        <h2 class="titulo-secundario">Fábrica de Montijo</h2>
+    </div>
 </div>
+<style>
+.disabled-btn {
+    opacity: 0.25;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+</style>
 {% endblock %}

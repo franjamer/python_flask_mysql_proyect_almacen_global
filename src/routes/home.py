@@ -74,9 +74,6 @@ def repuestos():
     cursor.close()
     return render_template('repuestos.html', repuestos=insertObjects, columnas=columnNames)
 
-# @home_bp.route('/pedidos2')
-# def pedidos():
-#     return render_template('pedidos.html')
 
 @home_bp.route('/movimientos')
 def movimientos():
@@ -98,3 +95,4 @@ def movimientos():
     cursor.close()
     conn.close()
     return render_template('movimientos.html', piezas=piezas, movimientos=movimientos, usuarios=usuarios)
+

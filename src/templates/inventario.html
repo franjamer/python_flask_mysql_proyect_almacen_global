@@ -9,16 +9,45 @@
     <!-- Formulario para añadir nuevo repuesto -->
     <form method="post" class="mb-4">
         <div class="row">
-            {% for col in columnas %}
-                {% if col != 'id' %}
-                <div class="col-md-2 mb-2">
-                    <input type="text" name="{{ col }}" class="form-control" placeholder="{{ col|capitalize }}"
-                        {% if col in ['referencia', 'categoria'] %}required{% endif %}>
-                </div>
-                {% endif %}
-            {% endfor %}
+            <!-- No mostramos el campo id en el formulario de alta -->
             <div class="col-md-2 mb-2">
-                <button type="submit" class="btn btn-success">Añadir</button>
+                <input type="text" name="referencia" class="form-control" placeholder="Referencia" required>
+            </div>
+            <div class="col-md-2 mb-2">
+                <input type="text" name="nombre" class="form-control" placeholder="Nombre">
+            </div>
+            <div class="col-md-2 mb-2">
+                <input type="text" name="categoria" class="form-control" placeholder="Categoría" required>
+            </div>
+            <div class="col-md-2 mb-2">
+                <input type="text" name="subcategoria" class="form-control" placeholder="Subcategoría">
+            </div>
+            <div class="col-md-2 mb-2">
+                <input type="text" name="almacen" class="form-control" placeholder="Almacén">
+            </div>
+            <div class="col-md-2 mb-2">
+                <input type="text" name="caracteristicas_medidas" class="form-control" placeholder="Características/Medidas">
+            </div>
+            <div class="col-md-2 mb-2">
+                <input type="text" name="fotos_planos" class="form-control" placeholder="Fotos/Planos">
+            </div>
+            <div class="col-md-2 mb-2">
+                <input type="text" name="empaquetado" class="form-control" placeholder="Empaquetado">
+            </div>
+            <div class="col-md-2 mb-2">
+                <input type="number" name="stock" class="form-control" placeholder="Stock" min="0" value="0">
+            </div>
+            <div class="col-md-2 mb-2">
+                <input type="number" name="stock_minimo" class="form-control" placeholder="Stock mínimo" min="0" value="0">
+            </div>
+            <div class="col-md-2 mb-2">
+                <input type="number" name="stock_maximo" class="form-control" placeholder="Stock máximo" min="0" value="0">
+            </div>
+            <div class="col-md-2 mb-2">
+                <button type="submit" class="btn btn-success"
+                    {% if not puede_crear_actualizar() %}disabled style="opacity:0.25;pointer-events:none;"{% endif %}>
+                    Añadir
+                </button>
             </div>
         </div>
     </form>
@@ -26,33 +55,51 @@
     <table class="table table-sm table-bordered">
         <thead>
             <tr>
-                {% for col in columnas %}
-                <th>{{ col|capitalize }}</th>
-                {% endfor %}
+                <th>ID</th>
+                <th>Referencia</th>
+                <th>Nombre</th>
+                <th>Categoría</th>
+                <th>Subcategoría</th>
+                <th>Almacén</th>
+                <th>Características/Medidas</th>
+                <th>Fotos/Planos</th>
+                <th>Empaquetado</th>
+                <th>Stock</th>
+                <th>Stock mínimo</th>
+                <th>Stock máximo</th>
                 <th>Modificar</th>
                 <th>Eliminar</th>
             </tr>
         </thead>
         <tbody>
             {% for repuesto in repuestos %}
-            <tr>
+            <tr {% if repuesto[9] <= repuesto[10] %}style="background-color: #ffcccc;"{% endif %}>
                 <form method="post" action="{{ url_for('inventario_bp.modificar_repuesto', referencia=repuesto[1]) }}">
-                    {% for i in range(columnas|length) %}
-                        {% if columnas[i] == 'id' %}
-                            <td><input type="text" name="{{ columnas[i] }}" value="{{ repuesto[i] }}" class="form-control" readonly></td>
-                        {% elif columnas[i] == 'referencia' %}
-                            <td><input type="text" name="{{ columnas[i] }}" value="{{ repuesto[i] }}" class="form-control" readonly></td>
-                        {% else %}
-                            <td><input type="text" name="{{ columnas[i] }}" value="{{ repuesto[i] }}" class="form-control"></td>
-                        {% endif %}
-                    {% endfor %}
+                    <td><input type="text" name="id" value="{{ repuesto[0] }}" class="form-control" readonly></td>
+                    <td><input type="text" name="referencia" value="{{ repuesto[1] }}" class="form-control" readonly></td>
+                    <td><input type="text" name="nombre" value="{{ repuesto[2] }}" class="form-control" readonly></td>
+                    <td><input type="text" name="categoria" value="{{ repuesto[3] }}" class="form-control" required></td>
+                    <td><input type="text" name="subcategoria" value="{{ repuesto[4] }}" class="form-control"></td>
+                    <td><input type="text" name="almacen" value="{{ repuesto[5] }}" class="form-control"></td>
+                    <td><input type="text" name="caracteristicas_medidas" value="{{ repuesto[6] }}" class="form-control"></td>
+                    <td><input type="text" name="fotos_planos" value="{{ repuesto[7] }}" class="form-control"></td>
+                    <td><input type="text" name="empaquetado" value="{{ repuesto[8] }}" class="form-control"></td>
+                    <td><input type="number" name="stock" value="{{ repuesto[9] }}" class="form-control"></td>
+                    <td><input type="number" name="stock_minimo" value="{{ repuesto[10] }}" class="form-control"></td>
+                    <td><input type="number" name="stock_maximo" value="{{ repuesto[11] }}" class="form-control"></td>
                     <td>
-                        <button type="submit" class="btn btn-warning btn-sm">Modificar</button>
+                        <button type="submit" class="btn btn-warning btn-sm"
+                            {% if not puede_crear_actualizar() %}disabled style="opacity:0.25;pointer-events:none;"{% endif %}>
+                            Modificar
+                        </button>
                     </td>
                 </form>
                 <td>
                     <form method="post" action="{{ url_for('inventario_bp.eliminar_repuesto', referencia=repuesto[1]) }}" onsubmit="return confirm('¿Seguro que deseas eliminar este repuesto?');">
-                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                        <button type="submit" class="btn btn-danger btn-sm"
+                            {% if not puede_eliminar() %}disabled style="opacity:0.25;pointer-events:none;"{% endif %}>
+                            Eliminar
+                        </button>
                     </form>
                 </td>
             </tr>

@@ -22,11 +22,18 @@
                 <a href="{{ url_for('pedidos_bp.pedidos', pedido_id=pedido[0]) }}" class="btn btn-info btn-sm">Ver</a>
             </td>
             <td>
-                <a href="{{ url_for('pedidos_bp.modificar_pedido', pedido_id=pedido[0]) }}" class="btn btn-warning btn-sm">Modificar</a>
+                <a href="{{ url_for('pedidos_bp.modificar_pedido', pedido_id=pedido[0]) }}"
+                   class="btn btn-warning btn-sm"
+                   {% if not puede_crud_pedidos(session.get('rol')) %}disabled style="opacity:0.25;pointer-events:none;"{% endif %}>
+                   Modificar
+                </a>
             </td>
             <td>
                 <form method="post" action="{{ url_for('pedidos_bp.eliminar_pedido', pedido_id=pedido[0]) }}" style="display:inline;" onsubmit="return confirm('¿Seguro que deseas eliminar este pedido?');">
-                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                    <button type="submit" class="btn btn-danger btn-sm"
+                        {% if not puede_eliminar_pedidos(session.get('rol')) %}disabled style="opacity:0.25;pointer-events:none;"{% endif %}>
+                        Eliminar
+                    </button>
                 </form>
             </td>
         </tr>

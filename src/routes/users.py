@@ -7,6 +7,8 @@ users_bp = Blueprint('users_bp', __name__)
 def addUser():
     username = request.form['username']
     password = request.form['password']
+    if session.get('rol') != 'admin':
+        return redirect(url_for('home_bp.menu'))
     if username and password:
         conn = db.get_connection()
         cursor = conn.cursor()
@@ -20,6 +22,8 @@ def addUser():
 
 @users_bp.route('/usuarios/<int:id>', methods=['POST'])
 def delete(id):
+    if session.get('rol') != 'admin':
+        return redirect(url_for('home_bp.menu'))
     conn = db.get_connection()
     cursor = conn.cursor()
     sql = "DELETE FROM usuarios WHERE idusuario= %s"
@@ -34,6 +38,8 @@ def delete(id):
 def edit(id):
     username = request.form['username']
     password = request.form['password']
+    if session.get('rol') != 'admin':
+        return redirect(url_for('home_bp.menu'))
     conn = db.get_connection()
     cursor = conn.cursor()
     sql = "UPDATE usuarios SET codigo_operador = %s, password = %s WHERE idusuario = %s"
