@@ -8,13 +8,20 @@
     <!-- Formulario para añadir movimiento -->
     <form method="POST" action="{{ url_for('movimientos_bp.movimientos') }}" class="mb-5">
         <div class="row g-3">
-            <div class="col-md-3">
-                <input type="text" name="nombre_pieza_repuesto" class="form-control" placeholder="Nombre repuesto" required>
+            <div class="col-md-4">
+                <select name="referencia_pieza_repuesto" class="form-control" required>
+                    <option value="">Selecciona referencia y nombre...</option>
+                    {% for pieza in inventario %}
+                        <option value="{{ pieza['referencia'] }}">
+                            {{ pieza['referencia'] }} - {{ pieza['nombre'] }}
+                        </option>
+                    {% endfor %}
+                </select>
             </div>
             <div class="col-md-2">
                 <select name="tipo_de_movimiento" class="form-control" required>
-                    <option value="entrada">Entrada</option>
                     <option value="salida">Salida</option>
+                    <option value="entrada">Entrada</option>
                     <option value="inventario">Inventario</option>
                 </select>
             </div>
@@ -25,9 +32,14 @@
                 <input type="text" name="unidad_de_cantidad" class="form-control" placeholder="Unidad">
             </div>
             <div class="col-md-2">
-                <input type="text" name="codigo_usuario" class="form-control" placeholder="Código usuario" required>
+                <select name="codigo_usuario" class="form-control" required>
+                    <option value="">Selecciona usuario...</option>
+                    {% for user in usuarios %}
+                        <option value="{{ user['usuario'] }}">{{ user['usuario'] }}</option>
+                    {% endfor %}
+                </select>
             </div>
-            <div class="col-md-1">
+            <div class="col-md-2 mt-2">
                 <input type="date" name="fecha_movimiento" class="form-control" required>
             </div>
             <div class="col-md-12 mt-2">
@@ -40,6 +52,7 @@
         <thead>
             <tr>
                 <th>ID</th>
+                <th>Referencia</th>
                 <th>Nombre repuesto</th>
                 <th>Tipo</th>
                 <th>Cantidad</th>
@@ -53,16 +66,17 @@
         <tbody>
             {% for mov in movimientos %}
             <tr>
-                <td>{{ mov[0] }}</td>
-                <td>{{ mov[1] }}</td>
-                <td>{{ mov[2] }}</td>
-                <td>{{ mov[3] }}</td>
-                <td>{{ mov[4] }}</td>
-                <td>{{ mov[5] }}</td>
-                <td>{{ mov[6] }}</td>
-                <td>{{ mov[7] }}</td>
+                <td>{{ mov['idmovimientos'] }}</td>
+                <td>{{ mov['referencia_pieza_repuesto'] }}</td>
+                <td>{{ mov['nombre_pieza_repuesto'] }}</td>
+                <td>{{ mov['tipo_de_movimiento'] }}</td>
+                <td>{{ mov['cantidad'] }}</td>
+                <td>{{ mov['unidad_de_cantidad'] }}</td>
+                <td>{{ mov['codigo_usuario'] }}</td>
+                <td>{{ mov['fecha_movimiento'] }}</td>
+                <td>{{ mov['stock_tras_movimiento'] }}</td>
                 <td>
-                    <form method="post" action="{{ url_for('movimientos_bp.eliminar_movimiento', id=mov[0]) }}" onsubmit="return confirm('¿Seguro que deseas eliminar este movimiento?');">
+                    <form method="post" action="{{ url_for('movimientos_bp.eliminar_movimiento', idmovimientos=mov['idmovimientos']) }}" onsubmit="return confirm('¿Seguro que deseas eliminar este movimiento?');">
                         <button type="submit" class="btn btn-danger btn-sm"
                             {% if not puede_eliminar_movimientos(session.get('rol')) %}disabled style="opacity:0.25;pointer-events:none;"{% endif %}>
                             Eliminar
@@ -74,4 +88,7 @@
         </tbody>
     </table>
 </div>
+<button class="btn btn-primary mb-3">
+        <a href="{{ url_for('home_bp.menu') }}" class="text-white">Volver al Menú</a>
+    </button>
 {% endblock %}

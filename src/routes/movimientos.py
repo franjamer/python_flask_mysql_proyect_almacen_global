@@ -3,27 +3,36 @@ import database as db
 from routes.roles import puede_eliminar_movimientos
 
 movimientos_bp = Blueprint('movimientos_bp', __name__)
-
 @movimientos_bp.route('/movimientos', methods=['GET', 'POST'])
 def movimientos():
     mensaje_error = None
+    conn = db.get_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    # Obtener inventario para el select
+    cursor.execute("SELECT referencia, nombre FROM inventario_tabla ORDER BY nombre ASC")
+    inventario = cursor.fetchall()
+
+    # Obtener usuarios para el select (de la tabla 'usuarios')
+    cursor.execute("SELECT idusuario,codigo_operador FROM usuarios ORDER BY idusuario ASC")
+    usuarios = cursor.fetchall()
+
     if request.method == 'POST':
-        # Todos pueden crear movimientos
-        nombre_pieza = request.form['nombre_pieza_repuesto']
+        referencia_pieza = request.form['referencia_pieza_repuesto']
         tipo = request.form['tipo_de_movimiento']
         cantidad = int(request.form.get('cantidad', 0))
         unidad = request.form.get('unidad_de_cantidad', '')
         codigo_usuario = request.form['codigo_usuario']
         fecha = request.form.get('fecha_movimiento', None)
-        conn = db.get_connection()
-        cursor = conn.cursor()
-        # Obtener stock actual
-        cursor.execute("SELECT stock FROM inventario_tabla WHERE nombre = %s", (nombre_pieza,))
+
+        # Obtener nombre del repuesto a partir de la referencia
+        cursor.execute("SELECT nombre, stock FROM inventario_tabla WHERE referencia = %s", (referencia_pieza,))
         result = cursor.fetchone()
         if not result:
             mensaje_error = "Repuesto no encontrado."
         else:
-            stock_actual = result[0]
+            nombre_pieza = result['nombre']
+            stock_actual = result['stock']
             if tipo == 'salida':
                 stock_nuevo = stock_actual - cantidad
             elif tipo == 'entrada':
@@ -33,33 +42,44 @@ def movimientos():
             else:
                 stock_nuevo = stock_actual
             # Actualizar stock
-            cursor.execute("UPDATE inventario_tabla SET stock = %s WHERE nombre = %s", (stock_nuevo, nombre_pieza))
-            # Insertar movimiento
+            cursor.execute("UPDATE inventario_tabla SET stock = %s WHERE referencia = %s", (stock_nuevo, referencia_pieza))
+            # Insertar movimiento (guardando referencia y nombre)
             cursor.execute("""
-                INSERT INTO movimientos_tabla (nombre_pieza_repuesto, tipo_de_movimiento, cantidad, unidad_de_cantidad, codigo_usuario, fecha_movimiento, stock_tras_movimiento)
-                VALUES (%s, %s, %s, %s, %s, %s, %s)
-            """, (nombre_pieza, tipo, cantidad, unidad, codigo_usuario, fecha, stock_nuevo))
+                INSERT INTO movimientos_tabla (referencia_pieza_repuesto, nombre_pieza_repuesto, tipo_de_movimiento, cantidad, unidad_de_cantidad, codigo_usuario, fecha_movimiento, stock_tras_movimiento)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
+            """, (referencia_pieza, nombre_pieza, tipo, cantidad, unidad, codigo_usuario, fecha, stock_nuevo))
             conn.commit()
-        cursor.close()
-        conn.close()
         if not mensaje_error:
+            cursor.close()
+            conn.close()
             return redirect(url_for('movimientos_bp.movimientos'))
-    # Mostrar movimientos
-    conn = db.get_connection()
-    cursor = conn.cursor()
-    cursor.execute("SELECT id, nombre_pieza_repuesto, tipo_de_movimiento, cantidad, unidad_de_cantidad, codigo_usuario, fecha_movimiento, stock_tras_movimiento FROM movimientos_tabla ORDER BY fecha_movimiento DESC")
+
+    # Mostrar movimientos (incluyendo referencia)
+    cursor.execute("""
+        SELECT idmovimientos, referencia_pieza_repuesto, nombre_pieza_repuesto, tipo_de_movimiento, cantidad, unidad_de_cantidad, codigo_usuario, fecha_movimiento, stock_tras_movimiento
+        FROM movimientos_tabla
+        ORDER BY fecha_movimiento DESC
+    """)
     movimientos = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('movimientos.html', movimientos=movimientos, mensaje_error=mensaje_error, puede_eliminar_movimientos=puede_eliminar_movimientos)
+    print("Movimientos obtenidos:", movimientos)    
+    return render_template(
+        'movimientos.html',
+        movimientos=movimientos,
+        inventario=inventario,
+        usuarios=usuarios,
+        mensaje_error=mensaje_error,
+        puede_eliminar_movimientos=puede_eliminar_movimientos
+    )
 
-@movimientos_bp.route('/movimientos/eliminar/<int:id>', methods=['POST'])
-def eliminar_movimiento(id):
+@movimientos_bp.route('/movimientos/eliminar/<int:idmovimientos>', methods=['POST'])
+def eliminar_movimiento(idmovimientos):
     if not puede_eliminar_movimientos(session.get('rol')):
         return redirect(url_for('movimientos_bp.movimientos'))
     conn = db.get_connection()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM movimientos_tabla WHERE id = %s", (id,))
+    cursor.execute("DELETE FROM movimientos_tabla WHERE idmovimientos = %s", (idmovimientos,))
     conn.commit()
     cursor.close()
     conn.close()

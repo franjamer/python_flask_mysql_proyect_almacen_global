@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request
+from routes.roles import puede_eliminar_movimientos
 import database as db
 
 home_bp = Blueprint('home_bp', __name__)
@@ -78,21 +79,27 @@ def repuestos():
 @home_bp.route('/movimientos')
 def movimientos():
     conn = db.get_connection()
-    cursor = conn.cursor()
+    cursor = conn.cursor(dictionary=True)
     # Obtener piezas
     cursor.execute("SELECT nombre, stock FROM inventario_tabla")
     piezas = cursor.fetchall()
-    piezas = [dict(zip([column[0] for column in cursor.description], fila)) for fila in piezas]
+    # Obtener inventario para el select
+    cursor.execute("SELECT referencia, nombre FROM inventario_tabla ORDER BY nombre ASC")
+    inventario = cursor.fetchall()
     # Obtener movimientos
     cursor.execute("SELECT * FROM movimientos_tabla")
-    movimientos_data = cursor.fetchall()
-    movimientos_cols = [column[0] for column in cursor.description]
-    movimientos = [dict(zip(movimientos_cols, fila)) for fila in movimientos_data]
+    movimientos = cursor.fetchall()
     # Obtener usuarios
     cursor.execute("SELECT codigo_operador FROM usuarios")
-    usuarios_data = cursor.fetchall()
-    usuarios = [dict(zip([column[0] for column in cursor.description], fila)) for fila in usuarios_data]
+    usuarios = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('movimientos.html', piezas=piezas, movimientos=movimientos, usuarios=usuarios)
+    return render_template(
+        'movimientos.html',
+        piezas=piezas,
+        inventario=inventario,  # <-- Añade esto
+        movimientos=movimientos,
+        usuarios=usuarios,
+        puede_eliminar_movimientos=puede_eliminar_movimientos
+    )
 

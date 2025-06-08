@@ -25,12 +25,14 @@ def puede_eliminar():
     return session.get('rol') == 'admin'
 
 def puede_ver():
-    return session.get('rol') in ['admin', 'pedidos', 'usuario']
+    return session.get('rol') in ['admin','pedidos', 'usuario']
 
 @inventario_bp.route('/inventario', methods=['GET', 'POST'])
 def inventario():
-    if not puede_ver():
-        return redirect(url_for('home_bp.menu'))
+    # if not puede_ver():
+    #     return redirect(url_for('home_bp.menu'))
+    print(session.get('rol'))
+    print("ROL EN SESIÓN:", session.get('rol'))
     mensaje_error = None
     if request.method == 'POST' and puede_crear_actualizar():
         datos = {campo: request.form.get(campo, '').strip() for campo in CAMPOS}
