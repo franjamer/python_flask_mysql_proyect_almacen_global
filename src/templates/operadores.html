@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Gestión de Operadores</h1>
+
+<!-- Formulario para añadir operador -->
+<form method="POST" action="{{ url_for('operadores_bp.añadir') }}">
+    <input type="text" name="codigo_operador" placeholder="Código del Operador" required>
+    <input type="text" name="nombre_completo" placeholder="Nombre Completo" required>
+    <input type="text" name="puesto" placeholder="Puesto" required>
+    <button type="submit">Añadir Operador</button>
+</form>
+
+<hr>
+
+<!-- Tabla de operadores -->
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Puesto</th>
+            {% if session['rol'] == 'admin' %}
+                <th>Acciones</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for op in operadores %}
+        <tr>
+            <td>{{ op.id_operador }}</td>
+            <td>{{ op.codigo_operador }}</td>
+            <td>{{ op.nombre_completo }}</td>
+            <td>{{ op.puesto }}</td>
+            {% if session['rol'] == 'admin' %}
+            <td>
+                <!-- Botón de eliminar -->
+                <form method="POST" action="{{ url_for('operadores_bp.delete', id=op.id_operador) }}" style="display:inline;">
+                    <button type="submit">Eliminar</button>
+                </form>
+                <!-- Formulario para editar -->
+                <form method="POST" action="{{ url_for('operadores_bp.edit', id=op.id_operador) }}" style="display:inline;">
+                    <input type="text" name="codigo_operador" value="{{ op.codigo_operador }}" required>
+                    <input type="text" name="nombre_completo" value="{{ op.nombre_completo }}" required>
+                    <input type="text" name="puesto" value="{{ op.puesto }}" required>
+                    <button type="submit">Editar</button>
+                </form>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

@@ -3,6 +3,8 @@ import database as db
 from routes.roles import puede_eliminar_movimientos
 
 movimientos_bp = Blueprint('movimientos_bp', __name__)
+
+
 @movimientos_bp.route('/movimientos', methods=['GET', 'POST'])
 def movimientos():
     mensaje_error = None
@@ -10,23 +12,26 @@ def movimientos():
     cursor = conn.cursor(dictionary=True)
 
     # Obtener inventario para el select
-    cursor.execute("SELECT referencia, nombre FROM inventario_tabla ORDER BY nombre ASC")
+    cursor.execute(
+        "SELECT referencia, nombre FROM inventario_tabla ORDER BY nombre ASC")
     inventario = cursor.fetchall()
 
-    # Obtener usuarios para el select (de la tabla 'usuarios')
-    cursor.execute("SELECT idusuario,codigo_operador FROM usuarios ORDER BY idusuario ASC")
-    usuarios = cursor.fetchall()
+    # Obtener perfiles para el select (de la tabla 'perfiles')
+    cursor.execute(
+        "SELECT idperfil,codigo_operador FROM perfiles ORDER BY idperfil ASC")
+    perfiles = cursor.fetchall()
 
     if request.method == 'POST':
         referencia_pieza = request.form['referencia_pieza_repuesto']
         tipo = request.form['tipo_de_movimiento']
         cantidad = int(request.form.get('cantidad', 0))
         unidad = request.form.get('unidad_de_cantidad', '')
-        codigo_usuario = request.form['codigo_usuario']
+        codigo_perfil = request.form['codigo_perfil']
         fecha = request.form.get('fecha_movimiento', None)
 
         # Obtener nombre del repuesto a partir de la referencia
-        cursor.execute("SELECT nombre, stock FROM inventario_tabla WHERE referencia = %s", (referencia_pieza,))
+        cursor.execute(
+            "SELECT nombre, stock FROM inventario_tabla WHERE referencia = %s", (referencia_pieza,))
         result = cursor.fetchone()
         if not result:
             mensaje_error = "Repuesto no encontrado."
@@ -42,12 +47,13 @@ def movimientos():
             else:
                 stock_nuevo = stock_actual
             # Actualizar stock
-            cursor.execute("UPDATE inventario_tabla SET stock = %s WHERE referencia = %s", (stock_nuevo, referencia_pieza))
+            cursor.execute(
+                "UPDATE inventario_tabla SET stock = %s WHERE referencia = %s", (stock_nuevo, referencia_pieza))
             # Insertar movimiento (guardando referencia y nombre)
             cursor.execute("""
-                INSERT INTO movimientos_tabla (referencia_pieza_repuesto, nombre_pieza_repuesto, tipo_de_movimiento, cantidad, unidad_de_cantidad, codigo_usuario, fecha_movimiento, stock_tras_movimiento)
+                INSERT INTO movimientos_tabla (referencia_pieza_repuesto, nombre_pieza_repuesto, tipo_de_movimiento, cantidad, unidad_de_cantidad, codigo_perfil, fecha_movimiento, stock_tras_movimiento)
                 VALUES (%s, %s, %s, %s, %s, %s, %s, %s)
-            """, (referencia_pieza, nombre_pieza, tipo, cantidad, unidad, codigo_usuario, fecha, stock_nuevo))
+            """, (referencia_pieza, nombre_pieza, tipo, cantidad, unidad, codigo_perfil, fecha, stock_nuevo))
             conn.commit()
         if not mensaje_error:
             cursor.close()
@@ -56,22 +62,23 @@ def movimientos():
 
     # Mostrar movimientos (incluyendo referencia)
     cursor.execute("""
-        SELECT idmovimientos, referencia_pieza_repuesto, nombre_pieza_repuesto, tipo_de_movimiento, cantidad, unidad_de_cantidad, codigo_usuario, fecha_movimiento, stock_tras_movimiento
+        SELECT idmovimientos, referencia_pieza_repuesto, nombre_pieza_repuesto, tipo_de_movimiento, cantidad, unidad_de_cantidad, codigo_perfil, fecha_movimiento, stock_tras_movimiento
         FROM movimientos_tabla
         ORDER BY fecha_movimiento DESC
     """)
     movimientos = cursor.fetchall()
     cursor.close()
     conn.close()
-    print("Movimientos obtenidos:", movimientos)    
+    print("Movimientos obtenidos:", movimientos)
     return render_template(
         'movimientos.html',
         movimientos=movimientos,
         inventario=inventario,
-        usuarios=usuarios,
+        perfiles=perfiles,
         mensaje_error=mensaje_error,
         puede_eliminar_movimientos=puede_eliminar_movimientos
     )
+
 
 @movimientos_bp.route('/movimientos/eliminar/<int:idmovimientos>', methods=['POST'])
 def eliminar_movimiento(idmovimientos):
@@ -79,7 +86,8 @@ def eliminar_movimiento(idmovimientos):
         return redirect(url_for('movimientos_bp.movimientos'))
     conn = db.get_connection()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM movimientos_tabla WHERE idmovimientos = %s", (idmovimientos,))
+    cursor.execute(
+        "DELETE FROM movimientos_tabla WHERE idmovimientos = %s", (idmovimientos,))
     conn.commit()
     cursor.close()
     conn.close()

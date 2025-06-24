@@ -1,5 +1,5 @@
 <!-- html parcial del modal que se abre cuando hacemos click en el botón editar. -->
-<div class="modal fade"id="btn-Editar{{user.idusuario}}" tabindex="-1"aria-labelledby="exampleModalLabel aria-hidden="true">
+<div class="modal fade"id="btn-Editar{{user.idperfil}}" tabindex="-1"aria-labelledby="exampleModalLabel aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -9,7 +9,7 @@
                 </button>
             </div>
         <div class="modal-body">
-            <form action="{{ url_for('users_bp.edit', id=user.idusuario) }}" method="POST">
+            <form action="{{ url_for('perfiles_bp.edit', id=user.idperfil) }}" method="POST">
                 <label for="">Username</label>
                 <input type="text" class="form-control  mb-3" name="username" value="{{user.codigo_operador}}"
                 >

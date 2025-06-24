@@ -36,6 +36,13 @@
                 onclick="return false;"
             >Inventario</a>
             {% endif %}
+            {% if session.get('rol')== 'admin'%}
+            <a href="{{url_for('home_bp.operadores')}}" class="menu-btn">operadores</a>
+            {% endif %}
+            {% if session.get('rol')== 'admin' %}
+            <a href="{{url_for('home_bp.perfiles')}}"
+            class="menu-btn">perfiles</a>
+            {% endif %}
         </div>
     </div>
     <div class="main-content">

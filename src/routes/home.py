@@ -4,26 +4,46 @@ import database as db
 
 home_bp = Blueprint('home_bp', __name__)
 
+
 @home_bp.route('/')
 def bienvenido():
     return render_template('bienvenido.html')
+
 
 @home_bp.route('/menu')
 def menu():
     return render_template('menu.html')
 
-@home_bp.route('/usuarios')
-def usuarios():
+
+@home_bp.route('/perfiles')
+def perfiles():
     conn = db.get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM usuarios")
-    usuarios = cursor.fetchall()
+    cursor.execute("SELECT * FROM perfiles")
+    perfiles = cursor.fetchall()
     insertObjects = []
     columnNames = [column[0] for column in cursor.description]
-    for fila in usuarios:
+    for fila in perfiles:
         insertObjects.append(dict(zip(columnNames, fila)))
     cursor.close()
-    return render_template('usuarios.html', users=insertObjects)
+    return render_template('perfiles.html', perfiles=insertObjects)
+
+
+@home_bp.route('/operadores')
+def operadores():
+    conn = db.get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM operadores")
+    resultados = cursor.fetchall()
+    columnNames = [column[0] for column in cursor.description]
+    operadores = []
+    for fila in resultados:
+        operadores.append(dict(zip(columnNames, fila)))
+    cursor.close()
+    conn.close()
+    return render_template('operadores.html', operadores=operadores)
+
+
 
 @home_bp.route('/busqueda')
 def busqueda():
@@ -57,10 +77,12 @@ def busqueda():
         if campo in columnas:
             columnas = [campo] + [col for col in columnas if col != campo]
         for fila in resultados:
-            repuestos.append(dict(zip(columnas, [fila[columnas.index(col)] for col in columnas])))
+            repuestos.append(
+                dict(zip(columnas, [fila[columnas.index(col)] for col in columnas])))
         cursor.close()
 
     return render_template('busqueda.html', repuestos=repuestos, busqueda=busqueda, campo=campo, columnas=columnas, orden=orden)
+
 
 @home_bp.route('/repuestos')
 def repuestos():
@@ -84,14 +106,15 @@ def movimientos():
     cursor.execute("SELECT nombre, stock FROM inventario_tabla")
     piezas = cursor.fetchall()
     # Obtener inventario para el select
-    cursor.execute("SELECT referencia, nombre FROM inventario_tabla ORDER BY nombre ASC")
+    cursor.execute(
+        "SELECT referencia, nombre FROM inventario_tabla ORDER BY nombre ASC")
     inventario = cursor.fetchall()
     # Obtener movimientos
     cursor.execute("SELECT * FROM movimientos_tabla")
     movimientos = cursor.fetchall()
-    # Obtener usuarios
-    cursor.execute("SELECT codigo_operador FROM usuarios")
-    usuarios = cursor.fetchall()
+    # Obtener perfiles
+    cursor.execute("SELECT perfil FROM perfiles")
+    perfiles = cursor.fetchall()
     cursor.close()
     conn.close()
     return render_template(
@@ -99,7 +122,6 @@ def movimientos():
         piezas=piezas,
         inventario=inventario,  # <-- Añade esto
         movimientos=movimientos,
-        usuarios=usuarios,
+        perfiles=perfiles,
         puede_eliminar_movimientos=puede_eliminar_movimientos
     )
-

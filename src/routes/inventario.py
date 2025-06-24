@@ -18,14 +18,18 @@ CAMPOS = [
     'stock_maximo'
 ]
 
+
 def puede_crear_actualizar():
     return session.get('rol') in ['admin', 'pedidos']
+
 
 def puede_eliminar():
     return session.get('rol') == 'admin'
 
+
 def puede_ver():
-    return session.get('rol') in ['admin','pedidos', 'usuario']
+    return session.get('rol') in ['admin', 'pedidos', 'perfil']
+
 
 @inventario_bp.route('/inventario', methods=['GET', 'POST'])
 def inventario():
@@ -35,7 +39,8 @@ def inventario():
     print("ROL EN SESIÓN:", session.get('rol'))
     mensaje_error = None
     if request.method == 'POST' and puede_crear_actualizar():
-        datos = {campo: request.form.get(campo, '').strip() for campo in CAMPOS}
+        datos = {campo: request.form.get(campo, '').strip()
+                 for campo in CAMPOS}
         # Validar obligatorios
         obligatorios = ['referencia', 'categoria']
         if any(datos[campo] == '' for campo in obligatorios):
@@ -46,7 +51,8 @@ def inventario():
             try:
                 placeholders = ','.join(['%s'] * len(CAMPOS))
                 campos_str = ','.join(CAMPOS)
-                valores = [datos[campo] if campo != 'stock' else (datos[campo] if datos[campo] != '' else 0) for campo in CAMPOS]
+                valores = [datos[campo] if campo != 'stock' else (
+                    datos[campo] if datos[campo] != '' else 0) for campo in CAMPOS]
                 cursor.execute(
                     f"INSERT INTO inventario_tabla ({campos_str}) VALUES ({placeholders})",
                     tuple(valores)
@@ -76,6 +82,7 @@ def inventario():
         puede_eliminar=puede_eliminar
     )
 
+
 @inventario_bp.route('/inventario/modificar/<referencia>', methods=['POST'])
 def modificar_repuesto(referencia):
     if not puede_crear_actualizar():
@@ -83,8 +90,10 @@ def modificar_repuesto(referencia):
     datos = {campo: request.form.get(campo, '').strip() for campo in CAMPOS}
     conn = db.get_connection()
     cursor = conn.cursor()
-    set_clause = ', '.join([f"{campo}=%s" for campo in CAMPOS if campo not in ['referencia', 'nombre']])
-    valores = [datos[campo] if campo != 'stock' else (datos[campo] if datos[campo] != '' else 0) for campo in CAMPOS if campo not in ['referencia', 'nombre']]
+    set_clause = ', '.join(
+        [f"{campo}=%s" for campo in CAMPOS if campo not in ['referencia', 'nombre']])
+    valores = [datos[campo] if campo != 'stock' else (
+        datos[campo] if datos[campo] != '' else 0) for campo in CAMPOS if campo not in ['referencia', 'nombre']]
     valores.append(referencia)
     cursor.execute(
         f"UPDATE inventario_tabla SET {set_clause} WHERE referencia=%s",
@@ -95,13 +104,15 @@ def modificar_repuesto(referencia):
     conn.close()
     return redirect(url_for('inventario_bp.inventario'))
 
+
 @inventario_bp.route('/inventario/eliminar/<referencia>', methods=['POST'])
 def eliminar_repuesto(referencia):
     if not puede_eliminar():
         return redirect(url_for('inventario_bp.inventario'))
     conn = db.get_connection()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM inventario_tabla WHERE referencia=%s", (referencia,))
+    cursor.execute(
+        "DELETE FROM inventario_tabla WHERE referencia=%s", (referencia,))
     conn.commit()
     cursor.close()
     conn.close()

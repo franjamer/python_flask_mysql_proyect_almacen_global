@@ -1,9 +1,9 @@
 <div class="container">
     <div class="card shadow">
         <div class="card-body">
-            <form action="{{ url_for('users_bp.addUser') }}" method="POST" class="mb-4">
+            <form action="{{ url_for('perfiles_bp.añadirOperador') }}" method="POST" class="mb-4">
                 <div class="mb-3">
-                    <label for="username" class="form-label mb-3">Usuario</label>
+                    <label for="username" class="form-label mb-3">perfil</label>
                     <input
                         type="text"
                         class="form-control mb-3"
@@ -22,6 +22,6 @@
                         required
                     >
                 </div>
-                <button type="submit" class="btn btn-primary mb-3 mt-4">Agregar usuario</button>
+                <button type="submit" class="btn btn-primary mb-3 mt-4">Agregar perfil</button>
             </form>
             <!-- <h1 class="text-center mt-5 mb-6 text-primary">PYTHON-FLASK-MYSQL</h1> -->

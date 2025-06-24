@@ -32,10 +32,10 @@
                 <input type="text" name="unidad_de_cantidad" class="form-control" placeholder="Unidad">
             </div>
             <div class="col-md-2">
-                <select name="codigo_usuario" class="form-control" required>
-                    <option value="">Selecciona usuario...</option>
-                    {% for user in usuarios %}
-                        <option value="{{ user['usuario'] }}">{{ user['usuario'] }}</option>
+                <select name="codigo_perfil" class="form-control" required>
+                    <option value="">Selecciona perfil...</option>
+                    {% for user in perfiles %}
+                        <option value="{{ user['perfil'] }}">{{ user['perfil'] }}</option>
                     {% endfor %}
                 </select>
             </div>
@@ -57,7 +57,7 @@
                 <th>Tipo</th>
                 <th>Cantidad</th>
                 <th>Unidad</th>
-                <th>Código usuario</th>
+                <th>Código perfil</th>
                 <th>Fecha</th>
                 <th>Stock tras movimiento</th>
                 <th>Eliminar</th>
@@ -72,7 +72,7 @@
                 <td>{{ mov['tipo_de_movimiento'] }}</td>
                 <td>{{ mov['cantidad'] }}</td>
                 <td>{{ mov['unidad_de_cantidad'] }}</td>
-                <td>{{ mov['codigo_usuario'] }}</td>
+                <td>{{ mov['codigo_perfil'] }}</td>
                 <td>{{ mov['fecha_movimiento'] }}</td>
                 <td>{{ mov['stock_tras_movimiento'] }}</td>
                 <td>
