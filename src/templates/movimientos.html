@@ -33,9 +33,9 @@
             </div>
             <div class="col-md-2">
                 <select name="codigo_perfil" class="form-control" required>
-                    <option value="">Selecciona perfil...</option>
-                    {% for user in perfiles %}
-                        <option value="{{ user['perfil'] }}">{{ user['perfil'] }}</option>
+                    <option value="">Selecciona operador...</option>
+                    {% for user in operadores %}
+                        <option value="{{ user['operadores'] }}">{{ user['operadores'] }}</option>
                     {% endfor %}
                 </select>
             </div>
