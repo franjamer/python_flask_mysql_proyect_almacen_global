@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Gestión de Operadores</h1>
-
+<a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
 <!-- Formulario para añadir operador -->
 <form method="POST" action="{{ url_for('operadores_bp.añadir') }}">
     <input type="text" name="codigo_operador" placeholder="Código del Operador" required>

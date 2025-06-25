@@ -5,6 +5,7 @@
 {% block content %}
 <div class="d-flex flex-column align-items-center justify-content-center" style="height: 70vh;">
     <h2 class="mb-4">BUSQUEDA DE REPUESTOS</h2>
+    <a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
     <form method="GET" action="{{ url_for('home_bp.busqueda') }}" class="mb-4">
         <div class="mb-3">
             <input type="text" name="busqueda" class="form-control" placeholder="Introduce el término a buscar" value="{{ request.args.get('busqueda', '') }}">
@@ -12,35 +13,36 @@
         <div class="mb-3">
             <label class="me-3">Buscar por:</label>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="campo" id="referencia" value="referencia" {% if request.args.get('campo', 'referencia') == 'referencia' %}checked{% endif %}>
+                <input class="form-check-input" type="radio" id="referencia" value="referencia" {% if request.args.get('campo', 'referencia') == 'referencia' %}checked{% endif %}>
                 <label class="form-check-label" for="referencia">Referencia</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="campo" id="nombre" value="nombre" {% if request.args.get('campo') == 'nombre' %}checked{% endif %}>
+                <input class="form-check-input" type="radio" id="nombre" value="nombre" {% if request.args.get('campo') == 'nombre' %}checked{% endif %}>
                 <label class="form-check-label" for="nombre">Nombre</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="campo" id="categoria" value="categoria" {% if request.args.get('campo') == 'categoria' %}checked{% endif %}>
+                <input class="form-check-input" type="radio"  id="categoria" value="categoria" {% if request.args.get('campo') == 'categoria' %}checked{% endif %}>
                 <label class="form-check-label" for="categoria">Categoría</label>
             </div>
             <div class="form-check form-check-inline">
-                <input class="form-check-input" type="radio" name="campo" id="almacen" value="almacen" {% if request.args.get('campo') == 'almacen' %}checked{% endif %}>
+                <input class="form-check-input" type="radio" id="almacen" value="almacen" {% if request.args.get('campo') == 'almacen' %}checked{% endif %}>
                 <label class="form-check-label" for="almacen">Almacén</label>
             </div>
         </div>
         <div class="mb-3">
-    <label class="me-2">Ordenar:</label>
-    <select name="orden" class="form-select w-auto d-inline-block">
-        <option value="asc" {% if request.args.get('orden', 'asc') == 'asc' %}selected{% endif %}>Ascendente</option>
-        <option value="desc" {% if request.args.get('orden') == 'desc' %}selected{% endif %}>Descendente</option>
-    </select>
-</div>
+            <label class="me-2">Ordenar:</label>
+            <select name="orden" class="form-select w-auto d-inline-block">
+                <option value="asc" {% if request.args.get('orden', 'asc') == 'asc' %}selected{% endif %}>Ascendente</option>
+                <option value="desc" {% if request.args.get('orden') == 'desc' %}selected{% endif %}>Descendente</option>
+            </select>
+        </div>
         <button type="submit" class="btn btn-primary">Buscar</button>
     </form>
     
     
 
 </div>
+
 <div class="container mt-5">
     <h2 class="mb-4">Resultados de la búsqueda</h2>
     <table class="table table-bordered table-dark table-striped">
@@ -61,7 +63,5 @@
             {% endfor %}
         </tbody>
     </table>
-    <button class="btn btn-primary mb-3">
-        <a href="{{ url_for('home_bp.menu') }}" class="text-white">Volver al Menú</a>
-    </button>
+    
 {% endblock %}

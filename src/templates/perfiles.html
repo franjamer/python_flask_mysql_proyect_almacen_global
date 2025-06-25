@@ -2,7 +2,7 @@
 
 {% block content %}
 <h1>Gestión de Perfiles</h1>
-
+<a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
 <!-- Formulario para añadir perfil -->
  <form method="POST" action="{{url_for('perfiles_bp.añadir') }}">
     <input type="text" name="perfil" placeholder="Nombre perfil" required>
