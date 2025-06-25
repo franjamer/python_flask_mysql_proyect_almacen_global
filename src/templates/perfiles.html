@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Gestión de Perfiles</h1>
+
+<!-- Formulario para añadir perfil -->
+ <form method="POST" action="{{url_for('perfiles_bp.añadir') }}">
+    <input type="text" name="perfil" placeholder="Nombre perfil" required>
+    <input type="password" name="password" placeholder="Contraseña" required>
+    <input type="text" name="rol" placeholder="Rol" required>
+    <button type="submit">Añadir Perfil</button>
+</form>
+
+<hr>
+
+<!-- Tabla de perfiles -->
+
+<table border="1">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Código</th>
+            <th>Nombre</th>
+            <th>Puesto</th>
+            {% if session['rol'] == 'admin' %}
+                <th>Acciones</th>
+            {% endif %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for per in perfiles %}
+        <tr>
+            <td>{{ per.id_perfil }}</td>
+            <td>{{ per.perfil }}</td>
+            <td>{{ per.password }}</td>
+            <td>{{ per.rol }}</td>
+            {% if session['rol'] == 'admin' %}
+            <td>
+                <!-- Botón de eliminar -->
+                <form method="POST" action="{{ url_for('perfiles_bp.delete', id=per.id_perfil) }}" style="display:inline;">
+                    <button type="submit">Eliminar</button>
+                </form>
+                <!-- Formulario para editar -->
+                <form method="POST" action="{{ url_for('perfiles_bp.edit', id=per.id_perfil) }}" style="display:inline;">
+                    <input type="text" name="perfil" value="{{ per.perfil }}" required>
+                    <input type="password" name="password" value="{{ per.password }}" required>
+                    <input type="text" name="rol" value="{{ per.rol }}" required>
+                    <button type="submit">Editar</button>
+                </form>
+            </td>
+            {% endif %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}

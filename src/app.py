@@ -66,7 +66,7 @@ app.register_blueprint(inventario_bp)
 app.register_blueprint(movimientos_bp)
 app.register_blueprint(pedidos_bp)
 app.register_blueprint(tablas_bp)
-app.register_blueprint(operadores_bp,url_prefix="/operadores")
+app.register_blueprint(operadores_bp, url_prefix="/operadores")
 
 # Configuración de la base de datos
 if __name__ == '__main__':

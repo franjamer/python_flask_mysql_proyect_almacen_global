@@ -1,4 +1,4 @@
-from flask import Blueprint, request, redirect, url_for
+from flask import Blueprint, request, redirect, url_for, session
 import database as db
 
 perfiles_bp = Blueprint('perfiles_bp', __name__)
@@ -6,15 +6,16 @@ perfiles_bp = Blueprint('perfiles_bp', __name__)
 
 @perfiles_bp.route('/perfiles', methods=['POST'])
 def añadir():
-    username = request.form['username']
+    perfil = request.form['perfil']
     password = request.form['password']
+    rol = request.form['rol']
     if session.get('rol') != 'admin':
         return redirect(url_for('home_bp.menu'))
-    if username and password:
+    if perfil and password and rol:
         conn = db.get_connection()
         cursor = conn.cursor()
-        sql = "INSERT INTO perfiles (perfil, password) VALUES  (%s, %s)"
-        perfiles = (username, password)
+        sql = "INSERT INTO perfiles (perfil, password,rol) VALUES  (%s, %s, %s)"
+        perfiles = (perfil, password, rol)
         cursor.execute(sql, perfiles)
         conn.commit()
         cursor.close()
@@ -28,7 +29,7 @@ def delete(id):
         return redirect(url_for('home_bp.menu'))
     conn = db.get_connection()
     cursor = conn.cursor()
-    sql = "DELETE FROM perfiles WHERE idperfil= %s"
+    sql = "DELETE FROM perfiles WHERE id_perfil= %s"
     perfiles = (id,)
     cursor.execute(sql, perfiles)
     conn.commit()
@@ -39,15 +40,18 @@ def delete(id):
 
 @perfiles_bp.route('/edit/<int:id>', methods=['POST'])
 def edit(id):
-    username = request.form['username']
-    password = request.form['password']
     if session.get('rol') != 'admin':
         return redirect(url_for('home_bp.menu'))
-    conn = db.get_connection()
-    cursor = conn.cursor()
-    sql = "UPDATE perfiles SET perfil = %s, password = %s WHERE idperfil = %s"
-    cursor.execute(sql, (username, password, id))
-    conn.commit()
-    cursor.close()
-    conn.close()
+
+    perfil = request.form['perfil']
+    password = request.form['password']
+    rol = request.form['rol']
+    if perfil and password and rol:
+        conn = db.get_connection()
+        cursor = conn.cursor()
+        sql = "UPDATE perfiles SET perfil = %s, password = %s, rol = %s WHERE id_perfil = %s"
+        cursor.execute(sql, (perfil, password, rol, id))
+        conn.commit()
+        cursor.close()
+        conn.close()
     return redirect(url_for('home_bp.perfiles'))
