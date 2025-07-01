@@ -1,0 +1,50 @@
+<table class="table table-sm table-bordered">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Referencia</th>
+            <th>Nombre</th>
+            <th>Tipo</th>
+            <th>Cantidad</th>
+            <th>Unidad</th>
+            <th>Operador</th>
+            <th>Fecha</th>
+            <th>Stock tras movimiento</th>
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {# 🎯 AÑADE ESTA VERIFICACIÓN ANTES DEL BUCLE FOR #}
+        {% if movimientos %}
+            {% for mov in movimientos %}
+            <tr>
+                <td>{{ mov['idmovimientos'] }}</td>
+                <td>{{ mov['referencia_pieza_repuesto'] }}</td>
+                <td>{{ mov['nombre_pieza_repuesto'] }}</td>
+                <td>{{ mov['tipo_de_movimiento'] }}</td>
+                <td>{{ mov['cantidad'] }}</td>
+                <td>{{ mov['unidad_de_cantidad'] }}</td>
+                <td>{{ mov['codigo_operador'] }}</td>
+                <td>{{ mov['fecha_movimiento'] }}</td>
+                <td>{{ mov['stock_tras_movimiento'] }}</td>
+                <td>
+                    <form method="post" action="{{ url_for('movimientos_bp.movimientos_table_bp.eliminar_movimiento', idmovimientos=mov['idmovimientos']) }}" onsubmit="return confirm('¿Seguro que deseas eliminar este movimiento?');">
+                        <button type="submit" class="btn btn-danger btn-sm"
+                            {% if not puede_eliminar_movimientos %}
+                                disabled
+                                style="opacity:0.25;pointer-events:none;"
+                            {% endif %}>
+                            Eliminar
+                        </button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        {% else %}
+            {# 🎯 Muestra un mensaje si no hay movimientos para evitar la tabla vacía #}
+            <tr>
+                <td colspan="10" class="text-center">No se encontraron movimientos.</td>
+            </tr>
+        {% endif %}
+    </tbody>
+</table>

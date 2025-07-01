@@ -32,17 +32,18 @@ def perfiles():
 @home_bp.route('/operadores')
 def operadores():
     conn = db.get_connection()
+    print("Conectando a la base de datos para obtener operadores desde home.py version aplicacion con IA")
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM operadores")
-    resultados = cursor.fetchall()
+    consulta_select = """SELECT * FROM operadores"""
+    cursor.execute(consulta_select)
+    operadores = cursor.fetchall()
+    insertObjets = []
     columnNames = [column[0] for column in cursor.description]
-    operadores = []
-    for fila in resultados:
+    for fila in operadores:
         operadores.append(dict(zip(columnNames, fila)))
     cursor.close()
     conn.close()
     return render_template('operadores.html', operadores=operadores)
-
 
 
 @home_bp.route('/busqueda')
@@ -101,7 +102,21 @@ def repuestos():
 @home_bp.route('/movimientos')
 def movimientos():
     conn = db.get_connection()
+
+    # 🎯 Añade esta verificación de seguridad
+    if conn is None:
+        # Si la conexión falla, devolvemos un error.
+        # Esto evita que el programa falle con un AttributeError.
+        # Puedes mostrar un mensaje de error en la plantilla o redirigir.
+        print("¡Error: No se pudo conectar a la base de datos!")
+        # Opcional: Redirigir a una página de error o al menú
+        # return redirect(url_for('home_bp.menu'))
+        # Opcional: Renderizar la plantilla con un mensaje de error
+        return render_template('movimientos.html', movimientos=[], inventario=[], operadores=[], mensaje_error="No se pudo conectar a la base de datos. Por favor, verifica la conexión.")
+
+    # Si la conexión es exitosa, continúa con el resto del código
     cursor = conn.cursor(dictionary=True)
+
     # Obtener piezas
     cursor.execute("SELECT nombre, stock FROM inventario_tabla")
     piezas = cursor.fetchall()

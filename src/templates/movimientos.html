@@ -1,11 +1,10 @@
-{% extends "base.html" %}
+ {% extends "base.html" %}
 {% block content %}
 <div class="container mt-5">
     <h2 class="mb-4">MOVIMIENTOS</h2>
     {% if mensaje_error %}
     <div class="alert alert-danger">{{ mensaje_error }}</div>
-    {% endif %}    
-        <a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
+    {% endif %}
     <!-- Formulario para añadir movimiento -->
     <form method="POST" action="{{ url_for('movimientos_bp.movimientos') }}" class="mb-5">
         <div class="row g-3">
@@ -33,10 +32,12 @@
                 <input type="text" name="unidad_de_cantidad" class="form-control" placeholder="Unidad">
             </div>
             <div class="col-md-2">
-                <select name="codigo_perfil" class="form-control" required>
-                    <option value="">Selecciona operador...</option>
-                    {% for user in operadores %}
-                        <option value="{{ user['operadores'] }}">{{ user['operadores'] }}</option>
+                <select name="codigo_usuario" class="form-control">
+                    <option value="">Selecciona operadores...</option>
+                    {% for operador in operadores %}
+                         <option value="{{ operador['id_operador'] }}">
+                            {{ operador['codigo_operador'] }} - {{ operador['nombre_completo'] }}
+                        </option>
                     {% endfor %}
                 </select>
             </div>
@@ -58,7 +59,7 @@
                 <th>Tipo</th>
                 <th>Cantidad</th>
                 <th>Unidad</th>
-                <th>Código perfil</th>
+                <th>Código operador</th>
                 <th>Fecha</th>
                 <th>Stock tras movimiento</th>
                 <th>Eliminar</th>
@@ -73,13 +74,17 @@
                 <td>{{ mov['tipo_de_movimiento'] }}</td>
                 <td>{{ mov['cantidad'] }}</td>
                 <td>{{ mov['unidad_de_cantidad'] }}</td>
-                <td>{{ mov['codigo_perfil'] }}</td>
+                <td>{{ mov['codigo_operador'] }}</td>
                 <td>{{ mov['fecha_movimiento'] }}</td>
                 <td>{{ mov['stock_tras_movimiento'] }}</td>
                 <td>
                     <form method="post" action="{{ url_for('movimientos_bp.eliminar_movimiento', idmovimientos=mov['idmovimientos']) }}" onsubmit="return confirm('¿Seguro que deseas eliminar este movimiento?');">
                         <button type="submit" class="btn btn-danger btn-sm"
-                            {% if not puede_eliminar_movimientos(session.get('rol')) %}disabled style="opacity:0.25;pointer-events:none;"{% endif %}>
+                            {% if not puede_eliminar_movimientos(session.get('rol')) %} 
+                            disabled style="opacity:0.25;pointer-events:none;"
+                            {% else %}
+                            style="opacity:0.9;pointer-events:none;"
+                            {% endif %}>
                             Eliminar
                         </button>
                     </form>
@@ -89,5 +94,7 @@
         </tbody>
     </table>
 </div>
-
+<button class="btn btn-primary mb-3">
+        <a href="{{ url_for('home_bp.menu') }}" class="text-white">Volver al Menú</a>
+    </button>
 {% endblock %}

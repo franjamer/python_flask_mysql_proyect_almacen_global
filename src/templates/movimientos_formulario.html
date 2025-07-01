@@ -1,0 +1,47 @@
+
+<form method="POST" action="{{ url_for('movimientos_bp.movimientos_form_bp.add_movimiento') }}">
+    <div class="mb-3">
+        <label for="referencia_pieza" class="form-label">Pieza/Repuesto</label>
+        <select name="referencia_pieza_repuesto" id="referencia_pieza" class="form-control" required>
+            <option value="">-- Selecciona una pieza --</option>
+            {% for item in inventario %}
+            <option value="{{ item['referencia'] }}">{{ item['referencia'] }} - {{ item['nombre'] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="tipo_movimiento" class="form-label">Tipo de Movimiento</label>
+        <select name="tipo_de_movimiento" id="tipo_movimiento" class="form-control" required>
+            <option value="">-- Selecciona el tipo --</option>
+            <option value="entrada">Entrada</option>
+            <option value="salida">Salida</option>
+            <option value="inventario">Inventario</option>
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="cantidad" class="form-label">Cantidad</label>
+        <input type="number" name="cantidad" id="cantidad" class="form-control" required min="1">
+    </div>
+    <div class="mb-3">
+        <label for="unidad_cantidad" class="form-label">Unidad</label>
+        <input type="text" name="unidad_de_cantidad" id="unidad_cantidad" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        
+        <select name="codigo_usuario" id="id_operador" class="form-control">
+            <option value="">-- Selecciona un operador --</option>
+            {% for operador in operadores %}
+            <option value="{{ operador['codigo_operador'] }}">{{ operador['codigo_operador'] }} - {{ operador['nombre_completo'] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="mb-3">
+        <label for="fecha_movimiento" class="form-label">Fecha</label>
+        <input type="date" name="fecha_movimiento" id="fecha_movimiento" class="form-control" required>
+    </div>
+    
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-success">Guardar Movimiento</button>
+    </div>
+</form>

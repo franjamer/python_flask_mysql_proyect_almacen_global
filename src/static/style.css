@@ -2,6 +2,11 @@
 body {
     background: #eeb6bb;
     font-family: 'Georgia', serif;
+    max-height: fit-content;
+}
+
+.container {
+    display:block;
 }
 
 .main-bg {
@@ -9,6 +14,7 @@ body {
     min-height: 90vh;
     background: #eeb6bb;
 }
+
 
 .sidebar {
     width: 270px;
@@ -75,7 +81,12 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 40px 0 40px 0;
+    margin: 20px;
     position: relative;
+}
+
+.navbar {
+    padding: 0.1%;
 }
 
 .titulo-principal {

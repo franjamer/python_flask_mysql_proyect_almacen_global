@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8">
+        <title>Test de Operadores</title>
+    </head>
+    <body>
+        <p>Prueba de Jinja2: {{ operadores }}</p>
+        <select>
+            <p>Operadores</p>
+            {% for operador in operadores %}
+            <option value="{{ operador['codigo_operador'] }}">
+                {{ operador['codigo_operador'] }} - {{ operador['nombre_completo'] }}
+            </option>
+            {% endfor %}
+        </select>
+    </body>
+</html>

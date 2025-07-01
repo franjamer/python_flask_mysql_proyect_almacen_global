@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
 <div class="main-bg">
+    <!-- sidebar izquierda -->
     <div class="sidebar">
         <div class="menu-btns">
             <!-- Búsqueda: siempre activo -->
@@ -36,25 +37,61 @@
                 onclick="return false;"
             >Inventario</a>
             {% endif %}
-            {% if session.get('rol')== 'admin'%}
-            <a href="{{url_for('home_bp.operadores')}}" class="menu-btn">operadores</a>
-            {% endif %}
             {% if session.get('rol')== 'admin' %}
-            <a href="{{url_for('home_bp.perfiles')}}"
-            class="menu-btn">perfiles</a>
+            <a href="#"
+            class="menu-btn">Proveedores</a>
+            {% else %}
+            <a
+                class="menu-btn disabled-btn"
+                tabindex="-1"
+                aria-disabled="true"
+                onclick="return false;"
+            >Proveedores</a>
             {% endif %}
+            
         </div>
     </div>
     <div class="main-content">
         <h1 class="titulo-principal">Almacén de Repuestos</h1>
         <h2 class="titulo-secundario">Fábrica de Montijo</h2>
     </div>
+    <!-- sidebar derecha -->
+    <div class="sidebar">
+        <div class="menu-btns">
+            {% if session.get('rol')== 'admin'%}
+            <a href="{{url_for('home_bp.operadores')}}" class="menu-btn">Operadores</a>
+            {% else %}
+            <a
+                class="menu-btn disabled-btn"
+                tabindex="-1"
+                aria-disabled="true"
+                onclick="return false;"
+            >Operadores</a>
+            {% endif %}
+            {% if session.get('rol')== 'admin' %}
+            <a href="{{url_for('home_bp.perfiles')}}"
+            class="menu-btn">Perfiles</a>
+            {% else %}
+            <a
+                class="menu-btn disabled-btn"
+                tabindex="-1"
+                aria-disabled="true"
+                onclick="return false;"
+            >Perfiles</a>
+            {% endif %}
+            {% if session.get('rol')== 'admin' %}
+            <a href="#"
+            class="menu-btn">Situación</a>
+            {% else %}
+            <a
+                class="menu-btn disabled-btn"
+                tabindex="-1"
+                aria-disabled="true"
+                onclick="return false;"
+            >Situación</a>
+            {% endif %}
+        </div>
+    </div>
 </div>
-<style>
-.disabled-btn {
-    opacity: 0.25;
-    pointer-events: none;
-    cursor: not-allowed;
-}
-</style>
+
 {% endblock %}

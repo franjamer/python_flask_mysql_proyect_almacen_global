@@ -13,7 +13,7 @@
         {% if session.get('perfil') %}
         <nav class="navbar navbar-light bg-light justify-content-between">
             <span class="navbar-text ms-3">
-                perfil:
+                Perfil:
                 <strong>{{ session['perfil'] }}</strong>
             </span>
             <a href="{{ url_for('logout') }}" class="btn btn-outline-danger me-3">Cerrar sesión</a>
