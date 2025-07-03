@@ -47,76 +47,76 @@
                 <select
                     name="codigo_operador_form"
                     id="select-operadores"
-                    class="form-control" required>
+                    class="form-control"
+                    required
+                >
                     <option value="">Selecciona operadores...</option>
                 </select>
             </div>
             <div class="col-md-2 mt-2">
                 <input
-                        type="date"
-                        name="fecha_movimiento"
-                        class="form-control"
-                        required
-                    >
+                    type="date"
+                    name="fecha_movimiento"
+                    class="form-control"
+                    required
+                >
             </div>
             <div class="col-md-12 mt-2">
-                    <button type="submit" class="btn btn-success">Añadir movimiento</button>
+                <button type="submit" class="btn btn-success">Añadir movimiento</button>
             </div>
         </div>
     </form>
-        <!-- Tabla de movimientos -->
-        <table class="table table-sm table-bordered">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Referencia</th>
-                    <th>Nombre repuesto</th>
-                    <th>Tipo</th>
-                    <th>Cantidad</th>
-                    <th>Unidad</th>
-                    <th>Código operador</th>
-                    <th>Fecha</th>
-                    <th>Stock tras movimiento</th>
-                    <th>Eliminar</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for mov in movimientos %}
-                <tr>
-                    <td>{{ mov['idmovimientos'] }}</td>
-                    <td>{{ mov['referencia_pieza_repuesto'] }}</td>
-                    <td>{{ mov['nombre_pieza_repuesto'] }}</td>
-                    <td>{{ mov['tipo_de_movimiento'] }}</td>
-                    <td>{{ mov['cantidad'] }}</td>
-                    <td>{{ mov['unidad_de_cantidad'] }}</td>
-                    <td>{{ mov['codigo_operador'] }}</td>
-                    <td>{{ mov['fecha_movimiento'] }}</td>
-                    <td>{{ mov['stock_tras_movimiento'] }}</td>
-                    <td>
-                        <form method="post" action="{{ url_for('movimientos_bp.eliminar_movimiento', idmovimientos=mov['idmovimientos']) }}" onsubmit="return confirm('¿Seguro que deseas eliminar este movimiento?');">
-                            {% if puede_eliminar_movimientos(session.get('rol')) %}
-                            <button
-                                type="submit"
-                                class="btn btn-danger btn-sm"
-                                disabled
-                                style="opacity:0.25;pointer-events:none;"
-                            >Eliminar</button>
-                            {% else %}
-                            <button type="submit" class="btn btn-danger btn-sm" style="opacity:0.9;pointer-events:none;">Eliminar</button>
-                            {% endif %}
-                        </form>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+    <!-- Tabla de movimientos -->
+    <table class="table table-sm table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Referencia</th>
+                <th>Nombre repuesto</th>
+                <th>Tipo</th>
+                <th>Cantidad</th>
+                <th>Unidad</th>
+                <th>Código operador</th>
+                <th>Fecha</th>
+                <th>Stock tras movimiento</th>
+                <th>Eliminar</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for mov in movimientos %}
+            <tr>
+                <td>{{ mov['idmovimientos'] }}</td>
+                <td>{{ mov['referencia_pieza_repuesto'] }}</td>
+                <td>{{ mov['nombre_pieza_repuesto'] }}</td>
+                <td>{{ mov['tipo_de_movimiento'] }}</td>
+                <td>{{ mov['cantidad'] }}</td>
+                <td>{{ mov['unidad_de_cantidad'] }}</td>
+                <td>{{ mov['codigo_operador'] }}</td>
+                <td>{{ mov['fecha_movimiento'] }}</td>
+                <td>{{ mov['stock_tras_movimiento'] }}</td>
+                <td>
+                    <form method="post" action="{{ url_for('movimientos_bp.eliminar_movimiento', idmovimientos=mov['idmovimientos']) }}" onsubmit="return confirm('¿Seguro que deseas eliminar este movimiento?');">
+                        {% if puede_eliminar_movimientos(session.get('rol')) %}
+                        <button type="submit" class="btn btn-danger btn-sm" style="opacity:0.9;">Eliminar</button>
+                        {% else %}
+                        <button
+                            type="submit"
+                            class="btn btn-danger btn-sm"
+                            disabled
+                            style="opacity:0.25;pointer-events:none;"
+                        >Eliminar</button>
+                        {% endif %}
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </div>
-
-    <!-- Botón para volver al menú principal -->
+<!-- Botón para volver al menú principal -->
 <button class="btn btn-primary mb-3">
-        <a href="{{ url_for('home_bp.menu') }}" class="text-white">Volver al Menú</a>
-    </button>    
-
+    <a href="{{ url_for('home_bp.menu') }}" class="text-white">Volver al Menú</a>
+</button>
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     fetch('{{ url_for("movimientos_bp.api_operadores") }}')
@@ -134,4 +134,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 });
 </script>
-    {% endblock %}
+{% endblock %}

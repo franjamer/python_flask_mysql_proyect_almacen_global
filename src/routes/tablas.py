@@ -5,7 +5,6 @@ tablas_bp = Blueprint('tablas_bp', __name__)
 
 @tablas_bp.route('/tablas', methods=['GET'])
 def mostrar_tablas():
-    print("ENTRANDO EN LA FUNCIÓN MOSTRAR_TABLAS")
     conn = db.get_connection()
     cursor = conn.cursor()
     cursor.execute("SHOW TABLES")

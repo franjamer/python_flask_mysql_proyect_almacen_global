@@ -10,14 +10,11 @@ def puede_eliminar_pedidos(rol):
 def puede_ver_inventario(rol):
     return rol == 'admin'
 
-def puede_crud_inventario(rol):
-    return rol == 'admin'
-
 def puede_ver_movimientos(rol):
     return True
 
 def puede_eliminar_movimientos(rol):
-    return True
+    return rol == 'admin'
 
 def puede_ver_busqueda(rol):
     return True
