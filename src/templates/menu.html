@@ -77,7 +77,7 @@
             >Perfiles</a>
             {% endif %}
             {% if session.get('rol')== 'admin' %}
-            <a href="#" class="menu-btn">Situación</a>
+            <a href="{{url_for('situacion_bp.situacion')}}" class="menu-btn">Situación</a>
             {% else %}
             <a
                 class="menu-btn disabled-btn"

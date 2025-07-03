@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block content %}
+<!-- Añade esto al principio del bloque content, antes del bucle de almacenes -->
+{% if puede_editar %}
+<h3>Añadir nueva posición</h3>
+<form method="POST" action="{{ url_for('situacion_bp.añadir') }}" class="mb-4">
+    <input type="text" name="almacen" placeholder="Almacén" required>
+    <input type="text" name="estanteria" placeholder="Estantería" required>
+    <input type="text" name="altura" placeholder="Altura" required>
+    <input type="text" name="columna" placeholder="Columna" required>
+    <select name="lado" required>
+        <option value="">Lado</option>
+        <option value="IZQ">IZQ</option>
+        <option value="DER">DER</option>
+        <option value="N/A">N/A</option>
+    </select>
+    <input type="text" name="linea_produccion" placeholder="Línea Producción" required>
+    <input type="text" name="referencia_repuesto" placeholder="Referencia Repuesto">
+    <input type="text" name="descripcion" placeholder="Descripción">
+    <button type="submit" class="btn btn-primary btn-sm">Añadir</button>
+</form>
+{% endif %}
+<h1>Situación de Almacén</h1>
+{% for alm in almacenes %}
+    <h3>Almacén: {{ alm.almacen }}</h3>
+    <table border="1" class="mb-4">
+        <thead>
+            <tr>
+                <th>Estantería</th>
+                <th>Columna</th>
+                <th>Altura</th>
+                <th>Lado</th>
+                <th>Línea Producción</th>
+                <th>Referencia</th>
+                <th>Descripción</th>
+                {% if puede_editar %}
+                <th>Acciones</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+        {% for pos in posiciones if pos.almacen == alm.almacen %}
+            <tr>
+                <td>{{ pos.estanteria }}</td>
+                <td>{{ pos.columna }}</td>
+                <td>{{ pos.altura }}</td>
+                <td>{{ pos.lado }}</td>
+                <td>{{ pos.linea_produccion }}</td>
+                <td>{{ pos.referencia_repuesto }}</td>
+                <td>{{ pos.descripcion }}</td>
+                {% if puede_editar %}
+                <td>
+                    <form method="POST" action="{{ url_for('situacion_bp.eliminar', id=pos.id_situacion_tabla) }}" style="display:inline;" onsubmit="return confirm('¿Eliminar esta posición?');">
+                        <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                    </form>
+                    <!-- Aquí puedes añadir el botón de editar si lo necesitas -->
+                </td>
+                {% endif %}
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+{% endfor %}
+{% endblock %}
