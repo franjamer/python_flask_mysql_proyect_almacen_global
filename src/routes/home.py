@@ -29,21 +29,21 @@ def perfiles():
     return render_template('perfiles.html', perfiles=insertObjects)
 
 
-@home_bp.route('/operadores')
-def operadores():
-    conn = db.get_connection()
-    print("Conectando a la base de datos para obtener operadores desde home.py version aplicacion con IA")
-    cursor = conn.cursor()
-    consulta_select = """SELECT * FROM operadores"""
-    cursor.execute(consulta_select)
-    operadores = cursor.fetchall()
-    insertObjets = []
-    columnNames = [column[0] for column in cursor.description]
-    for fila in operadores:
-        operadores.append(dict(zip(columnNames, fila)))
-    cursor.close()
-    conn.close()
-    return render_template('operadores.html', operadores=operadores)
+# @home_bp.route('/operadores')
+# def operadores():
+#     conn = db.get_connection()
+#     print("Conectando a la base de datos para obtener operadores desde home.py version aplicacion con IA")
+#     cursor = conn.cursor()
+#     consulta_select = """SELECT * FROM operadores"""
+#     cursor.execute(consulta_select)
+#     operadores = cursor.fetchall()
+#     insertObjets = []
+#     columnNames = [column[0] for column in cursor.description]
+#     # for fila in operadores:
+#     #     operadores.append(dict(zip(columnNames, fila)))
+#     cursor.close()
+#     conn.close()
+#     return render_template('operadores.html', operadores=operadores)
 
 
 @home_bp.route('/busqueda')

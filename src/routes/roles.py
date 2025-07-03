@@ -17,7 +17,7 @@ def puede_ver_movimientos(rol):
     return True
 
 def puede_eliminar_movimientos(rol):
-    return rol in ['admin', 'pedidos']
+    return True
 
 def puede_ver_busqueda(rol):
     return True

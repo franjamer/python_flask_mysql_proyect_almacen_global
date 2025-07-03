@@ -1,7 +1,19 @@
-from flask import Blueprint, request, redirect, url_for, session
+from flask import Blueprint, request, redirect, render_template,url_for, session
 import database as db
 
 operadores_bp = Blueprint('operadores_bp', __name__)
+
+@operadores_bp.route('/operadores', methods=['GET'])
+def ver_operadores():
+    if not session.get('rol') == 'admin':
+        return redirect(url_for('home_bp.menu'))
+    conn = db.get_connection()
+    cursor = conn.cursor(dictionary=True)  # <-- Esto es clave
+    cursor.execute("SELECT * FROM operadores ORDER BY id_operador ASC")
+    operadores = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return render_template('operadores.html', operadores=operadores)
 
 @operadores_bp.route('/añadir', methods=['POST'])
 def añadir():
@@ -21,7 +33,7 @@ def añadir():
         cursor.close()
         conn.close()
 
-    return redirect(url_for('home_bp.operadores'))
+    return redirect(url_for('operadores_bp.ver_operadores'))
 
 @operadores_bp.route('/delete/<int:id>', methods=['POST'])
 def delete(id):
@@ -35,7 +47,7 @@ def delete(id):
     conn.commit()
     cursor.close()
     conn.close()
-    return redirect(url_for('home_bp.operadores'))
+    return redirect(url_for('operadores_bp.ver_operadores'))
 
 @operadores_bp.route('/edit/<int:id>', methods=['POST'])
 def edit(id):
@@ -55,5 +67,4 @@ def edit(id):
         cursor.close()
         conn.close()
 
-    return redirect(url_for('home_bp.operadores'))
-
+    return redirect(url_for('operadores_bp.ver_operadores'))

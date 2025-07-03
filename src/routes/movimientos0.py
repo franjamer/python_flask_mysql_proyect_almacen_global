@@ -5,25 +5,9 @@ from routes.roles import puede_eliminar_movimientos
 # Crea el Blueprint para los movimientos
 movimientos_bp = Blueprint('movimientos_bp', __name__)
 
-
-# Ruta para obtener los operadores en formato JSON
-# Esta ruta es utilizada por el frontend para cargar los operadores en el formulario de movimientos.
-# Devuelve un JSON con los códigos y nombres de los operadores.
-# Se utiliza en la página de movimientos para llenar el select de operadores.
-@movimientos_bp.route('/api/operadores')
-def api_operadores():
-    conn = db.get_connection()
-    cursor = conn.cursor(dictionary=True)
-    cursor.execute(
-        "SELECT codigo_operador, nombre_completo FROM operadores ORDER BY id_operador ASC")
-    operadores = cursor.fetchall()
-    print("Operadores obtenidos:", operadores)
-    cursor.close()
-    conn.close()
-    return {'operadores': operadores}
-
-
 # Maneja las peticiones GET y POST para la gestión de movimientos.
+
+
 @movimientos_bp.route('/movimientos', methods=['GET', 'POST'])
 def movimientos():
     mensaje_error = None
@@ -131,7 +115,6 @@ def movimientos():
         movimientos=movimientos_lista,
         inventario=inventario,
         operadores=operadores,
-        movimientos_api_url=url_for('movimientos_bp.api_operadores'),
         mensaje_error=mensaje_error,
         puede_eliminar_movimientos=puede_eliminar_movimientos
     )
@@ -141,7 +124,6 @@ def movimientos():
 
 @movimientos_bp.route('/movimientos/eliminar/<int:idmovimientos>', methods=['POST'])
 def eliminar_movimiento(idmovimientos):
-    print(f"Intentando eliminar movimiento con ID: {idmovimientos}")
     if not puede_eliminar_movimientos(session.get('rol')):
         return redirect(url_for('movimientos_bp.movimientos'))
 

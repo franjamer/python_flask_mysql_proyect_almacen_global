@@ -38,8 +38,7 @@
             >Inventario</a>
             {% endif %}
             {% if session.get('rol')== 'admin' %}
-            <a href="#"
-            class="menu-btn">Proveedores</a>
+            <a href="#" class="menu-btn">Proveedores</a>
             {% else %}
             <a
                 class="menu-btn disabled-btn"
@@ -48,7 +47,6 @@
                 onclick="return false;"
             >Proveedores</a>
             {% endif %}
-            
         </div>
     </div>
     <div class="main-content">
@@ -59,7 +57,7 @@
     <div class="sidebar">
         <div class="menu-btns">
             {% if session.get('rol')== 'admin'%}
-            <a href="{{url_for('home_bp.operadores')}}" class="menu-btn">Operadores</a>
+            <a href="{{url_for('operadores_bp.ver_operadores')}}" class="menu-btn">Operadores</a>
             {% else %}
             <a
                 class="menu-btn disabled-btn"
@@ -69,8 +67,7 @@
             >Operadores</a>
             {% endif %}
             {% if session.get('rol')== 'admin' %}
-            <a href="{{url_for('home_bp.perfiles')}}"
-            class="menu-btn">Perfiles</a>
+            <a href="{{url_for('home_bp.perfiles')}}" class="menu-btn">Perfiles</a>
             {% else %}
             <a
                 class="menu-btn disabled-btn"
@@ -80,8 +77,7 @@
             >Perfiles</a>
             {% endif %}
             {% if session.get('rol')== 'admin' %}
-            <a href="#"
-            class="menu-btn">Situación</a>
+            <a href="#" class="menu-btn">Situación</a>
             {% else %}
             <a
                 class="menu-btn disabled-btn"
@@ -93,5 +89,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}
