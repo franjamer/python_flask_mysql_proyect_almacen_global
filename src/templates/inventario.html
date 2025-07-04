@@ -9,7 +9,6 @@
     <!-- Formulario para añadir nuevo repuesto -->
     <form method="post" class="mb-4">
         <div class="row">
-            <!-- No mostramos el campo id en el formulario de alta -->
             <div class="col-md-2 mb-2">
                 <input type="text" name="referencia" class="form-control" placeholder="Referencia" required>
             </div>
@@ -44,6 +43,16 @@
                 <input type="number" name="stock_maximo" class="form-control" placeholder="Stock máximo" min="0" value="0">
             </div>
             <div class="col-md-2 mb-2">
+                <select name="id_situacion_tabla">
+                    <option value="">Sin ubicación</option>
+                    {% for pos in posiciones %}
+                        <option value="{{ pos.id_situacion_tabla }}">
+                            {{ pos.almacen }} - Est:{{ pos.estanteria }} Col:{{ pos.columna }} Alt:{{ pos.altura }} Lado:{{ pos.lado }}
+                        </option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="col-md-2 mb-2">
                 <button type="submit" class="btn btn-success"
                     {% if not puede_crear_actualizar() %}disabled style="opacity:0.25;pointer-events:none;"{% endif %}>
                     Añadir
@@ -67,26 +76,66 @@
                 <th>Stock</th>
                 <th>Stock mín</th>
                 <th>Stock máx</th>
+                <th>Ubicación</th>
                 <th>Modificar</th>
                 <th>Eliminar</th>
             </tr>
         </thead>
         <tbody>
             {% for repuesto in repuestos %}
-            <tr {% if repuesto[9] <= repuesto[10] %}style="background-color: #ffcccc;"{% endif %}>
-                <form method="post" action="{{ url_for('inventario_bp.modificar_repuesto', referencia=repuesto[1]) }}">
-                    <td><input type="text" name="id" value="{{ repuesto[0] }}" class="form-control" readonly></td>
-                    <td><input type="text" name="referencia" value="{{ repuesto[1] }}" class="form-control" readonly></td>
-                    <td><input type="text" name="nombre" value="{{ repuesto[2] }}" class="form-control" readonly></td>
-                    <td><input type="text" name="categoria" value="{{ repuesto[3] }}" class="form-control" required></td>
-                    <td><input type="text" name="subcategoria" value="{{ repuesto[4] }}" class="form-control"></td>
-                    <td><input type="text" name="almacen" value="{{ repuesto[5] }}" class="form-control"></td>
-                    <td><input type="text" name="caracteristicas_medidas" value="{{ repuesto[6] }}" class="form-control"></td>
-                    <td><input type="text" name="fotos_planos" value="{{ repuesto[7] }}" class="form-control"></td>
-                    <td><input type="text" name="empaquetado" value="{{ repuesto[8] }}" class="form-control"></td>
-                    <td><input type="number" name="stock" value="{{ repuesto[9] }}" class="form-control"></td>
-                    <td><input type="number" name="stock_minimo" value="{{ repuesto[10] }}" class="form-control"></td>
-                    <td><input type="number" name="stock_maximo" value="{{ repuesto[11] }}" class="form-control"></td>
+            <tr {% if repuesto.stock|int <= repuesto.stock_minimo|int %}style="background-color: #ffcccc;"{% endif %}>
+                <form method="post" action="{{ url_for('inventario_bp.modificar_repuesto', referencia=repuesto.referencia) }}">
+                    <td><input type="text" name="id" value="{{ repuesto.id }}" class="form-control" readonly></td>
+                    <td><input type="text" name="referencia" value="{{ repuesto.referencia }}" class="form-control" readonly></td>
+                    <td><input type="text" name="nombre" value="{{ repuesto.nombre }}" class="form-control" readonly></td>
+                    <td><input type="text" name="categoria" value="{{ repuesto.categoria }}" class="form-control" required></td>
+                    <td><input type="text" name="subcategoria" value="{{ repuesto.subcategoria }}" class="form-control"></td>
+                    <td><input type="text" name="almacen" value="{{ repuesto.almacen }}" class="form-control"></td>
+                    <td><input type="text" name="caracteristicas_medidas" value="{{ repuesto.caracteristicas_medidas }}" class="form-control"></td>
+                    <td><input type="text" name="fotos_planos" value="{{ repuesto.fotos_planos }}" class="form-control"></td>
+                    <td><input type="text" name="empaquetado" value="{{ repuesto.empaquetado }}" class="form-control"></td>
+                    <td><input type="number" name="stock" value="{{ repuesto.stock }}" class="form-control"></td>
+                    <td><input type="number" name="stock_minimo" value="{{ repuesto.stock_minimo }}" class="form-control"></td>
+                    <td><input type="number" name="stock_maximo" value="{{ repuesto.stock_maximo }}" class="form-control"></td>
+                    <td>
+                        <select name="id_situacion_tabla" class="form-select">
+                            <option value="">Sin ubicación</option>
+                            {% for pos in posiciones %}
+                                <option value="{{ pos.id_situacion_tabla }}"
+                                    {% if repuesto.id_situacion_tabla == pos.id_situacion_tabla %}selected{% endif %}>
+                                    {{ pos.almacen }} - Est:{{ pos.estanteria }} Col:{{ pos.columna }} Alt:{{ pos.altura }} Lado:{{ pos.lado }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                        {% if repuesto.ubicacion %}
+                            <button type="button" class="btn btn-info btn-sm mt-1" data-bs-toggle="modal" data-bs-target="#modalSituacion{{ repuesto.id }}">
+                                Ver
+                            </button>
+                            <!-- Modal solo lectura -->
+                            <div class="modal fade" id="modalSituacion{{ repuesto.id }}" tabindex="-1">
+                              <div class="modal-dialog">
+                                <div class="modal-content">
+                                  <div class="modal-header">
+                                    <h5 class="modal-title">{{ repuesto.referencia }} - {{ repuesto.nombre }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                    <ul>
+                                      <li><b>Almacén:</b> {{ repuesto.almacen_situacion }}</li>
+                                      <li><b>Estantería:</b> {{ repuesto.estanteria }}</li>
+                                      <li><b>Columna:</b> {{ repuesto.columna }}</li>
+                                      <li><b>Altura:</b> {{ repuesto.altura }}</li>
+                                      <li><b>Lado:</b> {{ repuesto.lado }}</li>
+                                      <li><b>Línea Producción:</b> {{ repuesto.linea_produccion }}</li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                        {% else %}
+                            <span class="text-muted">Sin ubicación</span>
+                        {% endif %}
+                    </td>
                     <td>
                         <button type="submit" class="btn btn-warning btn-sm"
                             {% if not puede_crear_actualizar() %}disabled style="opacity:0.25;pointer-events:none;"{% endif %}>
@@ -95,7 +144,7 @@
                     </td>
                 </form>
                 <td>
-                    <form method="post" action="{{ url_for('inventario_bp.eliminar_repuesto', referencia=repuesto[1]) }}" onsubmit="return confirm('¿Seguro que deseas eliminar este repuesto?');">
+                    <form method="post" action="{{ url_for('inventario_bp.eliminar_repuesto', referencia=repuesto.referencia) }}" onsubmit="return confirm('¿Seguro que deseas eliminar este repuesto?');">
                         <button type="submit" class="btn btn-danger btn-sm"
                             {% if not puede_eliminar() %}disabled style="opacity:0.25;pointer-events:none;"{% endif %}>
                             Eliminar

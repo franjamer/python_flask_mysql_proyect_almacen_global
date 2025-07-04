@@ -1,6 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-<!-- Añade esto al principio del bloque content, antes del bucle de almacenes -->
+<a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
+<h2>Situación de Almacenes</h2>
+
 {% if puede_editar %}
 <h3>Añadir nueva posición</h3>
 <form method="POST" action="{{ url_for('situacion_bp.añadir') }}" class="mb-4">
@@ -15,12 +17,18 @@
         <option value="N/A">N/A</option>
     </select>
     <input type="text" name="linea_produccion" placeholder="Línea Producción" required>
-    <input type="text" name="referencia_repuesto" placeholder="Referencia Repuesto">
-    <input type="text" name="descripcion" placeholder="Descripción">
+    <select name="referencia_repuesto">
+        <option value="">Sin repuesto asociado</option>
+        {% for rep in repuestos %}
+            <option value="{{ rep.referencia }}">
+                {{ rep.referencia }} - {{ rep.nombre }}
+            </option>
+        {% endfor %}
+    </select>
     <button type="submit" class="btn btn-primary btn-sm">Añadir</button>
 </form>
 {% endif %}
-<h1>Situación de Almacén</h1>
+
 {% for alm in almacenes %}
     <h3>Almacén: {{ alm.almacen }}</h3>
     <table border="1" class="mb-4">
@@ -31,8 +39,7 @@
                 <th>Altura</th>
                 <th>Lado</th>
                 <th>Línea Producción</th>
-                <th>Referencia</th>
-                <th>Descripción</th>
+                <th>Referencia Repuesto</th>
                 {% if puede_editar %}
                 <th>Acciones</th>
                 {% endif %}
@@ -46,14 +53,18 @@
                 <td>{{ pos.altura }}</td>
                 <td>{{ pos.lado }}</td>
                 <td>{{ pos.linea_produccion }}</td>
-                <td>{{ pos.referencia_repuesto }}</td>
-                <td>{{ pos.descripcion }}</td>
+                <td>
+                    {% if pos.referencia_repuesto %}
+                        {{ pos.referencia_repuesto }}
+                    {% else %}
+                        <span class="text-muted">-</span>
+                    {% endif %}
+                </td>
                 {% if puede_editar %}
                 <td>
                     <form method="POST" action="{{ url_for('situacion_bp.eliminar', id=pos.id_situacion_tabla) }}" style="display:inline;" onsubmit="return confirm('¿Eliminar esta posición?');">
                         <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                     </form>
-                    <!-- Aquí puedes añadir el botón de editar si lo necesitas -->
                 </td>
                 {% endif %}
             </tr>
