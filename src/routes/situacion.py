@@ -65,3 +65,28 @@ def eliminar(id):
     cursor.close()
     conn.close()
     return redirect(url_for('situacion_bp.situacion'))
+
+@situacion_bp.route('/situacion/crear_ajax', methods=['POST'])
+def crear_situacion_ajax():
+    data = request.json
+    conn = db.get_connection()
+    cursor = conn.cursor(dictionary=True)
+    sql = """INSERT INTO situacion_tabla
+        (almacen, estanteria, altura, columna, lado, linea_produccion)
+        VALUES (%s, %s, %s, %s, %s, %s)"""
+    valores = (
+        data.get('almacen'),
+        data.get('estanteria'),
+        data.get('altura'),
+        data.get('columna'),
+        data.get('lado'),
+        data.get('linea_produccion')
+    )
+    cursor.execute(sql, valores)
+    conn.commit()
+    new_id = cursor.lastrowid
+    cursor.execute("SELECT * FROM situacion_tabla WHERE id_situacion_tabla = %s", (new_id,))
+    nueva = cursor.fetchone()
+    cursor.close()
+    conn.close()
+    return jsonify(nueva)

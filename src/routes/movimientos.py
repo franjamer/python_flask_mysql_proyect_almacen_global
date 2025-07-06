@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 import database as db
 from routes.roles import puede_eliminar_movimientos
+from .utilidades import asegurar_fila_minima_auto
 
 # Crea el Blueprint para los movimientos
 movimientos_bp = Blueprint('movimientos_bp', __name__)
@@ -147,6 +148,11 @@ def eliminar_movimiento(idmovimientos):
     try:
         conn = db.get_connection()
         cursor = conn.cursor()
+        asegurar_fila_minima_auto(
+            'movimientos_tabla',
+            ['idmovimientos'],
+            [idmovimientos]
+        )
         cursor.execute(
             "DELETE FROM movimientos_tabla WHERE idmovimientos = %s", (idmovimientos,))
         conn.commit()

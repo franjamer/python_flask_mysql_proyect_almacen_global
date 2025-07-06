@@ -37,8 +37,8 @@ body {
     width: 200px;
     height: 90px;
     margin: 0 auto;
-    background: #d60000;
-    color: #fff;
+    background: #eae8e8b1;
+    color: #787e83;
     font-size: 2rem;
     font-family: 'Georgia', serif;
     border-radius: 50% / 40%;
@@ -47,7 +47,7 @@ body {
     line-height: 90px;
     position: relative;
     text-decoration: none;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px rgba(190, 158, 158, 0.08);
     transition: transform 0.1s;
 }
 
@@ -58,7 +58,7 @@ body {
     left: 0;
     width: 80px;
     height: 30px;
-    background: #ffe600;
+    background: #ffffff;
     border-radius: 50% 50% 0 0 / 80% 80% 0 0;
     z-index: 1;
 }
@@ -93,17 +93,17 @@ body {
     color: #ff9900;
     font-size: 5vw;
     font-family: 'Georgia', serif;
-    text-shadow: 2px 2px 0 #d60000, 4px 4px 0 #fff;
+    text-shadow: 2px 2px 0 #8360ea, 4px 4px 0 #ca8bbb;
     margin-top: 40px;
     margin-bottom: 0;
     text-align: center;
 }
 
 .titulo-secundario {
-    color: #ff9900;
+    color: #eeb124;
     font-size: 3vw;
     font-family: 'Georgia', serif;
-    text-shadow: 2px 2px 0 #d60000, 4px 4px 0 #fff;
+    text-shadow: 2px 2px 0 #910000, 4px 4px 0 #fff;
     position: absolute;
     bottom: 40px;
     right: 10vw;
@@ -114,4 +114,19 @@ body {
     opacity: 0.25;
     pointer-events: none;
     cursor: not-allowed;
+}
+
+/* Permite redimensionar columnas de todas las tablas */
+table {
+    table-layout: auto;
+    width: 100%;
+}
+
+th, td {
+    min-width: 60px;      /* Ancho mínimo */
+    max-width: 600px;     /* Ancho máximo opcional */
+    overflow: auto;
+    resize: horizontal;   /* Permite redimensionar horizontalmente */
+    white-space: nowrap;  /* Evita saltos de línea */
+    cursor: ew-resize;    /* Cursor de redimensionar */
 }

@@ -42,8 +42,9 @@
             <div class="col-md-2 mb-2">
                 <input type="number" name="stock_maximo" class="form-control" placeholder="Stock máximo" min="0" value="0">
             </div>
-            <div class="col-md-2 mb-2">
-                <select name="id_situacion_tabla">
+            <!-- ÚNICO SELECT DE SITUACIÓN + BOTÓN NUEVA SITUACIÓN -->
+            <div class="col-md-4 mb-2 d-flex align-items-center">
+                <select name="id_situacion_tabla" id="selectSituacion" class="form-select me-2">
                     <option value="">Sin ubicación</option>
                     {% for pos in posiciones %}
                         <option value="{{ pos.id_situacion_tabla }}">
@@ -51,6 +52,9 @@
                         </option>
                     {% endfor %}
                 </select>
+                <button type="button" class="btn btn-outline-primary btn-sm ms-2" data-bs-toggle="modal" data-bs-target="#modalNuevaSituacion">
+                    Nueva situación
+                </button>
             </div>
             <div class="col-md-2 mb-2">
                 <button type="submit" class="btn btn-success"
@@ -60,8 +64,37 @@
             </div>
         </div>
     </form>
+    <!-- Modal Nueva Situación -->
+    <div class="modal fade" id="modalNuevaSituacion" tabindex="-1">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <form id="formNuevaSituacion">
+            <div class="modal-header">
+              <h5 class="modal-title">Crear nueva situación</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+              <input type="text" class="form-control mb-2" name="almacen" placeholder="Almacén" required>
+              <input type="text" class="form-control mb-2" name="estanteria" placeholder="Estantería" required>
+              <input type="text" class="form-control mb-2" name="altura" placeholder="Altura" required>
+              <input type="text" class="form-control mb-2" name="columna" placeholder="Columna" required>
+              <select class="form-control mb-2" name="lado" required>
+                <option value="">Lado</option>
+                <option value="IZQ">IZQ</option>
+                <option value="DER">DER</option>
+                <option value="N/A">N/A</option>
+              </select>
+              <input type="text" class="form-control mb-2" name="linea_produccion" placeholder="Línea Producción" required>
+            </div>
+            <div class="modal-footer">
+              <button type="submit" class="btn btn-primary">Crear</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
     <!-- Tabla de inventario -->
-    <table class="table table-sm table-bordered">
+    <table class="table table-sm table-bordered mt-4">
         <thead>
             <tr>
                 <th>ID</th>
@@ -87,17 +120,17 @@
                 <form method="post" action="{{ url_for('inventario_bp.modificar_repuesto', referencia=repuesto.referencia) }}">
                     <td><input type="text" name="id" value="{{ repuesto.id }}" class="form-control" readonly></td>
                     <td><input type="text" name="referencia" value="{{ repuesto.referencia }}" class="form-control" readonly></td>
-                    <td><input type="text" name="nombre" value="{{ repuesto.nombre }}" class="form-control" readonly></td>
-                    <td><input type="text" name="categoria" value="{{ repuesto.categoria }}" class="form-control" required></td>
-                    <td><input type="text" name="subcategoria" value="{{ repuesto.subcategoria }}" class="form-control"></td>
+                    <td title="{{ repuesto.nombre }}"><input type="text" name="nombre" value="{{ repuesto.nombre }}" class="form-control" readonly></td>
+                    <td title="{{ repuesto.categoria }}"><input type="text" name="categoria" value="{{ repuesto.categoria }}" class="form-control" required></td>
+                    <td ><input type="text" name="subcategoria" value="{{ repuesto.subcategoria }}" class="form-control"></td>
                     <td><input type="text" name="almacen" value="{{ repuesto.almacen }}" class="form-control"></td>
-                    <td><input type="text" name="caracteristicas_medidas" value="{{ repuesto.caracteristicas_medidas }}" class="form-control"></td>
-                    <td><input type="text" name="fotos_planos" value="{{ repuesto.fotos_planos }}" class="form-control"></td>
-                    <td><input type="text" name="empaquetado" value="{{ repuesto.empaquetado }}" class="form-control"></td>
+                    <td title="{{ repuesto.caracteristicas_medidas }}"><input type="text" name="caracteristicas_medidas" value="{{ repuesto.caracteristicas_medidas }}" class="form-control"></td>
+                    <td title="{{ repuesto.fotos_planos }}"><input type="text" name="fotos_planos" value="{{ repuesto.fotos_planos }}" class="form-control"></td>
+                    <td title="{{ repuesto.empaquetado }}"><input type="text" name="empaquetado" value="{{ repuesto.empaquetado }}" class="form-control"></td>
                     <td><input type="number" name="stock" value="{{ repuesto.stock }}" class="form-control"></td>
-                    <td><input type="number" name="stock_minimo" value="{{ repuesto.stock_minimo }}" class="form-control"></td>
-                    <td><input type="number" name="stock_maximo" value="{{ repuesto.stock_maximo }}" class="form-control"></td>
-                    <td>
+                    <td title="{{ repuesto.stock_minimo }}"><input type="number" name="stock_minimo" value="{{ repuesto.stock_minimo }}" class="form-control"></td>
+                    <td title="{{ repuesto.stock_maximo }}"><input type="number" name="stock_maximo" value="{{ repuesto.stock_maximo }}" class="form-control"></td>
+                    <td title="{{ repuesto.ubicacion }}"class="d-flex align-items-center ">
                         <select name="id_situacion_tabla" class="form-select">
                             <option value="">Sin ubicación</option>
                             {% for pos in posiciones %}
@@ -156,4 +189,39 @@
         </tbody>
     </table>
 </div>
+<script>
+document.getElementById('formNuevaSituacion').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const form = event.target;
+    const datos = {
+        almacen: form.almacen.value,
+        estanteria: form.estanteria.value,
+        altura: form.altura.value,
+        columna: form.columna.value,
+        lado: form.lado.value,
+        linea_produccion: form.linea_produccion.value
+    };
+    fetch('/situacion/crear_ajax', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify(datos)
+    })
+    .then(response => response.json())
+    .then(nueva => {
+        // Añadir la nueva opción al select y seleccionarla
+        const select = document.getElementById('selectSituacion');
+        const option = document.createElement('option');
+        option.value = nueva.id_situacion_tabla;
+        option.text = `${nueva.almacen} - Est:${nueva.estanteria} Col:${nueva.columna} Alt:${nueva.altura} Lado:${nueva.lado}`;
+        select.appendChild(option);
+        select.value = nueva.id_situacion_tabla;
+        // Cerrar modal
+        var modal = bootstrap.Modal.getInstance(document.getElementById('modalNuevaSituacion'));
+        modal.hide();
+        // Limpiar formulario
+        form.reset();
+    })
+    .catch(() => alert('Error al crear la situación'));
+});
+</script>
 {% endblock %}
