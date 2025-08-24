@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Mapa Interactivo de Almacenes</h2>
+    <div id="almacenes" class="row">
+        {% for almacen in almacenes %}
+        <div class="col-md-3 mb-4">
+            <div class="card almacen-card" style="cursor:pointer;" onclick="verEstanterias('{{ almacen.almacen }}')">
+                <div class="card-body text-center">
+                    <h5 class="card-title">{{ almacen.almacen }}</h5>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div id="vista-estanterias"></div>
+</div>
+<script>
+function verEstanterias(almacen) {
+    fetch(`/mapa/estanterias?almacen=${encodeURIComponent(almacen)}`)
+        .then(res => res.json())
+        .then(estanterias => {
+            let html = `<h4>Estanterías en <b>${almacen}</b></h4><div class="row">`;
+            estanterias.forEach(e => {
+                html += `<div class="col-md-2 mb-2">
+                    <button class="btn btn-outline-secondary w-100" onclick="verLados('${almacen}', '${e.estanteria}')">
+                        Estantería ${e.estanteria}
+                    </button>
+                </div>`;
+            });
+            html += '</div><div id="vista-lados"></div>';
+            document.getElementById('vista-estanterias').innerHTML = html;
+        });
+}
+
+function verLados(almacen, estanteria) {
+    fetch(`/mapa/lados?almacen=${encodeURIComponent(almacen)}&estanteria=${encodeURIComponent(estanteria)}`)
+        .then(res => res.json())
+        .then(lados => {
+            let html = `<h5>Lados de la estantería ${estanteria}:</h5>`;
+            lados.forEach(l => {
+                html += `<button class="btn btn-info m-1" onclick="verPosiciones('${almacen}', '${estanteria}', '${l.lado}')">${l.lado}</button>`;
+            });
+            document.getElementById('vista-lados').innerHTML = html;
+        });
+}
+
+function verPosiciones(almacen, estanteria, lado) {
+    fetch(`/mapa/posiciones?almacen=${encodeURIComponent(almacen)}&estanteria=${encodeURIComponent(estanteria)}&lado=${encodeURIComponent(lado)}`)
+        .then(res => res.json())
+        .then(posiciones => {
+            let html = `<h5>Posiciones en Estantería ${estanteria}, Lado ${lado}:</h5>
+            <table class="table table-bordered">
+                <thead>
+                    <tr><th>Columna, Altura</th><th>Repuestos</th></tr>
+                </thead>
+                <tbody>`;
+            posiciones.forEach(p => {
+                let repuestoHtml = '';
+                if (p.repuestos && p.repuestos.length > 0) {
+                    p.repuestos.forEach(r => {
+                        repuestoHtml += `<div><b>${r.referencia}</b> - ${r.nombre}</div>`;
+                    });
+                } else {
+                    repuestoHtml = 'Posición Vacía';
+                }
+                html += `<tr>
+                    <td>Columna ${p.columna}, Altura ${p.altura}</td>
+                    <td>${repuestoHtml}</td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('vista-lados').innerHTML = html;
+        });
+}
+
+function mostrarRepuestos(almacen, estanteria, lado, columna, altura) {
+    fetch(`/mapa/repuestos?almacen=${encodeURIComponent(almacen)}&estanteria=${encodeURIComponent(estanteria)}&lado=${encodeURIComponent(lado)}&columna=${encodeURIComponent(columna)}&altura=${encodeURIComponent(altura)}`)
+        .then(res => res.json())
+        .then(repuestos => {
+            let html = `<h6>Repuestos en posición Columna ${columna}, Altura ${altura}:</h6>`;
+            if (repuestos.length === 0) {
+                html += `<div class="alert alert-warning">Posición Vacía</div>`;
+            } else {
+                html += '<ul>';
+                repuestos.forEach(r => {
+                    html += `<li><b>${r.referencia}</b> - ${r.nombre}</li>`;
+                });
+                html += '</ul>';
+            }
+            document.getElementById('vista-repuestos').innerHTML = html;
+        });
+}
+</script>
+{% endblock %}

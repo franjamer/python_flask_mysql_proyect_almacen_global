@@ -84,7 +84,6 @@
                 <option value="DER">DER</option>
                 <option value="N/A">N/A</option>
               </select>
-              <input type="text" class="form-control mb-2" name="linea_produccion" placeholder="Línea Producción" required>
             </div>
             <div class="modal-footer">
               <button type="submit" class="btn btn-primary">Crear</button>
@@ -159,7 +158,7 @@
                                       <li><b>Columna:</b> {{ repuesto.columna }}</li>
                                       <li><b>Altura:</b> {{ repuesto.altura }}</li>
                                       <li><b>Lado:</b> {{ repuesto.lado }}</li>
-                                      <li><b>Línea Producción:</b> {{ repuesto.linea_produccion }}</li>
+                                     
                                     </ul>
                                   </div>
                                 </div>
@@ -199,7 +198,6 @@ document.getElementById('formNuevaSituacion').addEventListener('submit', functio
         altura: form.altura.value,
         columna: form.columna.value,
         lado: form.lado.value,
-        linea_produccion: form.linea_produccion.value
     };
     fetch('/situacion/crear_ajax', {
         method: 'POST',

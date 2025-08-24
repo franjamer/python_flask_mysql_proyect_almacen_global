@@ -73,10 +73,10 @@ def inventario():
     # Mostrar todos los repuestos con JOIN a situación
     cursor.execute("""
         SELECT i.*, 
-            s.almacen AS almacen_situacion, s.estanteria, s.columna, s.altura, s.lado, s.linea_produccion,
-            CONCAT(s.almacen, ' - Est:', s.estanteria, ' Col:', s.columna, ' Alt:', s.altura, ' Lado:', s.lado) AS ubicacion
+            s.almacen AS almacen_situacion, s.estanteria, s.columna, s.altura, s.lado,
+            CONCAT(s.almacen, '-', s.estanteria, '-', s.lado, '-', s.columna, '-', s.altura) AS ubicacion
         FROM inventario_tabla i
-        LEFT JOIN situacion_tabla s ON i.id_situacion_tabla = s.id_situacion_tabla
+        LEFT JOIN situacion_tabla s ON i.id_situacion_tabla = s.id
         ORDER BY i.id
     """)
     repuestos = cursor.fetchall()

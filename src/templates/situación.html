@@ -16,7 +16,6 @@
         <option value="DER">DER</option>
         <option value="N/A">N/A</option>
     </select>
-    <input type="text" name="linea_produccion" placeholder="Línea Producción" required>
     <select name="referencia_repuesto">
         <option value="">Sin repuesto asociado</option>
         {% for rep in repuestos %}
@@ -38,7 +37,6 @@
                 <th>Columna</th>
                 <th>Altura</th>
                 <th>Lado</th>
-                <th>Línea Producción</th>
                 <th>Referencia Repuesto</th>
                 {% if puede_editar %}
                 <th>Acciones</th>
@@ -52,7 +50,6 @@
                 <td>{{ pos.columna }}</td>
                 <td>{{ pos.altura }}</td>
                 <td>{{ pos.lado }}</td>
-                <td>{{ pos.linea_produccion }}</td>
                 <td>
                     {% if pos.referencia_repuesto %}
                         {{ pos.referencia_repuesto }}

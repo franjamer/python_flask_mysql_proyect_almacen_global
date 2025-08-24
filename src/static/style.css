@@ -128,5 +128,11 @@ th, td {
     overflow: auto;
     resize: horizontal;   /* Permite redimensionar horizontalmente */
     white-space: nowrap;  /* Evita saltos de línea */
-    cursor: ew-resize;    /* Cursor de redimensionar */
+    /*cursor: ew-resize;    /* Cursor de redimensionar */
+}
+th {
+    cursor: col-resize; /* Cursor de redimensionar */
+}
+td {
+    cursor: default; /* Cursor por defecto */
 }

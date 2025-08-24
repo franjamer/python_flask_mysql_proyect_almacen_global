@@ -40,14 +40,13 @@ def añadir():
         request.form['altura'],
         request.form['columna'],
         request.form['lado'],
-        request.form['linea_produccion'],
         referencia_repuesto
     )
     conn = db.get_connection()
     cursor = conn.cursor()
     sql = """INSERT INTO situacion_tabla
-        (almacen, estanteria, altura, columna, lado, linea_produccion, referencia_repuesto)
-        VALUES (%s, %s, %s, %s, %s, %s, %s)"""
+        (almacen, estanteria, altura, columna, lado, referencia_repuesto)
+        VALUES (%s, %s, %s, %s, %s, %s)"""
     cursor.execute(sql, datos)
     conn.commit()
     cursor.close()
@@ -72,15 +71,15 @@ def crear_situacion_ajax():
     conn = db.get_connection()
     cursor = conn.cursor(dictionary=True)
     sql = """INSERT INTO situacion_tabla
-        (almacen, estanteria, altura, columna, lado, linea_produccion)
-        VALUES (%s, %s, %s, %s, %s, %s)"""
+        (almacen, estanteria, altura, columna, lado)
+        VALUES (%s, %s, %s, %s, %s)"""
     valores = (
         data.get('almacen'),
         data.get('estanteria'),
         data.get('altura'),
         data.get('columna'),
-        data.get('lado'),
-        data.get('linea_produccion')
+        data.get('lado')
+        
     )
     cursor.execute(sql, valores)
     conn.commit()
