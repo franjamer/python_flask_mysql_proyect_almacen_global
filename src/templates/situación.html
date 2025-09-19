@@ -16,14 +16,14 @@
         <option value="DER">DER</option>
         <option value="N/A">N/A</option>
     </select>
-    <select name="referencia_repuesto">
+    <!-- <select name="referencia_repuesto">
         <option value="">Sin repuesto asociado</option>
         {% for rep in repuestos %}
             <option value="{{ rep.referencia }}">
                 {{ rep.referencia }} - {{ rep.nombre }}
             </option>
         {% endfor %}
-    </select>
+    </select> -->
     <button type="submit" class="btn btn-primary btn-sm">Añadir</button>
 </form>
 {% endif %}
@@ -37,7 +37,7 @@
                 <th>Columna</th>
                 <th>Altura</th>
                 <th>Lado</th>
-                <th>Referencia Repuesto</th>
+                <!-- <th>Referencia Repuesto</th> -->
                 {% if puede_editar %}
                 <th>Acciones</th>
                 {% endif %}
@@ -50,13 +50,13 @@
                 <td>{{ pos.columna }}</td>
                 <td>{{ pos.altura }}</td>
                 <td>{{ pos.lado }}</td>
-                <td>
+                <!-- <td>
                     {% if pos.referencia_repuesto %}
                         {{ pos.referencia_repuesto }}
                     {% else %}
                         <span class="text-muted">-</span>
                     {% endif %}
-                </td>
+                </td> -->
                 {% if puede_editar %}
                 <td>
                     <form method="POST" action="{{ url_for('situacion_bp.eliminar', id=pos.id_situacion_tabla) }}" style="display:inline;" onsubmit="return confirm('¿Eliminar esta posición?');">

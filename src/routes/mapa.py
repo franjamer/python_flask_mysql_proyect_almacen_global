@@ -60,8 +60,8 @@ def obtener_posiciones():
         cursor2.execute("""
             SELECT referencia, nombre
             FROM inventario_tabla
-            WHERE ubicacion = %s
-        """, (ubicacion,))
+            WHERE id_situacion_tabla = %s
+        """, (p['id_situacion_tabla'],))
         repuestos = cursor2.fetchall()
         p['repuestos'] = repuestos
         cursor2.close()

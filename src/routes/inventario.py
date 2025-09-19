@@ -9,7 +9,6 @@ CAMPOS = [
     'nombre',
     'categoria',
     'subcategoria',
-    'almacen',
     'caracteristicas_medidas',
     'fotos_planos',
     'empaquetado',
@@ -76,9 +75,10 @@ def inventario():
             s.almacen AS almacen_situacion, s.estanteria, s.columna, s.altura, s.lado,
             CONCAT(s.almacen, '-', s.estanteria, '-', s.lado, '-', s.columna, '-', s.altura) AS ubicacion
         FROM inventario_tabla i
-        LEFT JOIN situacion_tabla s ON i.id_situacion_tabla = s.id
+        LEFT JOIN situacion_tabla s ON i.id_situacion_tabla = s.id_situacion_tabla
         ORDER BY i.id
     """)
+
     repuestos = cursor.fetchall()
     cursor.close()
     conn.close()

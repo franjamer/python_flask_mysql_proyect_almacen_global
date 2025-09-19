@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session,jsonify
 import database as db
 
 situacion_bp = Blueprint('situacion_bp', __name__)
@@ -40,13 +40,13 @@ def añadir():
         request.form['altura'],
         request.form['columna'],
         request.form['lado'],
-        referencia_repuesto
+        
     )
     conn = db.get_connection()
     cursor = conn.cursor()
     sql = """INSERT INTO situacion_tabla
-        (almacen, estanteria, altura, columna, lado, referencia_repuesto)
-        VALUES (%s, %s, %s, %s, %s, %s)"""
+        (almacen, estanteria, altura, columna, lado)
+        VALUES (%s, %s, %s, %s, %s)"""
     cursor.execute(sql, datos)
     conn.commit()
     cursor.close()

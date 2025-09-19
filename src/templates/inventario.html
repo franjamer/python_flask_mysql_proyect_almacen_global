@@ -21,9 +21,9 @@
             <div class="col-md-2 mb-2">
                 <input type="text" name="subcategoria" class="form-control" placeholder="Subcategoría">
             </div>
-            <div class="col-md-2 mb-2">
+            <!-- <div class="col-md-2 mb-2">
                 <input type="text" name="almacen" class="form-control" placeholder="Almacén">
-            </div>
+            </div> -->
             <div class="col-md-2 mb-2">
                 <input type="text" name="caracteristicas_medidas" class="form-control" placeholder="Características/Medidas">
             </div>
@@ -101,7 +101,7 @@
                 <th>Nombre</th>
                 <th>Categoría</th>
                 <th>Subcategoría</th>
-                <th>Almacén</th>
+                <!-- <th>Almacén</th> -->
                 <th>Medidas</th>
                 <th>Planos</th>
                 <th>Empaquetado</th>
@@ -122,7 +122,7 @@
                     <td title="{{ repuesto.nombre }}"><input type="text" name="nombre" value="{{ repuesto.nombre }}" class="form-control" readonly></td>
                     <td title="{{ repuesto.categoria }}"><input type="text" name="categoria" value="{{ repuesto.categoria }}" class="form-control" required></td>
                     <td ><input type="text" name="subcategoria" value="{{ repuesto.subcategoria }}" class="form-control"></td>
-                    <td><input type="text" name="almacen" value="{{ repuesto.almacen }}" class="form-control"></td>
+                    <!-- <td><input type="text" name="almacen" value="{{ repuesto.almacen }}" class="form-control"></td> -->
                     <td title="{{ repuesto.caracteristicas_medidas }}"><input type="text" name="caracteristicas_medidas" value="{{ repuesto.caracteristicas_medidas }}" class="form-control"></td>
                     <td title="{{ repuesto.fotos_planos }}"><input type="text" name="fotos_planos" value="{{ repuesto.fotos_planos }}" class="form-control"></td>
                     <td title="{{ repuesto.empaquetado }}"><input type="text" name="empaquetado" value="{{ repuesto.empaquetado }}" class="form-control"></td>
