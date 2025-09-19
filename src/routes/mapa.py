@@ -87,3 +87,48 @@ def obtener_repuestos():
     cursor.close()
     conn.close()
     return jsonify(repuestos)
+@mapa_bp.route('/mapa/columnas')
+def obtener_columnas():
+    almacen = request.args.get('almacen')
+    estanteria = request.args.get('estanteria')
+    lado = request.args.get('lado')
+    conn = db.get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT DISTINCT columna
+        FROM situacion_tabla
+        WHERE almacen = %s AND estanteria = %s AND lado = %s
+        ORDER BY columna
+    """, (almacen, estanteria, lado))
+    columnas = cursor.fetchall()
+    cursor.close()
+    conn.close()
+    return jsonify(columnas)
+
+@mapa_bp.route('/mapa/alturas')
+def obtener_alturas():
+    almacen = request.args.get('almacen')
+    estanteria = request.args.get('estanteria')
+    lado = request.args.get('lado')
+    columna = request.args.get('columna')
+    conn = db.get_connection()
+    cursor = conn.cursor(dictionary=True)
+    cursor.execute("""
+        SELECT altura, id_situacion_tabla
+        FROM situacion_tabla
+        WHERE almacen = %s AND estanteria = %s AND lado = %s AND columna = %s
+        ORDER BY altura
+    """, (almacen, estanteria, lado, columna))
+    alturas = cursor.fetchall()
+    for a in alturas:
+        cursor2 = conn.cursor(dictionary=True)
+        cursor2.execute("""
+            SELECT referencia, nombre
+            FROM inventario_tabla
+            WHERE id_situacion_tabla = %s
+        """, (a['id_situacion_tabla'],))
+        a['repuestos'] = cursor2.fetchall()
+        cursor2.close()
+    cursor.close()
+    conn.close()
+    return jsonify(alturas)

@@ -91,5 +91,58 @@ function mostrarRepuestos(almacen, estanteria, lado, columna, altura) {
             document.getElementById('vista-repuestos').innerHTML = html;
         });
 }
+
+function verLados(almacen, estanteria) {
+    fetch(`/mapa/lados?almacen=${encodeURIComponent(almacen)}&estanteria=${encodeURIComponent(estanteria)}`)
+        .then(res => res.json())
+        .then(lados => {
+            let html = `<h5>Lados de la estantería ${estanteria}:</h5>`;
+            lados.forEach(l => {
+                html += `<button class="btn btn-info m-1" onclick="verColumnas('${almacen}', '${estanteria}', '${l.lado}')">${l.lado}</button>`;
+            });
+            document.getElementById('vista-lados').innerHTML = html;
+        });
+}
+
+function verColumnas(almacen, estanteria, lado) {
+    fetch(`/mapa/columnas?almacen=${encodeURIComponent(almacen)}&estanteria=${encodeURIComponent(estanteria)}&lado=${encodeURIComponent(lado)}`)
+        .then(res => res.json())
+        .then(columnas => {
+            let html = `<h5>Columnas en Lado ${lado}:</h5>`;
+            columnas.forEach(c => {
+                html += `<button class="btn btn-secondary m-1" onclick="verAlturas('${almacen}', '${estanteria}', '${lado}', '${c.columna}')">Columna ${c.columna}</button>`;
+            });
+            document.getElementById('vista-lados').innerHTML = html;
+        });
+}
+
+function verAlturas(almacen, estanteria, lado, columna) {
+    fetch(`/mapa/alturas?almacen=${encodeURIComponent(almacen)}&estanteria=${encodeURIComponent(estanteria)}&lado=${encodeURIComponent(lado)}&columna=${encodeURIComponent(columna)}`)
+        .then(res => res.json())
+        .then(alturas => {
+            let html = `<h5>Alturas en Columna ${columna}:</h5>
+            <table class="table table-bordered">
+                <thead>
+                    <tr><th>Altura</th><th>Repuestos</th></tr>
+                </thead>
+                <tbody>`;
+            alturas.forEach(a => {
+                let repuestoHtml = '';
+                if (a.repuestos && a.repuestos.length > 0) {
+                    a.repuestos.forEach(r => {
+                        repuestoHtml += `<div><b>${r.referencia}</b> - ${r.nombre}</div>`;
+                    });
+                } else {
+                    repuestoHtml = 'Posición Vacía';
+                }
+                html += `<tr>
+                    <td>${a.altura}</td>
+                    <td>${repuestoHtml}</td>
+                </tr>`;
+            });
+            html += '</tbody></table>';
+            document.getElementById('vista-lados').innerHTML = html;
+        });
+}
 </script>
 {% endblock %}
