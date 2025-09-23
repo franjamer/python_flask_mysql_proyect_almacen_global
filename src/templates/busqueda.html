@@ -3,9 +3,12 @@
 {% block title %}Búsqueda de repuestos{% endblock %}
 
 {% block content %}
+<a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">
+    ← Volver al menú principal
+</a>
 <div class="d-flex flex-column align-items-center justify-content-center" style="height: 70vh;">
     <h2 class="mb-4">BUSQUEDA DE REPUESTOS</h2>
-    <a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
+    
     <form method="GET" action="{{ url_for('home_bp.busqueda') }}" class="mb-4">
         <div class="mb-3">
             <input type="text" name="busqueda" class="form-control" placeholder="Introduce el término a buscar" value="{{ request.args.get('busqueda', '') }}">

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
+<a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
 <div class="container mt-5">
-    <a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
     <h2>Nuevo Pedido</h2>
     {% if mensaje_error %}
     <div class="alert alert-danger">{{ mensaje_error }}</div>

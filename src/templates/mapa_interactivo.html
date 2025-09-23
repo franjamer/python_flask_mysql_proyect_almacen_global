@@ -1,17 +1,33 @@
 {% extends "base.html" %}
 {% block content %}
+<a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
 <div class="container mt-4">
-    <h2>Mapa Interactivo de Almacenes</h2>
-    <div id="almacenes" class="row">
-        {% for almacen in almacenes %}
-        <div class="col-md-3 mb-4">
-            <div class="card almacen-card" style="cursor:pointer;" onclick="verEstanterias('{{ almacen.almacen }}')">
-                <div class="card-body text-center">
-                    <h5 class="card-title">{{ almacen.almacen }}</h5>
-                </div>
+    <h2 class="text-center mb-4">Mapa Interactivo de Almacenes</h2>
+    <div id="almacenes" class="row justify-content-center">
+        {% set num_almacenes = almacenes|length %}
+        {% if num_almacenes <= 5 %}
+            <div class="col-md-4 d-flex flex-column align-items-center">
+                {% for almacen in almacenes %}
+                    <div class="card almacen-card mb-3 w-100" style="cursor:pointer;" onclick="verEstanterias('{{ almacen.almacen }}')">
+                        <div class="card-body text-center">
+                            <h5 class="card-title">{{ almacen.almacen }}</h5>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-        </div>
-        {% endfor %}
+        {% else %}
+            {% for i in range(0, num_almacenes, 4) %}
+                <div class="col-md-3 d-flex flex-column align-items-center">
+                    {% for almacen in almacenes[i:i+4] %}
+                        <div class="card almacen-card mb-3 w-100" style="cursor:pointer;" onclick="verEstanterias('{{ almacen.almacen }}')">
+                            <div class="card-body text-center">
+                                <h5 class="card-title">{{ almacen.almacen }}</h5>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        {% endif %}
     </div>
     <div id="vista-estanterias"></div>
 </div>
@@ -30,65 +46,6 @@ function verEstanterias(almacen) {
             });
             html += '</div><div id="vista-lados"></div>';
             document.getElementById('vista-estanterias').innerHTML = html;
-        });
-}
-
-function verLados(almacen, estanteria) {
-    fetch(`/mapa/lados?almacen=${encodeURIComponent(almacen)}&estanteria=${encodeURIComponent(estanteria)}`)
-        .then(res => res.json())
-        .then(lados => {
-            let html = `<h5>Lados de la estantería ${estanteria}:</h5>`;
-            lados.forEach(l => {
-                html += `<button class="btn btn-info m-1" onclick="verPosiciones('${almacen}', '${estanteria}', '${l.lado}')">${l.lado}</button>`;
-            });
-            document.getElementById('vista-lados').innerHTML = html;
-        });
-}
-
-function verPosiciones(almacen, estanteria, lado) {
-    fetch(`/mapa/posiciones?almacen=${encodeURIComponent(almacen)}&estanteria=${encodeURIComponent(estanteria)}&lado=${encodeURIComponent(lado)}`)
-        .then(res => res.json())
-        .then(posiciones => {
-            let html = `<h5>Posiciones en Estantería ${estanteria}, Lado ${lado}:</h5>
-            <table class="table table-bordered">
-                <thead>
-                    <tr><th>Columna, Altura</th><th>Repuestos</th></tr>
-                </thead>
-                <tbody>`;
-            posiciones.forEach(p => {
-                let repuestoHtml = '';
-                if (p.repuestos && p.repuestos.length > 0) {
-                    p.repuestos.forEach(r => {
-                        repuestoHtml += `<div><b>${r.referencia}</b> - ${r.nombre}</div>`;
-                    });
-                } else {
-                    repuestoHtml = 'Posición Vacía';
-                }
-                html += `<tr>
-                    <td>Columna ${p.columna}, Altura ${p.altura}</td>
-                    <td>${repuestoHtml}</td>
-                </tr>`;
-            });
-            html += '</tbody></table>';
-            document.getElementById('vista-lados').innerHTML = html;
-        });
-}
-
-function mostrarRepuestos(almacen, estanteria, lado, columna, altura) {
-    fetch(`/mapa/repuestos?almacen=${encodeURIComponent(almacen)}&estanteria=${encodeURIComponent(estanteria)}&lado=${encodeURIComponent(lado)}&columna=${encodeURIComponent(columna)}&altura=${encodeURIComponent(altura)}`)
-        .then(res => res.json())
-        .then(repuestos => {
-            let html = `<h6>Repuestos en posición Columna ${columna}, Altura ${altura}:</h6>`;
-            if (repuestos.length === 0) {
-                html += `<div class="alert alert-warning">Posición Vacía</div>`;
-            } else {
-                html += '<ul>';
-                repuestos.forEach(r => {
-                    html += `<li><b>${r.referencia}</b> - ${r.nombre}</li>`;
-                });
-                html += '</ul>';
-            }
-            document.getElementById('vista-repuestos').innerHTML = html;
         });
 }
 
@@ -145,4 +102,12 @@ function verAlturas(almacen, estanteria, lado, columna) {
         });
 }
 </script>
+<style>
+.almacen-card {
+    transition: box-shadow 0.2s;
+}
+.almacen-card:hover {
+    box-shadow: 0 0 10px #007bff55;
+}
+</style>
 {% endblock %}

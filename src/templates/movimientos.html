@@ -1,5 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
+<a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">
+    ← Volver al menú principal
+</a>
 <div class="container mt-5">
     <h2 class="mb-4">MOVIMIENTOS</h2>
     {% if mensaje_error %}
