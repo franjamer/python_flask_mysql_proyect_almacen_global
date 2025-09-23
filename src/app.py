@@ -12,6 +12,7 @@ from routes.operadores import operadores_bp
 from routes.roles import puede_eliminar_movimientos
 from routes.situacion import situacion_bp
 from routes.mapa import mapa_bp
+from routes.configuracion import configuracion_bp, cargar_configuracion
 # configuración de carpetas y path de la aplicación.
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 template_dir = os.path.join(template_dir, 'src', 'templates')
@@ -65,6 +66,7 @@ app.register_blueprint(tablas_bp)
 app.register_blueprint(operadores_bp)
 app.register_blueprint(situacion_bp )
 app.register_blueprint(mapa_bp)
+app.register_blueprint(configuracion_bp)
 # Deshabilita el caché de plantillas para desarrollo
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True

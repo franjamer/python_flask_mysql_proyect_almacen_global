@@ -49,9 +49,12 @@
             {% endif %}
         </div>
     </div>
+    <!-- contenido central -->
+     {% set texto_principal = config.textos_menu.titulo_principal if config and config.textos_menu and 'titulo_principal' in config.textos_menu else 'Almacén de Repuestos' %}
+     {% set texto_secundario = config.textos_menu.titulo_secundario if config and config.textos_menu and 'titulo_secundario' in config.textos_menu else 'Montijo' %}
     <div class="main-content">
-        <h1 class="titulo-principal">Almacén de Repuestos</h1>
-        <h2 class="titulo-secundario">Montijo</h2>
+        <h1 class="titulo-principal">{{ texto_principal }}</h1>
+        <h2 class="titulo-secundario">{{ texto_secundario }}</h2>
     </div>
     <!-- sidebar derecha -->
     <div class="sidebar">
@@ -89,9 +92,20 @@
             {% endif %}
             
             <a class="menu-btn" href="{{ url_for('mapa_bp.mapa_interactivo') }}">Mapa Interactivo</a>
-                
-            
+            <a href="{{ url_for('configuracion_bp.configuracion') }}" class="menu-btn">
+                Configuración
+            </a>
+
         </div>
     </div>
+</div>
+{% set titulo_principal = config.textos_menu.titulo_principal if config and config.textos_menu and 'titulo_principal' in config.textos_menu else 'Bienvenido al sistema' %}
+{% set titulo_secundario = config.textos_menu.titulo_secundario if config and config.textos_menu and 'titulo_secundario' in config.textos_menu else 'Gestión de almacén' %}
+{% set texto_central = config.textos_menu.central if config and config.textos_menu and 'central' in config.textos_menu else 'Bienvenido al sistema de gestión' %}
+
+<div class="text-center my-4">
+    <h1>{{ titulo_principal }}</h1>
+    <h3>{{ titulo_secundario }}</h3>
+    <p>{{ texto_central }}</p>
 </div>
 {% endblock %}

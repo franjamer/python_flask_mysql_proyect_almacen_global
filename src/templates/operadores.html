@@ -52,4 +52,27 @@
         {% endfor %}
     </tbody>
 </table>
+
+{% set nombres_columnas = config.nombres_columnas if config and config.nombres_columnas else {} %}
+{% set nombre_vista = config.nombres_vistas['NOMBRE_VISTA'] if config and config.nombres_vistas and 'NOMBRE_VISTA' in config.nombres_vistas else 'Nombre Vista' %}
+
+<h2>{{ nombre_vista }}</h2>
+<table>
+    <thead>
+        <tr>
+            {% for col in columnas %}
+            <th>{{ nombres_columnas.get(col, col) }}</th>
+            {% endfor %}
+        </tr>
+    </thead>
+    <tbody>
+        {% for fila in datos %}
+        <tr>
+            {% for col in columnas %}
+            <td>{{ fila[col] }}</td>
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

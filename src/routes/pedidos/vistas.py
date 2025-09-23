@@ -82,9 +82,10 @@ def pedidos():
         puede_crud_pedidos=puede_crud_pedidos,
         puede_eliminar_pedidos=puede_eliminar_pedidos
     )
+
+
+
 # ruta para actualizar lineas de un pedido
-
-
 @pedidos_bp.route('/actualizar_linea/<int:linea_id>', methods=['POST'])
 def actualizar_linea(linea_id):
     if not puede_crud_pedidos(session.get('rol')):

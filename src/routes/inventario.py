@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from .utilidades import asegurar_fila_minima_auto
 import database as db
+from routes.configuracion import cargar_configuracion
 
 inventario_bp = Blueprint('inventario_bp', __name__)
 
@@ -83,6 +84,10 @@ def inventario():
     cursor.close()
     conn.close()
     columnas = ['id'] + CAMPOS
+
+    # Cargar configuración personalizada
+    config = cargar_configuracion()
+
     return render_template(
         'inventario.html',
         repuestos=repuestos,
@@ -90,7 +95,8 @@ def inventario():
         mensaje_error=mensaje_error,
         puede_crear_actualizar=puede_crear_actualizar,
         puede_eliminar=puede_eliminar,
-        posiciones=posiciones
+        posiciones=posiciones,
+        config=config
     )
 
 

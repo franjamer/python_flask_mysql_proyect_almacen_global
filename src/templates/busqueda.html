@@ -47,20 +47,23 @@
 </div>
 
 <div class="container mt-5">
-    <h2 class="mb-4">Resultados de la búsqueda</h2>
+    {% set nombres_columnas = config.nombres_columnas if config and config.nombres_columnas else {} %}
+    {% set nombre_vista = config.nombres_vistas['NOMBRE_VISTA'] if config and config.nombres_vistas and 'NOMBRE_VISTA' in config.nombres_vistas else 'Nombre Vista' %}
+
+    <h2 class="mb-4">{{ nombre_vista }}</h2>
     <table class="table table-bordered table-dark table-striped">
         <thead>
             <tr>
                 {% for col in columnas %}
-                <th>{{ col }}</th>
+                <th>{{ nombres_columnas.get(col, col) }}</th>
                 {% endfor %}
             </tr>
         </thead>
         <tbody>
-            {% for repuesto in repuestos %}
+            {% for fila in datos %}
             <tr>
                 {% for col in columnas %}
-                <td>{{ repuesto[col] }}</td>
+                <td>{{ fila[col] }}</td>
                 {% endfor %}
             </tr>
             {% endfor %}

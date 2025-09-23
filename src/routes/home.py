@@ -1,19 +1,19 @@
 from flask import Blueprint, render_template, request
 from routes.roles import puede_eliminar_movimientos
+from routes.configuracion import cargar_configuracion
 import database as db
 
 home_bp = Blueprint('home_bp', __name__)
 
-
 @home_bp.route('/')
 def bienvenido():
-    return render_template('bienvenido.html')
-
+    config = cargar_configuracion()
+    return render_template('bienvenido.html', config=config)
 
 @home_bp.route('/menu')
 def menu():
-    return render_template('menu.html')
-
+    config = cargar_configuracion()
+    return render_template('menu.html', config=config)
 
 @home_bp.route('/perfiles')
 def perfiles():
@@ -26,25 +26,8 @@ def perfiles():
     for fila in perfiles:
         insertObjects.append(dict(zip(columnNames, fila)))
     cursor.close()
-    return render_template('perfiles.html', perfiles=insertObjects)
-
-
-# @home_bp.route('/operadores')
-# def operadores():
-#     conn = db.get_connection()
-#     print("Conectando a la base de datos para obtener operadores desde home.py version aplicacion con IA")
-#     cursor = conn.cursor()
-#     consulta_select = """SELECT * FROM operadores"""
-#     cursor.execute(consulta_select)
-#     operadores = cursor.fetchall()
-#     insertObjets = []
-#     columnNames = [column[0] for column in cursor.description]
-#     # for fila in operadores:
-#     #     operadores.append(dict(zip(columnNames, fila)))
-#     cursor.close()
-#     conn.close()
-#     return render_template('operadores.html', operadores=operadores)
-
+    config = cargar_configuracion()
+    return render_template('perfiles.html', perfiles=insertObjects, config=config)
 
 @home_bp.route('/busqueda')
 def busqueda():
@@ -82,8 +65,8 @@ def busqueda():
                 dict(zip(columnas, [fila[columnas.index(col)] for col in columnas])))
         cursor.close()
 
-    return render_template('busqueda.html', repuestos=repuestos, busqueda=busqueda, campo=campo, columnas=columnas, orden=orden)
-
+    config = cargar_configuracion()
+    return render_template('busqueda.html', repuestos=repuestos, busqueda=busqueda, campo=campo, columnas=columnas, orden=orden, config=config)
 
 @home_bp.route('/repuestos')
 def repuestos():
@@ -96,47 +79,36 @@ def repuestos():
     for fila in repuestos:
         insertObjects.append(dict(zip(columnNames, fila)))
     cursor.close()
-    return render_template('repuestos.html', repuestos=insertObjects, columnas=columnNames)
-
+    config = cargar_configuracion()
+    return render_template('repuestos.html', repuestos=insertObjects, columnas=columnNames, config=config)
 
 @home_bp.route('/movimientos')
 def movimientos():
     conn = db.get_connection()
 
-    # 🎯 Añade esta verificación de seguridad
     if conn is None:
-        # Si la conexión falla, devolvemos un error.
-        # Esto evita que el programa falle con un AttributeError.
-        # Puedes mostrar un mensaje de error en la plantilla o redirigir.
         print("¡Error: No se pudo conectar a la base de datos!")
-        # Opcional: Redirigir a una página de error o al menú
-        # return redirect(url_for('home_bp.menu'))
-        # Opcional: Renderizar la plantilla con un mensaje de error
         return render_template('movimientos.html', movimientos=[], inventario=[], operadores=[], mensaje_error="No se pudo conectar a la base de datos. Por favor, verifica la conexión.")
 
-    # Si la conexión es exitosa, continúa con el resto del código
     cursor = conn.cursor(dictionary=True)
-
-    # Obtener piezas
     cursor.execute("SELECT nombre, stock FROM inventario_tabla")
     piezas = cursor.fetchall()
-    # Obtener inventario para el select
     cursor.execute(
         "SELECT referencia, nombre FROM inventario_tabla ORDER BY nombre ASC")
     inventario = cursor.fetchall()
-    # Obtener movimientos
     cursor.execute("SELECT * FROM movimientos_tabla")
     movimientos = cursor.fetchall()
-    # Obtener perfiles
     cursor.execute("SELECT perfil FROM perfiles")
     perfiles = cursor.fetchall()
     cursor.close()
     conn.close()
+    config = cargar_configuracion()
     return render_template(
         'movimientos.html',
         piezas=piezas,
-        inventario=inventario,  # <-- Añade esto
+        inventario=inventario,
         movimientos=movimientos,
         perfiles=perfiles,
-        puede_eliminar_movimientos=puede_eliminar_movimientos
+        puede_eliminar_movimientos=puede_eliminar_movimientos,
+        config=config
     )
