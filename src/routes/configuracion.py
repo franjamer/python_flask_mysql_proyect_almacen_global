@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 import json
 import os
 
@@ -71,6 +71,8 @@ def guardar_configuracion(config):
 
 @configuracion_bp.route('/configuracion', methods=['GET', 'POST'])
 def configuracion():
+    if session.get('rol') != 'admin':
+        return render_template('configuracion.html', solo_lectura=True, vistas={}, config={}, vista='', campos=[])
     config = cargar_configuracion()
     vista = request.args.get('vista', 'inventario')
     campos = VISTAS_CONFIG.get(vista, [])
@@ -92,4 +94,4 @@ def configuracion():
         guardar_configuracion(config)
         flash('Configuración guardada correctamente.', 'success')
         return redirect(url_for('configuracion_bp.configuracion', vista=vista))
-    return render_template('configuracion.html', config=config, vista=vista, campos=campos, vistas=VISTAS_CONFIG)
+    return render_template('configuracion.html', config=config, vista=vista, campos=campos, vistas=VISTAS_CONFIG, solo_lectura=False)

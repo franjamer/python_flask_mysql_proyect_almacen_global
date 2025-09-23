@@ -3,6 +3,11 @@
 <a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
 <div class="container mt-4">
     <h2 class="text-center mb-4">Configuración de la Aplicación</h2>
+    {% if solo_lectura %}
+    <div class="alert alert-warning text-center">
+        Solo los administradores pueden modificar la configuración.
+    </div>
+    {% else %}
     <form method="get" class="mb-4">
         <label for="vista" class="form-label">Selecciona la vista a configurar:</label>
         <select name="vista" id="vista" class="form-select" onchange="this.form.submit()">
@@ -107,6 +112,7 @@
             </div>
         </div>
     </div>
+    {% endif %}
 </div>
 <script>
 // Habilitar/deshabilitar el botón "Aplicar cambios" según los campos
