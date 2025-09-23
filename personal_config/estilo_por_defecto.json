@@ -48,10 +48,5 @@
     "situacion": "Situacion",
     "mapa_interactivo": "mapa_interactivo",
     "menu": "Menu"
-  },
-  "estilo_menu": {
-    "color_texto_menu": "#fb0000",
-    "color_fondo_menu": "#eeb6bb",
-    "tamano_texto_menu": "48"
   }
 }

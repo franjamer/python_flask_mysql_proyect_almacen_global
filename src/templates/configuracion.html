@@ -3,135 +3,124 @@
 <a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
 <div class="container mt-4">
     <h2 class="text-center mb-4">Configuración de la Aplicación</h2>
-    {% if solo_lectura %}
-    <div class="alert alert-warning text-center">
-        Solo los administradores pueden modificar la configuración.
-    </div>
-    {% else %}
-    <form method="get" class="mb-4">
-        <label for="vista" class="form-label">Selecciona la vista a configurar:</label>
-        <select name="vista" id="vista" class="form-select" onchange="this.form.submit()">
-            {% for v, campos_v in vistas.items() %}
-                {% if v != 'configuracion' %}
-                <option value="{{ v }}" {% if v == vista %}selected{% endif %}>
-                    {{ v|replace('_', ' ')|capitalize }}
-                </option>
-                {% endif %}
-            {% endfor %}
-        </select>
-    </form>
-    <div class="row">
-        <!-- Mitad superior: dos columnas -->
-        <div class="col-md-12 mb-4">
-            <div class="row">
-                <!-- Columna izquierda: valores actuales -->
-                <div class="col-md-6">
-                    <div class="card">
-                        <div class="card-header bg-light">
-                            <b>Valores actuales</b>
+    <!-- Nav tabs -->
+    <ul class="nav nav-tabs mb-4" id="configTabs" role="tablist">
+        <li class="nav-item" role="presentation">
+            <button
+                class="nav-link active"
+                id="general-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#general"
+                type="button"
+                role="tab"
+            >General</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button
+                class="nav-link"
+                id="estilo-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#estilo"
+                type="button"
+                role="tab"
+            >Estilo menú principal</button>
+        </li>
+    </ul>
+    <div class="tab-content">
+        <!-- Pestaña General: aquí va TODO lo que ya tienes -->
+        <div class="tab-pane fade show active" id="general" role="tabpanel">
+            {% include "configuracion_general.html" %}
+        </div>
+        <!-- Pestaña Estilo menú principal -->
+        <div class="tab-pane fade" id="estilo" role="tabpanel">
+            <form method="post" enctype="multipart/form-data" id="form-estilo">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Color del texto</label>
+                        <input
+                            type="color"
+                            class="form-control form-control-color"
+                            name="color_texto_menu"
+                            value="{{ config.estilo_menu.color_texto_menu if config.estilo_menu and config.estilo_menu.color_texto_menu else '#fb0000' }}"
+                        >
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Color de fondo</label>
+                        <input
+                            type="color"
+                            class="form-control form-control-color"
+                            name="color_fondo_menu"
+                            value="{{ config.estilo_menu.color_fondo_menu if config.estilo_menu and config.estilo_menu.color_fondo_menu else '#eeb6bb' }}"
+                        >
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Tamaño del texto principal (px)</label>
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="tamano_texto_menu"
+                            min="10"
+                            max="100"
+                            value="{{ config.estilo_menu.tamano_texto_menu if config.estilo_menu and config.estilo_menu.tamano_texto_menu else '48' }}"
+                        >
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Marca de agua (imagen PNG/JPG)</label>
+                        <input
+                            type="file"
+                            class="form-control"
+                            name="marca_agua_menu"
+                            accept="image/png, image/jpeg"
+                        >
+                        {% if config.estilo_menu and config.estilo_menu.marca_agua_menu %}
+                        <div class="mt-2">
+                            <img src="{{ url_for('static', filename='marca_agua/' ~ config.estilo_menu.marca_agua_menu) }}" alt="Marca de agua actual" style="max-width:150px;opacity:0.5;">
                         </div>
-                        <div class="card-body">
-                            <ul class="list-group">
-                                {% if vista == 'menu' %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Título principal
-                                        <span class="badge bg-primary rounded-pill">{{ config.textos_menu.titulo_principal }}</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Título secundario
-                                        <span class="badge bg-primary rounded-pill">{{ config.textos_menu.titulo_secundario }}</span>
-                                    </li>
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        Texto central
-                                        <span class="badge bg-primary rounded-pill">{{ config.textos_menu.central }}</span>
-                                    </li>
-                                {% else %}
-                                    {% for campo in campos %}
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        {{ campo|replace('_', ' ')|capitalize }}
-                                        <span class="badge bg-primary rounded-pill">{{ config.nombres_columnas[campo] }}</span>
-                                    </li>
-                                    {% endfor %}
-                                {% endif %}
-                            </ul>
-                        </div>
+                        {% endif %}
                     </div>
                 </div>
-                <!-- Columna derecha: campos editables -->
-                <div class="col-md-6">
-                    <form id="form-campos" method="post" autocomplete="off">
-                        <div class="card">
-                            <div class="card-header bg-light">
-                                <b>Editar {{ vista|replace('_', ' ')|capitalize }}</b>
-                            </div>
-                            <div class="card-body">
-                                {% if vista == 'menu' %}
-                                    <div class="mb-3">
-                                        <label class="form-label">Título principal</label>
-                                        <input type="text" class="form-control campo-editable" name="texto_menu_titulo_principal" value="{{ config.textos_menu.titulo_principal }}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Título secundario</label>
-                                        <input type="text" class="form-control campo-editable" name="texto_menu_titulo_secundario" value="{{ config.textos_menu.titulo_secundario }}" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="form-label">Texto central</label>
-                                        <input type="text" class="form-control campo-editable" name="texto_menu_central" value="{{ config.textos_menu.central }}" required>
-                                    </div>
-                                {% else %}
-                                    {% for campo in campos %}
-                                    <div class="mb-3">
-                                        <label class="form-label">{{ campo|replace('_', ' ')|capitalize }}</label>
-                                        <input type="text" class="form-control campo-editable" name="nombre_columna_{{ campo }}" value="{{ config.nombres_columnas[campo] }}" required>
-                                    </div>
-                                    {% endfor %}
-                                {% endif %}
-                                <button type="submit" class="btn btn-success mt-2" id="btn-aplicar" disabled>Aplicar cambios</button>
-                            </div>
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-        <!-- Mitad inferior: cargar configuraciones -->
-        <div class="col-md-12">
-            <div class="card">
-                <div class="card-header bg-light">
-                    <b>Cargar configuración</b>
-                </div>
-                <div class="card-body">
-                    <form id="form-cargar" method="post" enctype="multipart/form-data" action="{{ url_for('configuracion_bp.configuracion', vista=vista) }}">
-                        <div class="mb-3">
-                            <label for="archivo_config" class="form-label">Selecciona un archivo de configuración (.json):</label>
-                            <input type="file" class="form-control" id="archivo_config" name="archivo_config" accept=".json">
-                        </div>
-                        <button type="submit" class="btn btn-primary">Cargar configuración</button>
-                        <button type="button" class="btn btn-secondary" id="btn-restablecer">Restablecer configuración por defecto</button>
-                    </form>
-                </div>
-            </div>
+                <button
+                    type="submit"
+                    class="btn btn-success mt-2"
+                    name="accion"
+                    value="guardar_estilo"
+                >Guardar estilo</button>
+            </form>
         </div>
     </div>
-    {% endif %}
+    <!-- Explorador de ficheros de configuración -->
+    <div class="card mt-4">
+        <div class="card-header bg-light">
+            <b>Gestión de archivos de configuración</b>
+        </div>
+        <div class="card-body">
+            <form method="post" id="form-gestor">
+                <div class="row align-items-end">
+                    <div class="col-md-4 mb-3">
+                        <label for="nombre_guardar" class="form-label">Nombre para guardar (sin .json):</label>
+                        <input type="text" class="form-control" name="nombre_guardar" id="nombre_guardar" placeholder="Ej: mi_configuracion">
+                    </div>
+                    <div class="col-md-4 mb-3">
+                        <label for="archivo_config" class="form-label">Selecciona un archivo:</label>
+                        <select class="form-select" name="archivo_config" id="archivo_config">
+                            {% for archivo in archivos_config %}
+                            <option value="{{ archivo }}">{{ archivo }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="col-md-1 mb-3">
+                        <button type="submit" name="accion" value="cargar" class="btn btn-primary w-100">Cargar</button>
+                    </div>
+                    <div class="col-md-1 mb-3">
+                        <button type="submit" name="accion" value="guardar_todo" class="btn btn-success w-100">Guardar</button>
+                    </div>
+                    <div class="col-md-2 mb-3">
+                        <button type="submit" name="accion" value="eliminar" class="btn btn-danger w-100" onclick="return confirm('¿Eliminar este archivo?');">Eliminar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
-<script>
-// Habilitar/deshabilitar el botón "Aplicar cambios" según los campos
-const formCampos = document.getElementById('form-campos');
-const btnAplicar = document.getElementById('btn-aplicar');
-if (formCampos) {
-    formCampos.addEventListener('input', function() {
-        let vacio = false;
-        document.querySelectorAll('.campo-editable').forEach(input => {
-            if (!input.value.trim()) vacio = true;
-        });
-        btnAplicar.disabled = vacio;
-    });
-}
-// Botón restablecer (puedes implementar la lógica en el backend)
-document.getElementById('btn-restablecer').onclick = function() {
-    if (confirm('¿Seguro que quieres restablecer la configuración por defecto?')) {
-        window.location.href = "{{ url_for('configuracion_bp.configuracion', vista=vista) }}?reset=1";
-    }
-};
-</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}

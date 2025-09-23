@@ -1,0 +1,122 @@
+<form method="get" class="mb-4">
+    <label for="vista" class="form-label">Selecciona la vista a configurar:</label>
+    <select name="vista" id="vista" class="form-select" onchange="this.form.submit()">
+        {% for v, campos_v in vistas.items() %}
+            {% if v != 'configuracion' %}
+            <option value="{{ v }}" {% if v == vista %}selected{% endif %}>
+                {{ v|replace('_', ' ')|capitalize }}
+            </option>
+            {% endif %}
+        {% endfor %}
+    </select>
+</form>
+<div class="row">
+    <!-- Mitad superior: dos columnas -->
+    <div class="col-md-12 mb-4">
+        <div class="row">
+            <!-- Columna izquierda: valores actuales -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <b>Valores actuales</b>
+                    </div>
+                    <div class="card-body">
+                        <ul class="list-group">
+                            {% if vista == 'menu' %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Título principal
+                                    <span class="badge bg-primary rounded-pill">{{ config.textos_menu.titulo_principal }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Título secundario
+                                    <span class="badge bg-primary rounded-pill">{{ config.textos_menu.titulo_secundario }}</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    Texto central
+                                    <span class="badge bg-primary rounded-pill">{{ config.textos_menu.central }}</span>
+                                </li>
+                            {% else %}
+                                {% for campo in campos %}
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {{ campo|replace('_', ' ')|capitalize }}
+                                    <span class="badge bg-primary rounded-pill">{{ config.nombres_columnas[campo] }}</span>
+                                </li>
+                                {% endfor %}
+                            {% endif %}
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!-- Columna derecha: campos editables -->
+            <div class="col-md-6">
+                <form id="form-campos" method="post" autocomplete="off">
+                    <div class="card">
+                        <div class="card-header bg-light">
+                            <b>Editar {{ vista|replace('_', ' ')|capitalize }}</b>
+                        </div>
+                        <div class="card-body">
+                            {% if vista == 'menu' %}
+                                <div class="mb-3">
+                                    <label class="form-label">Título principal</label>
+                                    <input type="text" class="form-control campo-editable" name="texto_menu_titulo_principal" value="{{ config.textos_menu.titulo_principal }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Título secundario</label>
+                                    <input type="text" class="form-control campo-editable" name="texto_menu_titulo_secundario" value="{{ config.textos_menu.titulo_secundario }}" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Texto central</label>
+                                    <input type="text" class="form-control campo-editable" name="texto_menu_central" value="{{ config.textos_menu.central }}" required>
+                                </div>
+                            {% else %}
+                                {% for campo in campos %}
+                                <div class="mb-3">
+                                    <label class="form-label">{{ campo|replace('_', ' ')|capitalize }}</label>
+                                    <input type="text" class="form-control campo-editable" name="nombre_columna_{{ campo }}" value="{{ config.nombres_columnas[campo] }}" required>
+                                </div>
+                                {% endfor %}
+                            {% endif %}
+                            <button type="submit" class="btn btn-success mt-2" id="btn-aplicar" disabled>Aplicar cambios</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- Mitad inferior: cargar configuraciones -->
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header bg-light">
+                <b>Cargar configuración</b>
+            </div>
+            <div class="card-body">
+                <form id="form-cargar" method="post" enctype="multipart/form-data" action="{{ url_for('configuracion_bp.configuracion', vista=vista) }}">
+                    <div class="mb-3">
+                        <label for="archivo_config" class="form-label">Selecciona un archivo de configuración (.json):</label>
+                        <input type="file" class="form-control" id="archivo_config" name="archivo_config" accept=".json">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cargar configuración</button>
+                    <button type="button" class="btn btn-secondary" id="btn-restablecer">Restablecer configuración por defecto</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+const formCampos = document.getElementById('form-campos');
+const btnAplicar = document.getElementById('btn-aplicar');
+if (formCampos) {
+    formCampos.addEventListener('input', function() {
+        let vacio = false;
+        document.querySelectorAll('.campo-editable').forEach(input => {
+            if (!input.value.trim()) vacio = true;
+        });
+        btnAplicar.disabled = vacio;
+    });
+}
+document.getElementById('btn-restablecer').onclick = function() {
+    if (confirm('¿Seguro que quieres restablecer la configuración por defecto?')) {
+        window.location.href = "{{ url_for('configuracion_bp.configuracion', vista=vista) }}?reset=1";
+    }
+};
+</script>
