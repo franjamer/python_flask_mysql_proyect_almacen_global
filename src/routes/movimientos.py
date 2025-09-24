@@ -149,13 +149,12 @@ def eliminar_movimiento(idmovimientos):
         conn = db.get_connection()
         cursor = conn.cursor()
         asegurar_fila_minima_auto(
-            'movimientos_tabla',
-            ['idmovimientos'],
-            [idmovimientos]
+            'movimientos_tabla'   
         )
         cursor.execute(
             "DELETE FROM movimientos_tabla WHERE idmovimientos = %s", (idmovimientos,))
         conn.commit()
+        print("Eliminando movimiento con ID:", idmovimientos)
     except Exception as e:
         print(f"Error al eliminar movimiento: {e}")
         if conn:

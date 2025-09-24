@@ -98,7 +98,7 @@
                 <td>{{ mov['fecha_movimiento'] }}</td>
                 <td>{{ mov['stock_tras_movimiento'] }}</td>
                 <td>
-                    <form method="post" action="{{ url_for('movimientos_bp.eliminar_movimiento', idmovimientos=mov['idmovimientos']) }}" onsubmit="return confirm('¿Seguro que deseas eliminar este movimiento?');">
+                    <form method="post" action="{{ url_for('movimientos_bp.eliminar_movimiento', idmovimientos=mov.idmovimientos) }}" onsubmit="return confirm('¿Seguro que deseas eliminar este movimiento?');">
                         {% if puede_eliminar_movimientos(session.get('rol')) %}
                         <button type="submit" class="btn btn-danger btn-sm" style="opacity:0.9;">Eliminar</button>
                         {% else %}

@@ -29,44 +29,6 @@ def perfiles():
     config = cargar_configuracion()
     return render_template('perfiles.html', perfiles=insertObjects, config=config)
 
-@home_bp.route('/busqueda')
-def busqueda():
-    busqueda = request.args.get('busqueda', '')
-    campo = request.args.get('campo', 'referencia')
-    orden = request.args.get('orden', 'asc').lower()
-
-    repuestos = []
-    columnas = []
-    campos_validos = ['referencia', 'nombre', 'categoria', 'almacen']
-    if campo not in campos_validos:
-        campo = 'referencia'
-    if orden not in ['asc', 'desc']:
-        orden = 'asc'
-
-    if busqueda == '*':
-        query = f"SELECT * FROM inventario_tabla ORDER BY {campo} {orden.upper()}"
-        params = ()
-    elif busqueda:
-        query = f"SELECT * FROM inventario_tabla WHERE {campo} LIKE %s ORDER BY {campo} {orden.upper()}"
-        params = (f"%{busqueda}%",)
-    else:
-        query = None
-
-    if query:
-        conn = db.get_connection()
-        cursor = conn.cursor()
-        cursor.execute(query, params)
-        resultados = cursor.fetchall()
-        columnas = [column[0] for column in cursor.description]
-        if campo in columnas:
-            columnas = [campo] + [col for col in columnas if col != campo]
-        for fila in resultados:
-            repuestos.append(
-                dict(zip(columnas, [fila[columnas.index(col)] for col in columnas])))
-        cursor.close()
-
-    config = cargar_configuracion()
-    return render_template('busqueda.html', repuestos=repuestos, busqueda=busqueda, campo=campo, columnas=columnas, orden=orden, config=config)
 
 @home_bp.route('/repuestos')
 def repuestos():

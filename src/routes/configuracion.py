@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, request,session, redirect, url_for, flash
 import json
 import os
 import time
@@ -19,7 +19,7 @@ VISTAS_CONFIG = {
         "stock", "stock_minimo", "stock_maximo", "id_situacion_tabla"
     ],
     "busqueda": [
-        "referencia", "nombre", "categoria", "almacen", "stock"
+        "referencia", "nombre", "categoria", "almacen", "stock","ubicacion","id_situacion_tabla"
     ],
     "pedidos": [
         "id_pedido", "fecha", "referencia", "cantidad", "estado", "proveedor"
@@ -61,7 +61,12 @@ def cargar_configuracion():
         config['textos_menu'] = {"central": "Bienvenido al sistema de gestión","titulo_principal": "Bienvenido al sistema de gestión","titulo_secundario": "Menú Principal"}
 
     if 'nombres_vistas' not in config:
-        config['nombres_vistas'] = {k: k.replace('_', ' ').capitalize() for k in VISTAS_CONFIG.keys()}
+        config['nombres_vistas'] = {
+            'busqueda': 'Búsqueda de repuestos',
+            'inventario': 'Inventario',
+            'movimientos': 'Movimientos',
+            # ... otras vistas
+        }
     return config
 
 def guardar_configuracion(config):
@@ -73,6 +78,10 @@ def listar_archivos_config():
 
 @configuracion_bp.route('/configuracion', methods=['GET', 'POST'])
 def configuracion():
+    if session.get('perfil') != 'Admin':
+        flash('Acceso denegado: solo el perfil Admin puede acceder a configuración.', 'error')
+        return redirect(url_for('home_bp.menu'))
+
     config = cargar_configuracion()
     vista = request.args.get('vista', 'inventario')
     campos = VISTAS_CONFIG.get(vista, [])

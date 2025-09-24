@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request, redirect, url_for, session
+from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 from .utilidades import asegurar_fila_minima_auto
 import database as db
 from routes.configuracion import cargar_configuracion
@@ -100,21 +100,29 @@ def inventario():
     )
 
 
-@inventario_bp.route('/inventario/modificar/<referencia>', methods=['POST'])
-def modificar_repuesto(referencia):
+@inventario_bp.route('/inventario/modificar/<int:id>', methods=['POST'])
+def modificar_repuesto(id):
     if not puede_crear_actualizar():
         return redirect(url_for('inventario_bp.inventario'))
-    CAMPOS_EDIT = [c for c in CAMPOS if c not in ['referencia', 'nombre']]
-    datos = {campo: request.form.get(campo, '').strip()
-             for campo in CAMPOS_EDIT}
+    CAMPOS_EDIT = [c for c in CAMPOS]
+    datos = {campo: request.form.get(campo, '').strip() for campo in CAMPOS_EDIT}
     conn = db.get_connection()
     cursor = conn.cursor()
+
+    # Verificar si el registro existe
+    cursor.execute("SELECT referencia FROM inventario_tabla WHERE id=%s", (id,))
+    repuesto = cursor.fetchone()
+    if not repuesto:
+        flash("El repuesto no existe.", "error")
+        cursor.close()
+        conn.close()
+        return redirect(url_for('inventario_bp.inventario'))
+
     set_clause = ', '.join([f"{campo}=%s" for campo in CAMPOS_EDIT])
-    valores = [datos[campo] if campo != 'stock' else (
-        datos[campo] if datos[campo] != '' else 0) for campo in CAMPOS_EDIT]
-    valores.append(referencia)
+    valores = [datos[campo] if campo != 'stock' else (datos[campo] if datos[campo] != '' else 0) for campo in CAMPOS_EDIT]
+    valores.append(id)
     cursor.execute(
-        f"UPDATE inventario_tabla SET {set_clause} WHERE referencia=%s",
+        f"UPDATE inventario_tabla SET {set_clause} WHERE id=%s",
         tuple(valores)
     )
     conn.commit()
@@ -123,16 +131,32 @@ def modificar_repuesto(referencia):
     return redirect(url_for('inventario_bp.inventario'))
 
 
-@inventario_bp.route('/inventario/eliminar/<referencia>', methods=['POST'])
-def eliminar_repuesto(referencia):
+@inventario_bp.route('/inventario/eliminar/<int:id>', methods=['POST'])
+def eliminar_repuesto(id):
     if not puede_eliminar():
         return redirect(url_for('inventario_bp.inventario'))
     conn = db.get_connection()
     cursor = conn.cursor()
-    asegurar_fila_minima_auto('inventario_tabla')
-    cursor.execute(
-        "DELETE FROM inventario_tabla WHERE referencia=%s", (referencia,))
-    conn.commit()
+
+    # Obtener referencia para borrar movimientos
+    cursor.execute("SELECT referencia FROM inventario_tabla WHERE id=%s", (id,))
+    repuesto = cursor.fetchone()
+    referencia = repuesto[0] if repuesto else None
+
+    try:
+        if referencia:
+            cursor.execute(
+                "DELETE FROM movimientos_tabla WHERE referencia_pieza_repuesto=%s", (referencia,)
+            )
+            conn.commit()
+        asegurar_fila_minima_auto('inventario_tabla')
+        cursor.execute(
+            "DELETE FROM inventario_tabla WHERE id=%s", (id,)
+        )
+        conn.commit()
+    except Exception as e:
+        flash(f"Error al eliminar el repuesto: {e}", 'error')
+
     cursor.close()
     conn.close()
     return redirect(url_for('inventario_bp.inventario'))

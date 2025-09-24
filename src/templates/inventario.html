@@ -1,35 +1,27 @@
 {% extends "base.html" %}
-
-{% block title %}
-    {{ config.nombres_vistas['inventario'] if config and config.nombres_vistas and 'inventario' in config.nombres_vistas else 'Inventario' }}
-{% endblock %}
-
 {% block content %}
+{% set nombres_columnas = config.nombres_columnas if config and config.nombres_columnas else {} %}
+{% set nombre_vista = config.nombres_vistas['inventario'] if config and config.nombres_vistas and 'inventario' in config.nombres_vistas else 'Inventario' %}
 <a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
 
 <div class="container mt-4">
-    <h2>
-        {{ config.nombres_vistas['inventario'] if config and config.nombres_vistas and 'inventario' in config.nombres_vistas else 'Inventario' }}
-    </h2>
+    <h2>{{ nombre_vista }}</h2>
     {% if mensaje_error %}
         <div class="alert alert-danger">{{ mensaje_error }}</div>
     {% endif %}
 
     {% if puede_crear_actualizar() %}
+    <h3>Añadir nuevo repuesto</h3>
     <form method="post" class="mb-4">
         <div class="row">
             {% for campo in columnas if campo not in ['id', 'id_situacion_tabla'] %}
             <div class="col-md-3 mb-2">
-                <label class="form-label">
-                    {{ config.nombres_columnas[campo] if config and config.nombres_columnas and campo in config.nombres_columnas else campo|capitalize }}
-                </label>
+                <label class="form-label">{{ nombres_columnas.get(campo, campo|capitalize) }}</label>
                 <input type="text" class="form-control" name="{{ campo }}" required>
             </div>
             {% endfor %}
             <div class="col-md-3 mb-2">
-                <label class="form-label">
-                    {{ config.nombres_columnas['id_situacion_tabla'] if config and config.nombres_columnas and 'id_situacion_tabla' in config.nombres_columnas else 'Ubicación' }}
-                </label>
+                <label class="form-label">{{ nombres_columnas.get('id_situacion_tabla', 'Ubicación') }}</label>
                 <select name="id_situacion_tabla" class="form-select">
                     <option value="">Sin ubicación</option>
                     {% for pos in posiciones %}
@@ -44,17 +36,21 @@
     </form>
     {% endif %}
 
+    {% if puede_crear_actualizar() %}
+    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#nuevaSituacionModal">
+        Nueva situación
+    </button>
+    {% endif %}
+
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
                     {% for col in columnas %}
-                    <th>
-                        {{ config.nombres_columnas[col] if config and config.nombres_columnas and col in config.nombres_columnas else col|capitalize }}
-                    </th>
+                    <th>{{ nombres_columnas.get(col, col|capitalize) }}</th>
                     {% endfor %}
                     <th>Ubicación</th>
-                    {% if puede_eliminar() %}
+                    {% if puede_crear_actualizar() or puede_eliminar() %}
                     <th>Acciones</th>
                     {% endif %}
                 </tr>
@@ -68,9 +64,13 @@
                     <td>
                         {{ repuesto.ubicacion if repuesto.ubicacion else 'Sin ubicación' }}
                     </td>
-                    {% if puede_eliminar() %}
+                    {% if puede_crear_actualizar() or puede_eliminar() %}
                     <td>
-                        <form method="post" action="{{ url_for('inventario_bp.eliminar_repuesto', referencia=repuesto.referencia) }}" style="display:inline;" onsubmit="return confirm('¿Eliminar este repuesto?');">
+                        <!-- Botón "Actualizar" -->
+                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modificarRepuestoModal{{ repuesto.id }}">
+                            Actualizar
+                        </button>
+                        <form method="post" action="{{ url_for('inventario_bp.eliminar_repuesto', id=repuesto.id) }}" style="display:inline;" onsubmit="return confirm('¿Eliminar este repuesto?');">
                             <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
                         </form>
                     </td>
@@ -81,4 +81,78 @@
         </table>
     </div>
 </div>
+
+<!-- Modal "Nueva situación" -->
+<div class="modal fade" id="nuevaSituacionModal" tabindex="-1" aria-labelledby="nuevaSituacionModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="nuevaSituacionModalLabel">Nueva situación</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{{ url_for('situacion_bp.nueva_situacion') }}">
+                    <div class="mb-3">
+                        <label for="almacen" class="form-label">Almacén</label>
+                        <input type="text" class="form-control" id="almacen" name="almacen" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="estanteria" class="form-label">Estantería</label>
+                        <input type="text" class="form-control" id="estanteria" name="estanteria" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="lado" class="form-label">Lado</label>
+                        <input type="text" class="form-control" id="lado" name="lado" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="columna" class="form-label">Columna</label>
+                        <input type="text" class="form-control" id="columna" name="columna" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="altura" class="form-label">Altura</label>
+                        <input type="text" class="form-control" id="altura" name="altura" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal "Modificar repuesto" -->
+{% for repuesto in repuestos %}
+<div class="modal fade" id="modificarRepuestoModal{{ repuesto.id }}" tabindex="-1" aria-labelledby="modificarRepuestoModalLabel{{ repuesto.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modificarRepuestoModalLabel{{ repuesto.id }}">Modificar repuesto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="post" action="{{ url_for('inventario_bp.modificar_repuesto', id=repuesto.id) }}">
+                    {% for campo in columnas if campo not in ['id', 'id_situacion_tabla'] %}
+                    <div class="mb-3">
+                        <label for="{{ campo }}" class="form-label">{{ nombres_columnas.get(campo, campo|capitalize) }}</label>
+                        <input type="text" class="form-control" id="{{ campo }}" name="{{ campo }}" value="{{ repuesto[campo] }}" required>
+                    </div>
+                    {% endfor %}
+                    <!-- Campo "Ubicación" -->
+                    <div class="mb-3">
+                        <label for="id_situacion_tabla" class="form-label">{{ nombres_columnas.get('id_situacion_tabla', 'Ubicación') }}</label>
+                        <select name="id_situacion_tabla" class="form-select">
+                            <option value="">Sin ubicación</option>
+                            {% for pos in posiciones %}
+                                <option value="{{ pos.id_situacion_tabla }}" {% if repuesto.id_situacion_tabla == pos.id_situacion_tabla %}selected{% endif %}>
+                                    {{ pos.almacen }} - Est:{{ pos.estanteria }} Col:{{ pos.columna }} Alt:{{ pos.altura }} Lado:{{ pos.lado }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
 {% endblock %}
