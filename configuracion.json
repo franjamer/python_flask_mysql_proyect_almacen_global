@@ -1,6 +1,6 @@
 {
   "nombres_columnas": {
-    "referencia": "referencia",
+    "referencia": "Referencia",
     "nombre": "Descripcion Completa",
     "categoria": "Tipo",
     "subcategoria": "Montaje",
@@ -29,9 +29,9 @@
     "lado": "Caja",
     "columna": "Columna",
     "altura": "Fila",
-    "central": "central",
-    "titulo_principal": "titulo_principal",
-    "titulo_secundario": "titulo_secundario"
+    "central": "Central",
+    "titulo_principal": "Título Principal",
+    "titulo_secundario": "Título Secundario"
   },
   "textos_menu": {
     "central": "Taller Electrónica",
@@ -45,9 +45,9 @@
     "movimientos": "Movimientos",
     "operadores": "Operadores",
     "perfiles": "Perfiles",
-    "situacion": "Situacion",
-    "mapa_interactivo": "mapa_interactivo",
-    "menu": "Menu"
+    "situacion": "Situación",
+    "mapa_interactivo": "Mapa Interactivo",
+    "menu": "Menú"
   },
   "estilo_menu": {
     "color_texto_menu": "#fb0000",
