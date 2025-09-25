@@ -9,6 +9,10 @@
     --color-titulo-sombra2: #ca8bbb;
     --fuente-principal: 'Georgia', serif;
     /* Agrega más variables según lo que quieras personalizar */
+    --color-texto-menu: #000000;
+    --color-fondo-menu: #ffffff;
+    --tamano-texto-menu: 16px;
+    --estilo-texto-menu: normal;
 }
 
 /* Colores y fuentes principales */
@@ -188,4 +192,14 @@ th {
 }
 td {
     cursor: default; /* Cursor por defecto */
+}
+
+.estilo-preview {
+    color: var(--color-texto-menu);
+    background: var(--color-fondo-menu);
+    font-size: var(--tamano-texto-menu);
+    font-style: var(--estilo-texto-menu);
+    padding: 2px 10px;
+    border-radius: 4px;
+    display: inline-block;
 }

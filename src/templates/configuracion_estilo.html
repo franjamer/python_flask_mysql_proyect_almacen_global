@@ -1,3 +1,117 @@
-<div class="alert alert-info mt-3 text-center">
-    En construcción
-</div>
+{% if config.estilo_menu %}
+<style>
+:root {
+    --color-texto-menu: {{ config.estilo_menu.color_texto_menu or '#000000' }};
+    --color-fondo-menu: {{ config.estilo_menu.color_fondo_menu or '#ffffff' }};
+    --tamano-texto-menu: {{ config.estilo_menu.tamano_texto_menu or '16' }}px;
+    --estilo-texto-menu: {{ config.estilo_menu.estilo_texto_menu or 'normal' }};
+}
+</style>
+{% endif %}
+<form method="post" action="{{ url_for('configuracion_bp.configuracion') }}">
+    <!-- Mitad superior -->
+    <div class="row mb-4">
+        <!-- Valores actuales -->
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-light text-center">
+                    <b>Valores actuales</b>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group">
+                        <li class="list-group-item">
+                            <b>Color de texto:</b> {{ config.estilo_menu.color_texto_menu or '#000000' }}
+                        </li>
+                        <li class="list-group-item">
+                            <b>Color de fondo:</b> {{ config.estilo_menu.color_fondo_menu or '#ffffff' }}
+                        </li>
+                        <li class="list-group-item">
+                            <b>Tamaño de texto:</b> {{ config.estilo_menu.tamano_texto_menu or '16' }} px
+                        </li>
+                        <li class="list-group-item">
+                            <b>Estilo de texto:</b> {{ config.estilo_menu.estilo_texto_menu or 'normal' }}
+                        </li>
+                        <li class="list-group-item">
+                            <span class="estilo-preview">
+                                Vista previa de los estilos
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- Parámetros modificables -->
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-light text-center">
+                    <b>Parámetros a modificar</b>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Color de texto</label>
+                        <input type="color" class="form-control form-control-color" name="color_texto_menu" value="{{ config.estilo_menu.color_texto_menu or '#000000' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Color de fondo</label>
+                        <input type="color" class="form-control form-control-color" name="color_fondo_menu" value="{{ config.estilo_menu.color_fondo_menu or '#ffffff' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Tamaño de texto (px)</label>
+                        <input type="number" class="form-control" name="tamano_texto_menu" min="10" max="72" value="{{ config.estilo_menu.tamano_texto_menu or '16' }}">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Estilo de texto</label>
+                        <select class="form-select" name="estilo_texto_menu">
+                            <option value="normal" {% if config.estilo_menu.estilo_texto_menu == 'normal' %}selected{% endif %}>Normal</option>
+                            <option value="bold" {% if config.estilo_menu.estilo_texto_menu == 'bold' %}selected{% endif %}>Negrita</option>
+                            <option value="italic" {% if config.estilo_menu.estilo_texto_menu == 'italic' %}selected{% endif %}>Cursiva</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Mitad inferior -->
+    <div class="row">
+        <!-- Aplicación local -->
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-light text-center">
+                    <b>Aplicar cambios a una vista</b>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Vista</label>
+                        <select class="form-select" name="vista_local">
+                            {% for v in vistas.keys() %}
+                                <option value="{{ v }}">{{ v|replace('_', ' ')|capitalize }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" name="accion" value="aplicar_local" class="btn btn-primary">Aplicar a vista seleccionada</button>
+                </div>
+            </div>
+        </div>
+        <!-- Aplicación global -->
+        <div class="col-md-6">
+            <div class="card h-100">
+                <div class="card-header bg-light text-center">
+                    <b>Aplicar cambios globalmente</b>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">Parámetro a aplicar</label>
+                        <select class="form-select" name="parametro_global">
+                            <option value="todo">Todos</option>
+                            <option value="color_texto_menu">Color de texto</option>
+                            <option value="color_fondo_menu">Color de fondo</option>
+                            <option value="tamano_texto_menu">Tamaño de texto</option>
+                            <option value="estilo_texto_menu">Estilo de texto</option>
+                        </select>
+                    </div>
+                    <button type="submit" name="accion" value="aplicar_global" class="btn btn-success">Aplicar globalmente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>

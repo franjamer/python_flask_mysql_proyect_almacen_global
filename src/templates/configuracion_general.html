@@ -3,9 +3,9 @@
     <select name="vista" id="vista" class="form-select" onchange="this.form.submit()">
         {% for v, campos_v in vistas.items() %}
             {% if v != 'configuracion' %}
-            <option value="{{ v }}" {% if v == vista %}selected{% endif %}>
-                {{ v|replace('_', ' ')|capitalize }}
-            </option>
+                <option value="{{ v }}" {% if v == vista %}selected{% endif %}>
+                    {{ v|replace('_', ' ')|capitalize }}
+                </option>
             {% endif %}
         {% endfor %}
     </select>
@@ -34,10 +34,10 @@
                         </li>
                     {% else %}
                         {% for campo in campos %}
-                        <li class="list-group-item flex-fill text-center">
-                            <b>{{ campo|replace('_', ' ')|capitalize }}</b><br>
-                            <span class="badge bg-primary rounded-pill">{{ config.nombres_columnas[campo] }}</span>
-                        </li>
+                            <li class="list-group-item flex-fill text-center">
+                                <b>{{ campo|replace('_', ' ')|capitalize }}</b><br>
+                                <span class="badge bg-primary rounded-pill">{{ config.nombres_columnas[campo] }}</span>
+                            </li>
                         {% endfor %}
                     {% endif %}
                 </ul>
@@ -45,7 +45,7 @@
         </div>
     </div>
 </div>
-<!-- Solo la mitad inferior: campos editables en tres columnas y botón en la columna más corta -->
+<!-- Mitad inferior: campos editables en tres columnas y botón en la columna más corta -->
 <div class="row">
     <div class="col-12">
         <form id="form-campos" method="post" autocomplete="off">
@@ -78,41 +78,41 @@
                             {% set col3 = campos[por_col*2:] %}
                             <div class="col-md-4">
                                 {% for campo in col1 %}
-                                <div class="mb-3">
-                                    <label class="form-label">{{ campo|replace('_', ' ')|capitalize }}</label>
-                                    <input type="text" class="form-control campo-editable" name="nombre_columna_{{ campo }}" value="{{ config.nombres_columnas[campo] }}" required>
-                                </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">{{ campo|replace('_', ' ')|capitalize }}</label>
+                                        <input type="text" class="form-control campo-editable" name="nombre_columna_{{ campo }}" value="{{ config.nombres_columnas[campo] }}" required>
+                                    </div>
                                 {% endfor %}
                                 {% if col1|length <= col2|length and col1|length <= col3|length %}
-                                <div class="d-flex justify-content-center mt-4">
-                                    <button type="submit" class="btn btn-success" id="btn-aplicar" disabled>Aplicar cambios</button>
-                                </div>
+                                    <div class="d-flex justify-content-center mt-4 bg-info border rounded py-3">
+                                        <button type="submit" class="btn btn-success" id="btn-aplicar" disabled>Aplicar cambios</button>
+                                    </div>
                                 {% endif %}
                             </div>
                             <div class="col-md-4">
                                 {% for campo in col2 %}
-                                <div class="mb-3">
-                                    <label class="form-label">{{ campo|replace('_', ' ')|capitalize }}</label>
-                                    <input type="text" class="form-control campo-editable" name="nombre_columna_{{ campo }}" value="{{ config.nombres_columnas[campo] }}" required>
-                                </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">{{ campo|replace('_', ' ')|capitalize }}</label>
+                                        <input type="text" class="form-control campo-editable" name="nombre_columna_{{ campo }}" value="{{ config.nombres_columnas[campo] }}" required>
+                                    </div>
                                 {% endfor %}
                                 {% if col2|length < col1|length and col2|length <= col3|length %}
-                                <div class="d-flex justify-content-center mt-4">
-                                    <button type="submit" class="btn btn-success" id="btn-aplicar" disabled>Aplicar cambios</button>
-                                </div>
+                                    <div class="d-flex justify-content-center mt-4 bg-info border rounded py-3">
+                                        <button type="submit" class="btn btn-success" id="btn-aplicar" disabled>Aplicar cambios</button>
+                                    </div>
                                 {% endif %}
                             </div>
                             <div class="col-md-4">
                                 {% for campo in col3 %}
-                                <div class="mb-3">
-                                    <label class="form-label">{{ campo|replace('_', ' ')|capitalize }}</label>
-                                    <input type="text" class="form-control campo-editable" name="nombre_columna_{{ campo }}" value="{{ config.nombres_columnas[campo] }}" required>
-                                </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">{{ campo|replace('_', ' ')|capitalize }}</label>
+                                        <input type="text" class="form-control campo-editable" name="nombre_columna_{{ campo }}" value="{{ config.nombres_columnas[campo] }}" required>
+                                    </div>
                                 {% endfor %}
                                 {% if col3|length < col1|length and col3|length < col2|length %}
-                                <div class="d-flex justify-content-center mt-4 bg-info border rounded py-3">
-                                    <button type="submit" class="btn btn-success" id="btn-aplicar" disabled>Aplicar cambios</button>
-                                </div>
+                                    <div class="d-flex justify-content-center mt-4 bg-info border rounded py-3">
+                                        <button type="submit" class="btn btn-success" id="btn-aplicar" disabled>Aplicar cambios</button>
+                                    </div>
                                 {% endif %}
                             </div>
                         {% endif %}
@@ -125,7 +125,7 @@
 <script>
 const formCampos = document.getElementById('form-campos');
 const btnAplicar = document.getElementById('btn-aplicar');
-if (formCampos) {
+if (formCampos && btnAplicar) {
     formCampos.addEventListener('input', function() {
         let vacio = false;
         document.querySelectorAll('.campo-editable').forEach(input => {
