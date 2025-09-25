@@ -18,6 +18,16 @@
         <li class="nav-item" role="presentation">
             <button
                 class="nav-link"
+                id="gestion-archivos-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#gestion-archivos"
+                type="button"
+                role="tab"
+            >Gestión de archivos</button>
+        </li>
+        <li class="nav-item" role="presentation">
+            <button
+                class="nav-link"
                 id="estilo-tab"
                 data-bs-toggle="tab"
                 data-bs-target="#estilo"
@@ -27,98 +37,17 @@
         </li>
     </ul>
     <div class="tab-content">
-        <!-- Pestaña General: aquí va TODO lo que ya tienes -->
+        <!-- Pestaña General -->
         <div class="tab-pane fade show active" id="general" role="tabpanel">
             {% include "configuracion_general.html" %}
         </div>
+        <!-- Pestaña Gestión de archivos -->
+        <div class="tab-pane fade" id="gestion-archivos" role="tabpanel">
+            {% include "configuracion_gestion_archivos.html" %}
+        </div>
         <!-- Pestaña Estilo menú principal -->
         <div class="tab-pane fade" id="estilo" role="tabpanel">
-            <form method="post" enctype="multipart/form-data" id="form-estilo">
-                <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Color del texto</label>
-                        <input
-                            type="color"
-                            class="form-control form-control-color"
-                            name="color_texto_menu"
-                            value="{{ config.estilo_menu.color_texto_menu if config.estilo_menu and config.estilo_menu.color_texto_menu else '#fb0000' }}"
-                        >
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Color de fondo</label>
-                        <input
-                            type="color"
-                            class="form-control form-control-color"
-                            name="color_fondo_menu"
-                            value="{{ config.estilo_menu.color_fondo_menu if config.estilo_menu and config.estilo_menu.color_fondo_menu else '#eeb6bb' }}"
-                        >
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Tamaño del texto principal (px)</label>
-                        <input
-                            type="number"
-                            class="form-control"
-                            name="tamano_texto_menu"
-                            min="10"
-                            max="100"
-                            value="{{ config.estilo_menu.tamano_texto_menu if config.estilo_menu and config.estilo_menu.tamano_texto_menu else '48' }}"
-                        >
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Marca de agua (imagen PNG/JPG)</label>
-                        <input
-                            type="file"
-                            class="form-control"
-                            name="marca_agua_menu"
-                            accept="image/png, image/jpeg"
-                        >
-                        {% if config.estilo_menu and config.estilo_menu.marca_agua_menu %}
-                        <div class="mt-2">
-                            <img src="{{ url_for('static', filename='marca_agua/' ~ config.estilo_menu.marca_agua_menu) }}" alt="Marca de agua actual" style="max-width:150px;opacity:0.5;">
-                        </div>
-                        {% endif %}
-                    </div>
-                </div>
-                <button
-                    type="submit"
-                    class="btn btn-success mt-2"
-                    name="accion"
-                    value="guardar_estilo"
-                >Guardar estilo</button>
-            </form>
-        </div>
-    </div>
-    <!-- Explorador de ficheros de configuración -->
-    <div class="card mt-4">
-        <div class="card-header bg-light">
-            <b>Gestión de archivos de configuración</b>
-        </div>
-        <div class="card-body">
-            <form method="post" id="form-gestor">
-                <div class="row align-items-end">
-                    <div class="col-md-4 mb-3">
-                        <label for="nombre_guardar" class="form-label">Nombre para guardar (sin .json):</label>
-                        <input type="text" class="form-control" name="nombre_guardar" id="nombre_guardar" placeholder="Ej: mi_configuracion">
-                    </div>
-                    <div class="col-md-4 mb-3">
-                        <label for="archivo_config" class="form-label">Selecciona un archivo:</label>
-                        <select class="form-select" name="archivo_config" id="archivo_config">
-                            {% for archivo in archivos_config %}
-                            <option value="{{ archivo }}">{{ archivo }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
-                    <div class="col-md-1 mb-3">
-                        <button type="submit" name="accion" value="cargar" class="btn btn-primary w-100">Cargar</button>
-                    </div>
-                    <div class="col-md-1 mb-3">
-                        <button type="submit" name="accion" value="guardar_todo" class="btn btn-success w-100">Guardar</button>
-                    </div>
-                    <div class="col-md-2 mb-3">
-                        <button type="submit" name="accion" value="eliminar" class="btn btn-danger w-100" onclick="return confirm('¿Eliminar este archivo?');">Eliminar</button>
-                    </div>
-                </div>
-            </form>
+            {% include "configuracion_estilo.html" %}
         </div>
     </div>
 </div>

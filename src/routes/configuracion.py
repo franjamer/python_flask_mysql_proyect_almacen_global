@@ -62,10 +62,16 @@ def cargar_configuracion():
 
     if 'nombres_vistas' not in config:
         config['nombres_vistas'] = {
-            'busqueda': 'Búsqueda de repuestos',
+            'Busqueda': 'Busqueda de Repuestos',
             'inventario': 'Inventario',
             'movimientos': 'Movimientos',
-            # ... otras vistas
+            'pedidos': 'Pedidos',
+            'operadores': 'Operadores',
+            'perfiles': 'Perfiles',
+            'situacion': 'Situación',
+            'mapa_interactivo': 'Mapa Interactivo',
+            'menu': 'Menú Principal'
+            
         }
     return config
 
@@ -160,3 +166,29 @@ def configuracion():
         vistas=VISTAS_CONFIG,
         archivos_config=archivos_config
     )
+
+@configuracion_bp.route('/cargar_estilo', methods=['POST'])
+def cargar_estilo():
+    if session.get('perfil') != 'Admin':
+        flash('Acceso denegado: solo el perfil Admin puede acceder a configuración.', 'error')
+        return redirect(url_for('home_bp.menu'))
+
+    config = cargar_configuracion()
+    archivo = request.form.get('archivo_config')
+    if archivo:
+        ruta = os.path.join(PERSONAL_CONFIG_DIR, archivo)
+        if os.path.exists(ruta):
+            with open(ruta, 'r', encoding='utf-8') as f:
+                nueva_config = json.load(f)
+            # Solo se cargan los estilos del menú
+            if 'estilo_menu' in nueva_config:
+                config['estilo_menu'] = nueva_config['estilo_menu']
+                guardar_configuracion(config)
+                flash('Estilo cargado correctamente.', 'success')
+            else:
+                flash('El archivo no contiene estilos válidos.', 'error')
+        else:
+            flash('Archivo no encontrado.', 'error')
+    else:
+        flash('No se ha seleccionado ningún archivo.', 'error')
+    return redirect(url_for('configuracion_bp.configuracion'))

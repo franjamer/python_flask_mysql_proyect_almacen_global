@@ -1,12 +1,51 @@
-/* Colores y fuentes principales */
-body {
-    background: #eeb6bb;
-    font-family: 'Georgia', serif;
-    max-height: fit-content;
+:root {
+    --color-fondo: #eeb6bb;
+    --color-principal: #e9a6a9;
+    --color-menu-btn: #91cbff;
+    --color-menu-btn-hover: #b80000;
+    --color-titulo: #ff9900;
+    --color-titulo-secundario: #eeb124;
+    --color-titulo-sombra: #8360ea;
+    --color-titulo-sombra2: #ca8bbb;
+    --fuente-principal: 'Georgia', serif;
+    /* Agrega más variables según lo que quieras personalizar */
 }
 
+/* Colores y fuentes principales */
+body {
+    background: var(--color-fondo);
+    font-family: var(--fuente-principal);
+    max-height: fit-content;
+    margin: 0%;
+    padding: 0 0 0 0;
+    justify-content: center;
+    align-items: center;
+}
+table, th, td {
+    display: table-cell;
+    border: 1px solid black;
+    border-collapse: collapse;
+    padding: 8px;
+    text-align: center;
+    font-size: 0.9rem;
+    background: #fff;
+    max-width: fit-content;
+    margin: 0 5%;
+
+}
+div.container {
+    display: block;
+    width: 100%;
+    max-width: max-content;
+    /* margin: 1px 5px 1px 5px; */
+    padding: 5px 5px 5px 5px;
+}
 .container {
-    display:block;
+    display: block;
+    width: 100%;
+    max-width: max-content;
+    padding: 5px 5px 5px 5px;
+    
 }
 
 .main-bg {
@@ -15,14 +54,16 @@ body {
     background: #eeb6bb;
 }
 
-
 .sidebar {
     width: 270px;
-    background: #e9a6a9;
+    background: var(--color-principal);
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding-top: 40px;
+    margin-left: 0.5%;
+    margin-top: 20px;
+    margin-right: 20px;
+
 }
 
 .menu-btns {
@@ -37,7 +78,7 @@ body {
     width: 200px;
     height: 90px;
     margin: 0 auto;
-    background: #91cbff;
+    background: var(--color-menu-btn);
     color: #fb0000;
     font-size: 1.5rem;
     font-family: 'Georgia', serif;
@@ -70,7 +111,7 @@ body {
 
 .menu-btn:hover {
     transform: scale(1.05);
-    background: #b80000;
+    background: var(--color-menu-btn-hover);
 }
 
 .main-content {
@@ -81,7 +122,7 @@ body {
     justify-content: space-between;
     align-items: center;
     padding: 40px 0 40px 0;
-    margin: 20px;
+    margin: 10px;
     position: relative;
 }
 
@@ -90,17 +131,17 @@ body {
 }
 
 .titulo-principal {
-    color: #ff9900;
+    color: var(--color-titulo);
     font-size: 5vw;
     font-family: 'Georgia', serif;
-    text-shadow: 2px 2px 0 #8360ea, 4px 4px 0 #ca8bbb;
+    text-shadow: 2px 2px 0 var(--color-titulo-sombra), 4px 4px 0 var(--color-titulo-sombra2);
     margin-top: 20px;
     margin-bottom: 0;
     text-align: center;
 }
 
 .titulo-secundario {
-    color: #eeb124;
+    color: var(--color-titulo-secundario);
     font-size: 3vw;
     font-family: 'Georgia', serif;
     text-shadow: 2px 2px 0 #910000, 4px 4px 0 #fff;
@@ -110,7 +151,7 @@ body {
     margin: 0;
 }
 .titulo-central {
-    color: #eeb124;
+    color: var(--color-titulo-secundario);
     font-size: 3vw;
     font-family: 'Georgia', serif;
     text-shadow: 2px 2px 0 #910000, 4px 4px 0 #fff;
@@ -126,8 +167,12 @@ body {
 
 /* Permite redimensionar columnas de todas las tablas */
 table {
+    padding: 0;
     table-layout: auto;
-    width: 100%;
+    width: 98%;
+    margin: 0;
+    box-sizing: border-box;
+
 }
 
 th, td {
@@ -139,7 +184,7 @@ th, td {
     /*cursor: ew-resize;    /* Cursor de redimensionar */
 }
 th {
-    cursor: col-resize; /* Cursor de redimensionar */
+    cursor: default; /* Cursor de redimensionar */
 }
 td {
     cursor: default; /* Cursor por defecto */
