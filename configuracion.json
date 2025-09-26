@@ -32,7 +32,50 @@
     "central": "Central",
     "titulo_principal": "Título Principal",
     "titulo_secundario": "Título Secundario",
-    "ubicacion": "Ubicacion"
+    "ubicacion": "Ubicacion",
+    "codigo_operador": "Codigo operador",
+    "nombre_completo": "Nombre completo",
+    "telefono": "Telefono",
+    "email": "Email",
+    "direccion": "Direccion",
+    "referencia_pieza_repuesto": "Referencia pieza repuesto",
+    "nombre_pieza_repuesto": "Nombre pieza repuesto",
+    "tipo_de_movimiento": "Tipo de movimiento",
+    "unidad_de_cantidad": "Unidad de cantidad",
+    "fecha_movimiento": "Fecha movimiento",
+    "stock_tras_movimiento": "Stock tras movimiento",
+    "username": "Username",
+    "password_hash": "Password hash",
+    "full_name": "Full name",
+    "role": "Role",
+    "search_term": "Search term",
+    "filter_by": "Filter by",
+    "sort_order": "Sort order",
+    "page_number": "Page number",
+    "page_size": "Page size",
+    "Referencia": "Referencia",
+    "Nombre": "Nombre",
+    "Categoria": "Categoria",
+    "Subcategoria": "Subcategoria",
+    "Caracteristicas_Medidas": "Caracteristicas medidas",
+    "Fotos_Planos": "Fotos planos",
+    "Empaquetado": "Empaquetado",
+    "Stock": "Stock",
+    "Stock_Minimo": "Stock minimo",
+    "Stock_Maximo": "Stock maximo",
+    "id_Situacion_Tabla": "Id situacion tabla",
+    "Codigo_Operador": "Codigo operador",
+    "Nombre_Completo": "Nombre completo",
+    "Telefono": "Telefono",
+    "Email": "Email",
+    "Direccion": "Direccion",
+    "Referencia_Pieza_Repuesto": "Referencia pieza repuesto",
+    "Nombre_Pieza_Repuesto": "Nombre pieza repuesto",
+    "Tipo_De_Movimiento": "Tipo de movimiento",
+    "Cantidad": "Cantidad",
+    "Unidad_De_Cantidad": "Unidad de cantidad",
+    "Fecha_Movimiento": "Fecha movimiento",
+    "Stock_Tras_Movimiento": "Stock tras movimiento"
   },
   "textos_menu": {
     "central": "Taller Electrónica",
@@ -51,8 +94,17 @@
     "menu": "Menú"
   },
   "estilo_menu": {
-    "color_texto_menu": "#fb0000",
-    "color_fondo_menu": "#eeb6bb",
-    "tamano_texto_menu": "48"
+    "color_texto_menu": "#cb1543",
+    "color_fondo_menu": "#ffc7c7",
+    "tamano_texto_menu": "20",
+    "estilo_texto_menu": "italic"
+  },
+  "estilos_vistas": {
+    "busqueda": {
+      "color_texto_menu": "#cb1543",
+      "color_fondo_menu": "#ffc7c7",
+      "tamano_texto_menu": "25",
+      "estilo_texto_menu": "normal"
+    }
   }
 }

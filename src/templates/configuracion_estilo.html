@@ -1,13 +1,3 @@
-{% if config.estilo_menu %}
-<style>
-:root {
-    --color-texto-menu: {{ config.estilo_menu.color_texto_menu or '#000000' }};
-    --color-fondo-menu: {{ config.estilo_menu.color_fondo_menu or '#ffffff' }};
-    --tamano-texto-menu: {{ config.estilo_menu.tamano_texto_menu or '16' }}px;
-    --estilo-texto-menu: {{ config.estilo_menu.estilo_texto_menu or 'normal' }};
-}
-</style>
-{% endif %}
 <form method="post" action="{{ url_for('configuracion_bp.configuracion') }}">
     <!-- Mitad superior -->
     <div class="row mb-4">

@@ -12,7 +12,8 @@ from routes.operadores import operadores_bp
 from routes.roles import puede_eliminar_movimientos
 from routes.situacion import situacion_bp
 from routes.mapa import mapa_bp
-from routes.configuracion import configuracion_bp, cargar_configuracion
+from routes.configuracion import configuracion_bp
+from routes.configuracion_carga import cargar_configuracion
 from routes.proveedores import proveedores_bp
 from routes.busqueda import busqueda_bp
 # from src import create_app
@@ -23,6 +24,11 @@ template_dir = os.path.join(template_dir, 'src', 'templates')
 # Inicialización de la aplicación Flask
 app = Flask(__name__, template_folder=template_dir)
 app.secret_key = 'FJMR_ADMIN'
+
+@app.context_processor
+def inject_config():
+    config = cargar_configuracion()
+    return dict(config=config)
 
 # RUTA DE LOGIN
 @app.route('/login', methods=['GET', 'POST'])

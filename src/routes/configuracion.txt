@@ -1,0 +1,238 @@
+from flask import Blueprint, render_template, request,session, redirect, url_for, flash
+import json
+import os
+import time
+
+configuracion_bp = Blueprint('configuracion_bp', __name__)
+
+CONFIG_PATH = os.path.join(os.path.dirname(__file__), '../../configuracion.json')
+# Cambia aquí el nombre de la carpeta si quieres 'personal_config'
+PERSONAL_CONFIG_DIR = os.path.join(os.path.dirname(__file__), '../../personal_config')
+if not os.path.exists(PERSONAL_CONFIG_DIR):
+    os.makedirs(PERSONAL_CONFIG_DIR)
+
+# Define las vistas y los campos configurables de cada una
+VISTAS_CONFIG = {
+    "inventario": [
+        "referencia", "nombre", "categoria", "subcategoria",
+        "caracteristicas_medidas", "fotos_planos", "empaquetado",
+        "stock", "stock_minimo", "stock_maximo", "id_situacion_tabla"
+    ],
+    "busqueda": [
+        "referencia", "nombre", "categoria", "almacen", "stock","ubicacion","id_situacion_tabla"
+    ],
+    "pedidos": [
+        "id_pedido", "fecha", "referencia", "cantidad", "estado", "proveedor"
+    ],
+    "movimientos": [
+        "id_movimiento", "fecha", "referencia", "cantidad", "tipo", "operador"
+    ],
+    "operadores": [
+        "id_operador", "nombre", "perfil", "activo"
+    ],
+    "perfiles": [
+        "id_perfil", "perfil", "descripcion"
+    ],
+    "situacion": [
+        "id_situacion_tabla", "almacen", "estanteria", "lado", "columna", "altura"
+    ],
+    "mapa_interactivo": [
+        "almacen", "estanteria", "lado", "columna", "altura"
+    ],
+    "menu": ["central", "titulo_principal", "titulo_secundario"]
+}
+
+def cargar_configuracion():
+    import os, json
+    CONFIG_PATH = os.path.join(os.path.dirname(__file__), '../../configuracion.json')
+    if os.path.exists(CONFIG_PATH):
+        with open(CONFIG_PATH, 'r', encoding='utf-8') as f:
+            config = json.load(f)
+    else:
+        config = {}
+    if 'nombres_columnas' not in config:
+        config['nombres_columnas'] = {}
+    # Añade todos los campos de todas las vistas si faltan
+    for campos in VISTAS_CONFIG.values():
+        for campo in campos:
+            if campo not in config['nombres_columnas']:
+                config['nombres_columnas'][campo] = campo.replace('_', ' ').capitalize()
+    if 'textos_menu' not in config:
+        config['textos_menu'] = {"central": "Bienvenido al sistema de gestión","titulo_principal": "Bienvenido al sistema de gestión","titulo_secundario": "Menú Principal"}
+
+    if 'nombres_vistas' not in config:
+        config['nombres_vistas'] = {
+            'Busqueda': 'Busqueda de Repuestos',
+            'inventario': 'Inventario',
+            'movimientos': 'Movimientos',
+            'pedidos': 'Pedidos',
+            'operadores': 'Operadores',
+            'perfiles': 'Perfiles',
+            'situacion': 'Situación',
+            'mapa_interactivo': 'Mapa Interactivo',
+            'menu': 'Menú Principal'
+            
+        }
+    return config
+
+def guardar_configuracion(config):
+    with open(CONFIG_PATH, 'w', encoding='utf-8') as f:
+        json.dump(config, f, ensure_ascii=False, indent=2)
+
+def listar_archivos_config():
+    return [f for f in os.listdir(PERSONAL_CONFIG_DIR) if f.endswith('.json')]
+
+@configuracion_bp.route('/configuracion', methods=['GET', 'POST'])
+def configuracion():
+    if session.get('perfil') != 'Admin':
+        flash('Acceso denegado: solo el perfil Admin puede acceder a configuración.', 'error')
+        return redirect(url_for('home_bp.menu'))
+
+    config = cargar_configuracion()
+    vista = request.args.get('vista', 'inventario')
+    campos = VISTAS_CONFIG.get(vista, [])
+    archivos_config = listar_archivos_config()
+
+    if request.method == 'POST':
+        accion = request.form.get('accion')
+        archivo = request.form.get('archivo_config')
+        nombre_guardar = request.form.get('nombre_guardar', '').strip()
+
+        # Guardar solo los estilos del menú principal
+        if accion == 'guardar_estilo':
+            if 'estilo_menu' not in config:
+                config['estilo_menu'] = {}
+            config['estilo_menu']['color_texto_menu'] = request.form.get('color_texto_menu', '#fb0000')
+            config['estilo_menu']['color_fondo_menu'] = request.form.get('color_fondo_menu', '#eeb6bb')
+            config['estilo_menu']['tamano_texto_menu'] = request.form.get('tamano_texto_menu', '48')
+            # Si tienes imagen de marca de agua, añade aquí la lógica para guardarla
+            guardar_configuracion(config)
+            flash('Estilo guardado correctamente.', 'success')
+            return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+
+        # Guardar toda la configuración en un archivo nuevo
+        if accion == 'guardar_todo':
+            # --- AÑADE AQUÍ LA LECTURA DE LOS CAMPOS DE ESTILO ANTES DE GUARDAR ---
+            if 'estilo_menu' not in config:
+                config['estilo_menu'] = {}
+            config['estilo_menu']['color_texto_menu'] = request.form.get('color_texto_menu', config['estilo_menu'].get('color_texto_menu', '#fb0000'))
+            config['estilo_menu']['color_fondo_menu'] = request.form.get('color_fondo_menu', config['estilo_menu'].get('color_fondo_menu', '#eeb6bb'))
+            config['estilo_menu']['tamano_texto_menu'] = request.form.get('tamano_texto_menu', config['estilo_menu'].get('tamano_texto_menu', '48'))
+            # Si tienes imagen de marca de agua, añade aquí la lógica para guardarla
+
+            if nombre_guardar:
+                nombre = f"{nombre_guardar}.json"
+            else:
+                nombre = f"config_{int(time.time())}.json"
+            ruta = os.path.join(PERSONAL_CONFIG_DIR, nombre)
+            with open(ruta, 'w', encoding='utf-8') as f:
+                json.dump(config, f, ensure_ascii=False, indent=2)
+            flash(f'Configuración guardada como {nombre}.', 'success')
+            return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+        # Cargar configuración desde archivo
+        elif accion == 'cargar' and archivo:
+            ruta = os.path.join(PERSONAL_CONFIG_DIR, archivo)
+            with open(ruta, 'r', encoding='utf-8') as f:
+                nueva_config = json.load(f)
+            guardar_configuracion(nueva_config)
+            flash('Configuración cargada correctamente.', 'success')
+            return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+        # Eliminar archivo de configuración
+        elif accion == 'eliminar' and archivo:
+            ruta = os.path.join(PERSONAL_CONFIG_DIR, archivo)
+            if os.path.exists(ruta):
+                os.remove(ruta)
+                flash('Archivo eliminado.', 'success')
+            return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+        # Actualiza la configuración with los datos del formulario
+        config['nombres_columnas'] = request.form.get('nombres_columnas', type=dict) or config.get('nombres_columnas', {})
+        config['nombres_vistas'] = request.form.get('nombres_vistas', type=dict) or config.get('nombres_vistas', {})
+        config['textos_menu'] = request.form.get('textos_menu', type=dict) or config.get('textos_menu', {})
+        # Alternativamente, puedes procesar cada campo individualmente si no usas JS para enviar el dict
+        for campo in campos:
+            config['nombres_columnas'][campo] = request.form.get(f'nombre_columna_{campo}', campo)
+        for vista_nombre in ['inventario', 'busqueda', 'mapa_interactivo']:
+            config['nombres_vistas'][vista_nombre] = request.form.get(f'nombre_vista_{vista_nombre}', vista_nombre)
+        if 'central' in VISTAS_CONFIG.get(vista, []):
+            config['textos_menu']['central'] = request.form.get('texto_menu_central', config['textos_menu'].get('central', ''))
+        guardar_configuracion(config)
+        flash('Configuración guardada correctamente.', 'success')
+        return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+    return render_template(
+        'configuracion.html',
+        config=config,
+        vista=vista,
+        campos=campos,
+        vistas=VISTAS_CONFIG,
+        archivos_config=archivos_config
+    )
+
+@configuracion_bp.route('/cargar_estilo', methods=['POST'])
+def cargar_estilo():
+    if session.get('perfil') != 'Admin':
+        flash('Acceso denegado: solo el perfil Admin puede acceder a configuración.', 'error')
+        return redirect(url_for('home_bp.menu'))
+
+    config = cargar_configuracion()
+    archivo = request.form.get('archivo_config')
+    if archivo:
+        ruta = os.path.join(PERSONAL_CONFIG_DIR, archivo)
+        if os.path.exists(ruta):
+            with open(ruta, 'r', encoding='utf-8') as f:
+                nueva_config = json.load(f)
+            # Solo se cargan los estilos del menú
+            if 'estilo_menu' in nueva_config:
+                config['estilo_menu'] = nueva_config['estilo_menu']
+                guardar_configuracion(config)
+                flash('Estilo cargado correctamente.', 'success')
+            else:
+                flash('El archivo no contiene estilos válidos.', 'error')
+        else:
+            flash('Archivo no encontrado.', 'error')
+    else:
+        flash('No se ha seleccionado ningún archivo.', 'error')
+    return redirect(url_for('configuracion_bp.configuracion'))
+
+@configuracion_bp.route('/aplicar_estilo', methods=['POST'])
+def aplicar_estilo():
+    if session.get('perfil') != 'Admin':
+        flash('Acceso denegado: solo el perfil Admin puede acceder a configuración.', 'error')
+        return redirect(url_for('home_bp.menu'))
+
+    config = cargar_configuracion()
+    accion = request.form.get('accion')
+    archivo = request.form.get('archivo_config')
+
+    # Procesar cambios de estilos desde la pestaña Estilos
+    if accion == 'aplicar_local':
+        vista_local = request.form.get('vista_local')
+        if 'estilos_vistas' not in config:
+            config['estilos_vistas'] = {}
+        config['estilos_vistas'][vista_local] = {
+            'color_texto_menu': request.form.get('color_texto_menu'),
+            'color_fondo_menu': request.form.get('color_fondo_menu'),
+            'tamano_texto_menu': request.form.get('tamano_texto_menu'),
+            'estilo_texto_menu': request.form.get('estilo_texto_menu')
+        }
+        guardar_configuracion(config)
+        flash(f'Estilo aplicado a la vista {vista_local}.', 'success')
+        return redirect(url_for('configuracion_bp.configuracion', vista=vista_local))
+
+    if accion == 'aplicar_global':
+        parametro = request.form.get('parametro_global')
+        if 'estilo_menu' not in config:
+            config['estilo_menu'] = {}
+        if parametro == 'todo':
+            config['estilo_menu'] = {
+                'color_texto_menu': request.form.get('color_texto_menu'),
+                'color_fondo_menu': request.form.get('color_fondo_menu'),
+                'tamano_texto_menu': request.form.get('tamano_texto_menu'),
+                'estilo_texto_menu': request.form.get('estilo_texto_menu')
+            }
+        else:
+            config['estilo_menu'][parametro] = request.form.get(parametro)
+        guardar_configuracion(config)
+        flash('Estilo global actualizado.', 'success')
+        return redirect(url_for('configuracion_bp.configuracion'))
+
+    return redirect(url_for('configuracion_bp.configuracion'))

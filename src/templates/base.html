@@ -8,16 +8,13 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"></script>
         <!-- En base.html, dentro del <head> -->
-        {% if estilos_personalizados %}
+        {% if config.estilo_menu %}
         <style>
         :root {
-            --color-fondo: {{ estilos_personalizados.color_fondo }};
-            --color-principal: {{ estilos_personalizados.color_principal }};
-            --color-menu-btn: {{ estilos_personalizados.color_menu_btn }};
-            --color-menu-btn-hover: {{ estilos_personalizados.color_menu_btn_hover }};
-            --color-titulo: {{ estilos_personalizados.color_titulo }};
-            --fuente-principal: {{ estilos_personalizados.fuente_principal }};
-            /* ...etc... */
+            --color-texto-menu: {{ config.estilo_menu.color_texto_menu or '#000000' }};
+            --color-fondo-menu: {{ config.estilo_menu.color_fondo_menu or '#ffffff' }};
+            --tamano-texto-menu: {{ config.estilo_menu.tamano_texto_menu or '16' }}px;
+            --estilo-texto-menu: {{ config.estilo_menu.estilo_texto_menu or 'normal' }};
         }
         </style>
         {% endif %}
