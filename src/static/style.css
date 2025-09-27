@@ -1,6 +1,11 @@
+/* #fb0000 */
+/* #eeb6bb */
+/* 48 */
 :root {
-    --color-fondo: #eeb6bb;
-    --color-principal: #fddcde;
+    /* --color-fondo: #eeb6bb; */
+    --color-fondo: #fb0000;
+    /* --color-principal: #fddcde; */
+    --color-principal: #eeb6bb;
     --color-menu-btn: #91cbff;
     --color-menu-btn-hover: #b80000;
     --color-menu-btn-before: #00bfffdf;

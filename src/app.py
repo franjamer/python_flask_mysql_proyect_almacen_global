@@ -38,6 +38,8 @@ def login():
         perfil = request.form['perfil']
         password = request.form['password']
         conn = db.get_connection()
+        if conn is None:
+            return "No se pudo conectar a la base de datos", 500
         cursor = conn.cursor()
         cursor.execute(
             "SELECT rol FROM perfiles WHERE perfil = %s AND password = %s", (perfil, password))
@@ -83,7 +85,8 @@ app.register_blueprint(busqueda_bp)
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
 
-# Configuración de la base de datos
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=4000)
 

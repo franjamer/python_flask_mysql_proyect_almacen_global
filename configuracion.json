@@ -96,7 +96,7 @@
   "estilo_menu": {
     "color_texto_menu": "#cb1543",
     "color_fondo_menu": "#ffc7c7",
-    "tamano_texto_menu": "20",
+    "tamano_texto_menu": "16",
     "estilo_texto_menu": "italic"
   },
   "estilos_vistas": {
