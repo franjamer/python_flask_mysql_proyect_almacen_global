@@ -1,3 +1,4 @@
+import os
 import mysql.connector
 import time # 🎯 Añade esta importación
 
@@ -13,10 +14,11 @@ def get_connection():
     for i in range(max_retries):
         try:
             conn = mysql.connector.connect(
-                host="localhost",
-                user="root",
-                password="root",
-                database="almacenrepuestos"
+                host=os.environ.get('DB_HOST', 'localhost'),
+                user=os.environ.get('DB_USER', 'usuario'),
+                password=os.environ.get('DB_PASSWORD', 'clave'),
+                database=os.environ.get('DB_NAME', 'almacen'),
+                port=3306
             )
             # Si la conexión tiene éxito, salimos del bucle
             print("Conexión a la base de datos establecida con éxito.")
