@@ -1,8 +1,13 @@
+# Importa y registra el blueprint de estilos si lo necesitas
+from .configuracion_estilos import estilos_bp
 from flask import Blueprint, render_template, request, session, redirect, url_for, flash
-from .configuracion_utils import VISTAS_CONFIG
+from .configuracion_utils import VISTAS_CONFIG, inicializar_config
 from .configuracion_carga import cargar_configuracion, guardar_configuracion, listar_archivos_config
+from .vistas_config_loader import cargar_vistas_config
 
 configuracion_bp = Blueprint('configuracion_bp', __name__)
+
+VISTAS_CONFIG = cargar_vistas_config()
 
 @configuracion_bp.route('/configuracion', methods=['GET', 'POST'])
 def configuracion():
@@ -11,57 +16,36 @@ def configuracion():
         return redirect(url_for('home_bp.menu'))
 
     config = cargar_configuracion()
+    config = inicializar_config(config, VISTAS_CONFIG)
+    
     vista = request.args.get('vista', 'inventario')
     campos = VISTAS_CONFIG.get(vista, [])
     archivos_config = listar_archivos_config()
 
     if request.method == 'POST':
-        accion = request.form.get('accion')
-        archivo = request.form.get('archivo_config')
-        nombre_guardar = request.form.get('nombre_guardar', '').strip()
+        # Actualiza los textos del menú si están en el formulario
+        for campo in ['central', 'titulo_principal', 'titulo_secundario']:
+            nuevo_valor = request.form.get(f'texto_menu_{campo}')
+            if nuevo_valor:
+                config['textos_menu'][campo] = nuevo_valor
 
-        # --- Lógica para aplicar estilos ---
-        if accion == 'aplicar_local':
-            vista_local = request.form.get('vista_local')
-            if 'estilos_vistas' not in config:
-                config['estilos_vistas'] = {}
-            config['estilos_vistas'][vista_local] = {
-                'color_texto_menu': request.form.get('color_texto_menu'),
-                'color_fondo_menu': request.form.get('color_fondo_menu'),
-                'tamano_texto_menu': request.form.get('tamano_texto_menu'),
-                'estilo_texto_menu': request.form.get('estilo_texto_menu')
-            }
-            guardar_configuracion(config)
-            flash(f'Estilo aplicado a la vista {vista_local}.', 'success')
-            return redirect(url_for('configuracion_bp.configuracion', vista=vista_local))
+        # Actualiza nombres de columnas si están en el formulario
+        for campo in config['nombres_columnas']:
+            nuevo_valor = request.form.get(f'nombre_columna_{campo}')
+            if nuevo_valor:
+                config['nombres_columnas'][campo] = nuevo_valor
 
-        if accion == 'aplicar_global':
-            parametro = request.form.get('parametro_global')
-            if 'estilo_menu' not in config:
-                config['estilo_menu'] = {}
-            if parametro == 'todo':
-                config['estilo_menu'] = {
-                    'color_texto_menu': request.form.get('color_texto_menu'),
-                    'color_fondo_menu': request.form.get('color_fondo_menu'),
-                    'tamano_texto_menu': request.form.get('tamano_texto_menu'),
-                    'estilo_texto_menu': request.form.get('estilo_texto_menu')
-                }
-            else:
-                config['estilo_menu'][parametro] = request.form.get(parametro)
-            guardar_configuracion(config)
-            flash('Estilo global actualizado.', 'success')
-            return redirect(url_for('configuracion_bp.configuracion', vista=vista))
-        # --- Fin lógica estilos ---
+        # Actualiza estilos por vista si corresponde
+        for vista in config.get('estilos_vistas', {}):
+            for clave in ['color_texto_menu', 'color_fondo_menu', 'tamano_texto_menu', 'estilo_texto_menu']:
+                nuevo_valor = request.form.get(f'estilo_{clave}_{vista}')
+                if nuevo_valor:
+                    config['estilos_vistas'][vista][clave] = nuevo_valor
 
-        # ...aquí va la lógica de guardar_todo, cargar, eliminar, etc...
-        # Puedes importar funciones auxiliares si lo prefieres
-
-        # Ejemplo para guardar_todo:
-        if accion == 'guardar_todo':
-            # ...tu lógica...
-            pass
-
-        # El resto igual, o llama a funciones de otros módulos
+        # Guarda la configuración actualizada
+        guardar_configuracion(config)
+        flash('Configuración guardada correctamente.', 'success')
+        return redirect(url_for('configuracion_bp.configuracion'))
 
     return render_template(
         'configuracion.html',
@@ -71,6 +55,3 @@ def configuracion():
         vistas=VISTAS_CONFIG,
         archivos_config=archivos_config
     )
-
-# Importa y registra el blueprint de estilos si lo necesitas
-from .configuracion_estilos import estilos_bp

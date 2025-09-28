@@ -1,7 +1,13 @@
 from flask import Blueprint, request, session, redirect, url_for, flash
 from .configuracion_carga import cargar_configuracion, guardar_configuracion
+from .vistas_config import VISTAS
 
 estilos_bp = Blueprint('estilos_bp', __name__)
+
+def actualizar_estilo_vista(vista, clave_estilo, nuevo_valor):
+    if clave_estilo in VISTAS[vista]["estilos"]:
+        VISTAS[vista]["estilos"][clave_estilo] = nuevo_valor
+        # Aquí puedes guardar el cambio en un archivo si lo deseas
 
 @estilos_bp.route('/aplicar_estilo', methods=['POST'])
 def aplicar_estilo():

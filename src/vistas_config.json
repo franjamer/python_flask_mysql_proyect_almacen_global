@@ -1,0 +1,29 @@
+{
+  "inventario": [
+    "referencia", "nombre", "categoria", "subcategoria",
+    "caracteristicas_medidas", "fotos_planos", "empaquetado",
+    "stock", "stock_minimo", "stock_maximo", "id_situacion_tabla"
+  ],
+  "busqueda": [
+    "referencia", "nombre", "categoria", "almacen", "stock", "ubicacion", "id_situacion_tabla"
+  ],
+  "pedidos": [
+    "id_pedido", "fecha", "referencia", "cantidad", "estado", "proveedor"
+  ],
+  "movimientos": [
+    "id_movimiento", "fecha", "referencia", "cantidad", "tipo", "operador"
+  ],
+  "operadores": [
+    "id_operador", "nombre", "perfil", "activo"
+  ],
+  "perfiles": [
+    "id_perfil", "perfil", "descripcion"
+  ],
+  "situacion": [
+    "id_situacion_tabla", "almacen", "estanteria", "lado", "columna", "altura"
+  ],
+  "mapa_interactivo": [
+    "almacen", "estanteria", "lado", "columna", "altura"
+  ],
+  "menu": ["central", "titulo_principal", "titulo_secundario"]
+}

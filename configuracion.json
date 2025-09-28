@@ -1,16 +1,16 @@
 {
   "nombres_columnas": {
-    "referencia": "referencia",
-    "nombre": "nombre",
-    "categoria": "categoria",
-    "subcategoria": "subcategoria",
-    "caracteristicas_medidas": "caracteristicas_medidas",
-    "fotos_planos": "fotos_planos",
-    "empaquetado": "empaquetado",
-    "stock": "stock",
-    "stock_minimo": "stock_minimo",
-    "stock_maximo": "stock_maximo",
-    "id_situacion_tabla": "id_situacion_tabla",
+    "referencia": "Referencia",
+    "nombre": "Nombre",
+    "categoria": "Categoria",
+    "subcategoria": "Subcategoria",
+    "caracteristicas_medidas": "Caracteristicas_medidas",
+    "fotos_planos": "Fotos_planos",
+    "empaquetado": "Empaquetado",
+    "stock": "Stock",
+    "stock_minimo": "Stock_minimo",
+    "stock_maximo": "Stock_maximo",
+    "id_situacion_tabla": "Id_situacion_tabla",
     "almacen": "Contenedor",
     "id_pedido": "Número de Pedido",
     "fecha": "Fecha",
@@ -69,13 +69,13 @@
     "Telefono": "Telefono",
     "Email": "Email",
     "Direccion": "Direccion",
-    "Referencia_Pieza_Repuesto": "Referencia pieza repuesto",
-    "Nombre_Pieza_Repuesto": "Nombre pieza repuesto",
-    "Tipo_De_Movimiento": "Tipo de movimiento",
+    "Referencia_Pieza_Repuesto": "Referencia Pieza Repuesto",
+    "Nombre_Pieza_Repuesto": "Nombre Pieza Repuesto",
+    "Tipo_De_Movimiento": "Tipo de Movimiento",
     "Cantidad": "Cantidad",
-    "Unidad_De_Cantidad": "Unidad de cantidad",
-    "Fecha_Movimiento": "Fecha movimiento",
-    "Stock_Tras_Movimiento": "Stock tras movimiento"
+    "Unidad_De_Cantidad": "Unidad de Cantidad",
+    "Fecha_Movimiento": "Fecha Movimiento",
+    "Stock_Tras_Movimiento": "Stock tras Movimiento"
   },
   "textos_menu": {
     "central": "Taller Electrónica",
@@ -105,6 +105,53 @@
       "color_fondo_menu": "#ffc7c7",
       "tamano_texto_menu": "25",
       "estilo_texto_menu": "normal"
+    },
+    "pedidos": {
+      "color_texto_menu": "#cb1543",
+      "color_fondo_menu": "#ffc7c7",
+      "tamano_texto_menu": "25",
+      "estilo_texto_menu": "normal"
+    },
+    "movimientos": {
+      "color_texto_menu": "#cb1543",
+      "color_fondo_menu": "#ffc7c7",
+      "tamano_texto_menu": "25",
+      "estilo_texto_menu": "normal"
+    },
+    "operadores": {
+      "color_texto_menu": "#cb1543",
+      "color_fondo_menu": "#ffc7c7",
+      "tamano_texto_menu": "25",
+      "estilo_texto_menu": "normal"
+    },
+    "perfiles": {
+      "color_texto_menu": "#cb1543",
+      "color_fondo_menu": "#ffc7c7",
+      "tamano_texto_menu": "25",
+      "estilo_texto_menu": "normal"
+    },
+    "situacion": {
+      "color_texto_menu": "#cb1543",
+      "color_fondo_menu": "#ffc7c7",
+      "tamano_texto_menu": "25",
+      "estilo_texto_menu": "normal"
+    },
+    "mapa_interactivo": {
+      "color_texto_menu": "#cb1543",
+      "color_fondo_menu": "#ffc7c7",
+      "tamano_texto_menu": "25",
+      "estilo_texto_menu": "normal"
+    },
+    "inventario": {
+      "color_texto_menu": "#cb1543",
+      "color_fondo_menu": "#ffc7c7",
+      "tamano_texto_menu": "25",
+      "estilo_texto_menu": "normal"
+    },
+    "menu": {
+      "color_texto_menu": "#cb1543",
+      "color_fondo_menu": "#ffc7c7",
+      "tamano_texto_menu": "25",
+      "estilo_texto_menu": "normal"
     }
-  }
-}
+  }}
