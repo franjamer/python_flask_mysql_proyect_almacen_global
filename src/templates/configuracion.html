@@ -2,59 +2,20 @@
 {% block content %}
 <a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
 <div class="container mt-4">
-    <h2 class="text-center mb-4">Configuracion de la Aplicacion</h2>
-    <!-- Nav tabs -->
-    <ul class="nav nav-tabs mb-4" id="configTabs" role="tablist">
-        <!-- Pestaña General -->
+    <ul class="nav nav-tabs mb-3" id="configTabs" role="tablist">
         <li class="nav-item" role="presentation">
-            <button
-                class="nav-link active"
-                id="general-tab"
-                data-bs-toggle="tab"
-                data-bs-target="#general"
-                type="button"
-                role="tab"
-            >General</button>
+            <a class="nav-link {% if pestana == 'general' %}active{% endif %}" href="?pestana=general&vista={{ vista }}">General</a>
         </li>
-        <!-- Pestaña Estilos -->
         <li class="nav-item" role="presentation">
-            <button
-                class="nav-link"
-                id="estilo-tab"
-                data-bs-toggle="tab"
-                data-bs-target="#estilo"
-                type="button"
-                role="tab"
-            >Estilos</button>
+            <a class="nav-link {% if pestana == 'estilos' %}active{% endif %}" href="?pestana=estilos&subpestana=global&vista={{ vista }}">Estilos</a>
         </li>
-        <!-- Pestaña Gestión de archivos -->
-        <li class="nav-item" role="presentation">
-            <button
-                class="nav-link"
-                id="gestion-archivos-tab"
-                data-bs-toggle="tab"
-                data-bs-target="#gestion-archivos"
-                type="button"
-                role="tab"
-            >Gestión de archivos</button>
-        </li>
-        
     </ul>
-    <div class="tab-content">
-        <!-- Pestaña General -->
-        <div class="tab-pane fade show active" id="general" role="tabpanel">
+    <div>
+        {% if pestana == 'general' %}
             {% include "configuracion_general.html" %}
-        </div>
-        <!-- Pestaña Estilos -->
-        <div class="tab-pane fade" id="estilo" role="tabpanel">
+        {% elif pestana == 'estilos' %}
             {% include "configuracion_estilo.html" %}
-        </div>
-        <!-- Pestaña Gestión de archivos -->
-        <div class="tab-pane fade" id="gestion-archivos" role="tabpanel">
-            {% include "configuracion_gestion_archivos.html" %}
-        </div>
-        
+        {% endif %}
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 {% endblock %}

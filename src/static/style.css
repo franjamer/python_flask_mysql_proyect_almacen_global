@@ -155,7 +155,7 @@ div.container {
     background: var(--color-fondo-menu);
     font-size: var(--tamano-texto-menu);
     font-style: var(--estilo-texto-menu);
-    text-shadow: 2px 2px 0 #d5eb11, 4px 4px 0 #eec381;
+    /* text-shadow: 2px 2px 0 #d5eb11, 4px 4px 0 #eec381; */
     margin: 0px 0 250px 10px;
     text-align: center;
     position: relative;
@@ -174,7 +174,7 @@ div.container {
     /* color: var(--color-titulo-secundario); */
     /* font-size: 3vw; */
     font-family: 'Georgia', serif;
-    text-shadow: 2px 2px 0 #910000, 4px 4px 0 #fff;
+    /* text-shadow: 2px 2px 0 #910000, 4px 4px 0 #fff; */
     position: relative;
     bottom: 20px;
     /* right: 1vw; */
@@ -191,7 +191,7 @@ div.container {
     font-size: var(--tamano-texto-menu);
     font-style: var(--estilo-texto-menu);
     font-family: 'Georgia', serif;
-    text-shadow: 2px 2px 0 #910000, 4px 4px 0 #ddaeae;
+    /* text-shadow: 2px 2px 0 #910000, 4px 4px 0 #ddaeae; */
     margin: 0px 0 250px 0;
     text-align: center;
     width: 100%;
@@ -249,7 +249,7 @@ h1, h2, h3, h4, h5, h6 {
     background: var(--color-fondo-menu);
     font-size: var(--tamano-texto-menu);
     font-style: var(--estilo-texto-menu);
-    text-shadow: 2px 2px 0 var(--color-titulo-sombra), 4px 4px 0 var(--color-titulo-sombra2);
+    /* text-shadow: 2px 2px 0 var(--color-titulo-sombra), 4px 4px 0 var(--color-titulo-sombra2); */
     font-family: 'Georgia', serif;
 }
 h2 {

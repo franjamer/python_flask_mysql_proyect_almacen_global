@@ -1,0 +1,18 @@
+<div class="p-3 border rounded" style="background: #f8f9fa;">
+    <h5>Valores Actuales</h5>
+    <ul class="list-unstyled">
+        <li><b>Color de texto:</b> <span style="color: {{ color_texto }};">{{ color_texto }}</span></li>
+        <li><b>Color de fondo:</b> <span style="background: {{ color_fondo }}; padding: 2px 10px;">{{ color_fondo }}</span></li>
+        <li><b>Tamaño de texto:</b> {{ tamano_texto }} px</li>
+        <li><b>Estilo de texto:</b> {{ estilo_texto|capitalize }}</li>
+    </ul>
+    <div class="mt-3 p-2 text-center" style="
+        color: {{ color_texto }};
+        background-color: {{ color_fondo }};
+        font-size: {{ tamano_texto }}px;
+        font-style: {% if estilo_texto == 'cursiva' %}italic{% else %}normal{% endif %};
+        font-weight: {% if estilo_texto == 'negrita' %}bold{% else %}normal{% endif %};
+    ">
+        Previsualización
+    </div>
+</div>

@@ -1,7 +1,14 @@
-from vistas_config import VISTAS
+from .vistas_config import VISTAS
 
-def actualizar_texto_columna(vista, columna, nuevo_texto):
-    # Aquí podrías guardar el cambio en la estructura o en un archivo
-    if columna in VISTAS[vista]["columnas"]:
-        # Actualiza el nombre de la columna (puedes guardar en un archivo si lo deseas)
-        pass
+def obtener_nombres_columnas(vista):
+    nombres_defecto = {campo: campo.replace('_', ' ').capitalize() for campo in VISTAS[vista]['columnas']}
+    nombres_personalizados = VISTAS[vista].get('nombres_columnas', {})
+    return {campo: nombres_personalizados.get(campo, nombres_defecto[campo]) for campo in VISTAS[vista]['columnas']}
+
+def actualizar_nombres_columnas(vista, form):
+    if 'nombres_columnas' not in VISTAS[vista]:
+        VISTAS[vista]['nombres_columnas'] = {}
+    for campo in VISTAS[vista]['columnas']:
+        nuevo_valor = form.get(f'nombre_columna_{campo}')
+        if nuevo_valor:
+            VISTAS[vista]['nombres_columnas'][campo] = nuevo_valor

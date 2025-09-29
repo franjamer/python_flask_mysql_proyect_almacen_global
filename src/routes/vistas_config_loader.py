@@ -1,5 +1,6 @@
 import json
 import os
+from .vistas_config import VISTAS
 
 def cargar_vistas_config():
     ruta = os.path.join(os.path.dirname(__file__), '..', 'vistas_config.json')

@@ -1,25 +1,18 @@
 <div class="container">
     <!-- Nav tabs para subpestañas -->
-    <ul class="nav nav-pills mb-3" id="estiloSubTabs" role="tablist">
+    <ul class="nav nav-tabs mb-3" id="estiloSubTabs" role="tablist">
         <li class="nav-item" role="presentation">
-            <button class="nav-link active" id="global-tab" data-bs-toggle="pill" data-bs-target="#global" type="button" role="tab">
-                Global
-            </button>
+            <a class="nav-link {% if subpestana == 'global' %}active{% endif %}" href="?pestana=estilos&subpestana=global&vista={{ vista }}">Global</a>
         </li>
         <li class="nav-item" role="presentation">
-            <button class="nav-link" id="local-tab" data-bs-toggle="pill" data-bs-target="#local" type="button" role="tab">
-                Local
-            </button>
+            <a class="nav-link {% if subpestana == 'local' %}active{% endif %}" href="?pestana=estilos&subpestana=local&vista={{ vista }}">Local</a>
         </li>
     </ul>
-    <div class="tab-content" id="estiloSubTabsContent">
-        <!-- Subpestaña Global -->
-        <div class="tab-pane fade show active" id="global" role="tabpanel">
+    <div>
+        {% if subpestana == 'global' %}
             {% include "configuracion_estilo_global.html" %}
-        </div>
-        <!-- Subpestaña Local -->
-        <div class="tab-pane fade" id="local" role="tabpanel">
+        {% elif subpestana == 'local' %}
             {% include "configuracion_estilo_local.html" %}
-        </div>
+        {% endif %}
     </div>
 </div>

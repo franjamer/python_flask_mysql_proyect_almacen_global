@@ -35,8 +35,8 @@
         "titulo_secundario": "Titulo secundario"
     },
     "estilo_menu": {
-        "color_texto_menu": "#f36d6d",
-        "color_fondo_menu": "#b3cef9",
+        "color_texto_menu": "#f1acac",
+        "color_fondo_menu": "#b5c5de",
         "tamano_texto_menu": "16",
         "estilo_texto_menu": "normal"
     },

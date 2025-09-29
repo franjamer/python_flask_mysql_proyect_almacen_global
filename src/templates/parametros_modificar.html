@@ -1,0 +1,28 @@
+<div class="p-3 border rounded">
+    <h5>Parámetros a Modificar</h5>
+    <form method="post">
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label for="{{ prefix }}color_texto_menu" class="form-label">Color de texto</label>
+                <input type="color" class="form-control form-control-color" id="{{ prefix }}color_texto_menu" name="{{ prefix }}color_texto_menu" value="{{ color_texto }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="{{ prefix }}color_fondo_menu" class="form-label">Color de fondo</label>
+                <input type="color" class="form-control form-control-color" id="{{ prefix }}color_fondo_menu" name="{{ prefix }}color_fondo_menu" value="{{ color_fondo }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="{{ prefix }}tamano_texto_menu" class="form-label">Tamaño de texto</label>
+                <input type="number" class="form-control" id="{{ prefix }}tamano_texto_menu" name="{{ prefix }}tamano_texto_menu" value="{{ tamano_texto }}">
+            </div>
+            <div class="col-md-6 mb-3">
+                <label for="{{ prefix }}estilo_texto_menu" class="form-label">Estilo de texto</label>
+                <select class="form-select" id="{{ prefix }}estilo_texto_menu" name="{{ prefix }}estilo_texto_menu">
+                    <option value="normal" {% if estilo_texto == 'normal' %}selected{% endif %}>Normal</option>
+                    <option value="negrita" {% if estilo_texto == 'negrita' %}selected{% endif %}>Negrita</option>
+                    <option value="cursiva" {% if estilo_texto == 'cursiva' %}selected{% endif %}>Cursiva</option>
+                </select>
+            </div>
+        </div>
+        <button type="submit" name="{{ boton_name }}" class="btn btn-primary w-100">Aplicar Cambios</button>
+    </form>
+</div>
