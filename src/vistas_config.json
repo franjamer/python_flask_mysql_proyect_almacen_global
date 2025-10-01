@@ -130,10 +130,10 @@
       "estilo_texto_menu": "normal"
     },
     "nombres_columnas": {
-      "id": "ID",
-      "referencia_pedido": "Referencia",
+      "id": "ID Pedido",
+      "referencia_pedido": "Referencia Pedidos",
       "fecha_creacion": "Fecha",
-      "completo": "Completo"
+      "completo": "Pedido Completo?"
     }
   },
   "perfiles": {
@@ -183,6 +183,16 @@
       "color_fondo_menu": "#ffffff",
       "tamano_texto_menu": "16",
       "estilo_texto_menu": "normal"
+    }
+  },
+  "lineas_pedido": {
+    "nombres_columnas": {
+      "referencia_articulo": "Referencia repuesto",
+      "nombre_articulo": "Nombre",
+      "cantidad_pedida": "Pedida",
+      "cantidad_recibida": "Recibida",
+      "fecha_recibido": "Fecha recibido",
+      "completo": "Completo"
     }
   }
 }

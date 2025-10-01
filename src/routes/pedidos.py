@@ -1,23 +1,23 @@
 # Inportación de las dependencias y variables necesarias
 from flask import Blueprint, render_template, request, redirect, url_for, session
 from .pedidos_detalle import validar_pedido, obtener_nombre_articulo
+from .pedidos_db import (
+    obtener_inventario, obtener_pedidos, obtener_lineas_pedido,
+    insertar_pedido, actualizar_linea_pedido, eliminar_pedido,
+    eliminar_linea, modificar_pedido, obtener_pedido_cabecera  
+)
 from routes.roles import puede_crud_pedidos, puede_eliminar_pedidos
-import database as db
 from .vistas_config import VISTAS
 from .configuracion_general import obtener_nombres_columnas
 
 pedidos_bp = Blueprint('pedidos_bp', __name__)
 
-columnas = VISTAS['pedidos']['columnas']
-nombres_columnas = obtener_nombres_columnas('pedidos')
-
-
-# ruta para crear pedido nuevo,minimo con una linea de pedido
 @pedidos_bp.route('/pedidos', methods=['GET', 'POST'])
 def pedidos():
-    conn = db.get_connection()
-    cursor = conn.cursor()
     mensaje_error = None
+    columnas = VISTAS['pedidos']['columnas']
+    nombres_columnas = VISTAS['pedidos']['nombres_columnas']
+    nombre_vista = "Pedidos"  # Puedes parametrizarlo si lo tienes en config
 
     if request.method == 'POST':
         if not puede_crud_pedidos(session.get('rol')):
@@ -30,56 +30,18 @@ def pedidos():
             cantidades_pedidas = request.form.getlist('cantidad_pedida[]')
             cantidades_recibidas = request.form.getlist('cantidad_recibida[]')
             fechas_recibido = request.form.getlist('fecha_recibido[]')
+            lineas = zip(referencias, cantidades_pedidas, cantidades_recibidas, fechas_recibido)
+            insertar_pedido(referencia_pedido, fecha_creacion, lineas, obtener_nombre_articulo)
 
-            completo = False
-            cursor.execute("""
-                INSERT INTO pedidos_global_tabla (referencia_pedido, fecha_creacion, completo)
-                VALUES (%s, %s, %s)
-            """, (referencia_pedido, fecha_creacion, completo))
-            pedido_id = cursor.lastrowid
-
-            for i in range(len(referencias)):
-                cantidad_pedida = int(cantidades_pedidas[i])
-                cantidad_recibida = int(
-                    cantidades_recibidas[i]) if cantidades_recibidas[i] else 0
-                fecha_recibido = fechas_recibido[i] if fechas_recibido[i] else None
-                completo_linea = cantidad_pedida == cantidad_recibida
-
-                nombre_articulo = obtener_nombre_articulo(
-                    cursor, referencias[i])
-
-                cursor.execute("""
-                    INSERT INTO lineas_pedido_tabla
-                    (pedido_id, referencia_articulo, nombre_articulo, cantidad_pedida, cantidad_recibida, fecha_recibido, completo)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s)
-                """, (pedido_id, referencias[i], nombre_articulo, cantidad_pedida, cantidad_recibida, fecha_recibido, completo_linea))
-
-            cursor.execute("""
-                SELECT COUNT(*) FROM lineas_pedido_tabla WHERE pedido_id = %s AND completo = 0
-            """, (pedido_id,))
-            incompletas = cursor.fetchone()[0]
-            if incompletas == 0:
-                cursor.execute(
-                    "UPDATE pedidos_global_tabla SET completo = 1 WHERE id = %s", (pedido_id,))
-
-            conn.commit()
-
-    cursor.execute("SELECT referencia, nombre FROM inventario_tabla")
-    inventario = cursor.fetchall()
-    cursor.execute(
-        "SELECT id, referencia_pedido, fecha_creacion, completo FROM pedidos_global_tabla ORDER BY id DESC LIMIT 50")
-    pedidos_raw = cursor.fetchall()
-    columnas = VISTAS['pedidos']['columnas']
-    pedidos = [dict(zip(columnas, pedido)) for pedido in pedidos_raw]
+    inventario = obtener_inventario()
+    pedidos = obtener_pedidos(columnas)
     pedido_id = request.args.get('pedido_id')
     lineas = []
     if pedido_id:
-        cursor.execute(
-            "SELECT * FROM lineas_pedido_tabla WHERE pedido_id = %s", (pedido_id,))
-        lineas = cursor.fetchall()
+        lineas = obtener_lineas_pedido(pedido_id)
 
-    cursor.close()
-    conn.close()
+    nombres_columnas_lineas = VISTAS['lineas_pedido']['nombres_columnas']
+
     return render_template(
         'pedidos.html',
         pedidos=pedidos,
@@ -89,12 +51,11 @@ def pedidos():
         puede_crud_pedidos=puede_crud_pedidos,
         puede_eliminar_pedidos=puede_eliminar_pedidos,
         columnas=columnas,
-        nombres_columnas=nombres_columnas
+        nombres_columnas=nombres_columnas,
+        nombre_vista=nombre_vista,
+        nombres_columnas_lineas=nombres_columnas_lineas
     )
 
-
-
-# ruta para actualizar lineas de un pedido
 @pedidos_bp.route('/actualizar_linea/<int:linea_id>', methods=['POST'])
 def actualizar_linea(linea_id):
     if not puede_crud_pedidos(session.get('rol')):
@@ -102,96 +63,28 @@ def actualizar_linea(linea_id):
     cantidad_pedida = int(request.form['cantidad_pedida'])
     cantidad_recibida = int(request.form['cantidad_recibida'])
     fecha_recibido = request.form.get('fecha_recibido')
-
-    conn = db.get_connection()
-    cursor = conn.cursor()
-    if not fecha_recibido:
-        cursor.execute(
-            "SELECT fecha_recibido FROM lineas_pedido_tabla WHERE id = %s", (linea_id,))
-        result = cursor.fetchone()
-        fecha_recibido = result[0] if result else None
-
-    completo = cantidad_recibida >= cantidad_pedida
-
-    cursor.execute("""
-        UPDATE lineas_pedido_tabla
-        SET cantidad_pedida = %s,
-            cantidad_recibida = %s,
-            fecha_recibido = %s,
-            completo = %s
-        WHERE id = %s
-    """, (cantidad_pedida, cantidad_recibida, fecha_recibido, completo, linea_id))
-
-    cursor.execute(
-        "SELECT pedido_id FROM lineas_pedido_tabla WHERE id = %s", (linea_id,))
-    pedido_id_db = cursor.fetchone()[0]
-    cursor.execute(
-        "SELECT COUNT(*) FROM lineas_pedido_tabla WHERE pedido_id = %s AND completo = 0", (pedido_id_db,))
-    incompletas = cursor.fetchone()[0]
-    cursor.execute("UPDATE pedidos_global_tabla SET completo = %s WHERE id = %s",
-                   (incompletas == 0, pedido_id_db))
-
-    conn.commit()
-    cursor.close()
-    conn.close()
+    pedido_id_db = actualizar_linea_pedido(linea_id, cantidad_pedida, cantidad_recibida, fecha_recibido)
     return redirect(url_for('pedidos_bp.pedidos', pedido_id=pedido_id_db))
 
-
-# ruta para eliminar un pedido
 @pedidos_bp.route('/eliminar_pedido/<int:pedido_id>', methods=['POST'])
-def eliminar_pedido(pedido_id):
+def eliminar_pedido_route(pedido_id):
     if not puede_eliminar_pedidos(session.get('rol')):
         return redirect(url_for('pedidos_bp.pedidos'))
-    conn = db.get_connection()
-    cursor = conn.cursor()
-    cursor.execute(
-        "DELETE FROM lineas_pedido_tabla WHERE pedido_id = %s", (pedido_id,))
-    cursor.execute(
-        "DELETE FROM pedidos_global_tabla WHERE id = %s", (pedido_id,))
-    conn.commit()
-    cursor.close()
-    conn.close()
+    eliminar_pedido(pedido_id)
     return redirect(url_for('pedidos_bp.pedidos'))
 
-
-
-# ruta para eliminar una linea de un pedido, de más de una linea
 @pedidos_bp.route('/eliminar_linea/<int:linea_id>', methods=['POST'])
-def eliminar_linea(linea_id):
+def eliminar_linea_route(linea_id):
     if not puede_eliminar_pedidos(session.get('rol')):
         return redirect(url_for('pedidos_bp.pedidos'))
-    conn = db.get_connection()
-    cursor = conn.cursor()
-    cursor.execute(
-        "SELECT pedido_id FROM lineas_pedido_tabla WHERE id = %s", (linea_id,))
-    result = cursor.fetchone()
-    if not result:
-        cursor.close()
-        conn.close()
-        return redirect(url_for('pedidos_bp.pedidos'))
-    pedido_id_db = result[0]
-    cursor.execute(
-        "SELECT COUNT(*) FROM lineas_pedido_tabla WHERE pedido_id = %s", (pedido_id_db,))
-    num_lineas = cursor.fetchone()[0]
-    if num_lineas > 1:
-        cursor.execute(
-            "DELETE FROM lineas_pedido_tabla WHERE id = %s", (linea_id,))
-        conn.commit()
-    cursor.close()
-    conn.close()
-    return redirect(url_for('pedidos_bp.pedidos', pedido_id=pedido_id_db))
+    pedido_id_db = eliminar_linea(linea_id)
+    return redirect(url_for('pedidos_bp.pedidos', pedido_id=pedido_id_db) if pedido_id_db else url_for('pedidos_bp.pedidos'))
 
-
-
-# ruta para modificar un pedido
 @pedidos_bp.route('/modificar_pedido/<int:pedido_id>', methods=['GET', 'POST'])
-def modificar_pedido(pedido_id):
+def modificar_pedido_route(pedido_id):
     if not puede_crud_pedidos(session.get('rol')):
         return redirect(url_for('pedidos_bp.pedidos'))
-    conn = db.get_connection()
-    cursor = conn.cursor()
     mensaje_error = None
-
     if request.method == 'POST':
         mensaje_error = validar_pedido(request.form)
         if not mensaje_error:
@@ -201,58 +94,21 @@ def modificar_pedido(pedido_id):
             cantidades_pedidas = request.form.getlist('cantidad_pedida[]')
             cantidades_recibidas = request.form.getlist('cantidad_recibida[]')
             fechas_recibido = request.form.getlist('fecha_recibido[]')
-
-            cursor.execute("""
-                UPDATE pedidos_global_tabla
-                SET referencia_pedido = %s, fecha_creacion = %s
-                WHERE id = %s
-            """, (referencia_pedido, fecha_creacion, pedido_id))
-
-            cursor.execute(
-                "DELETE FROM lineas_pedido_tabla WHERE pedido_id = %s", (pedido_id,))
-
-            for i in range(len(referencias)):
-                cantidad_pedida = int(cantidades_pedidas[i])
-                cantidad_recibida = int(
-                    cantidades_recibidas[i]) if cantidades_recibidas[i] else 0
-                fecha_recibido = fechas_recibido[i] if fechas_recibido[i] else None
-                completo_linea = cantidad_pedida == cantidad_recibida
-
-                nombre_articulo = obtener_nombre_articulo(
-                    cursor, referencias[i])
-
-                cursor.execute("""
-                    INSERT INTO lineas_pedido_tabla
-                    (pedido_id, referencia_articulo, nombre_articulo, cantidad_pedida, cantidad_recibida, fecha_recibido, completo)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s)
-                """, (pedido_id, referencias[i], nombre_articulo, cantidad_pedida, cantidad_recibida, fecha_recibido, completo_linea))
-
-            cursor.execute(
-                "SELECT COUNT(*) FROM lineas_pedido_tabla WHERE pedido_id = %s AND completo = 0", (pedido_id,))
-            incompletas = cursor.fetchone()[0]
-            cursor.execute(
-                "UPDATE pedidos_global_tabla SET completo = %s WHERE id = %s", (incompletas == 0, pedido_id))
-
-            conn.commit()
-            cursor.close()
-            conn.close()
+            lineas = zip(referencias, cantidades_pedidas, cantidades_recibidas, fechas_recibido)
+            modificar_pedido(pedido_id, referencia_pedido, fecha_creacion, lineas, obtener_nombre_articulo)
             return redirect(url_for('pedidos_bp.pedidos', pedido_id=pedido_id))
 
-    cursor.execute(
-        "SELECT referencia_pedido, fecha_creacion FROM pedidos_global_tabla WHERE id = %s", (pedido_id,))
-    pedido = cursor.fetchone()
-    cursor.execute(
-        "SELECT * FROM lineas_pedido_tabla WHERE pedido_id = %s", (pedido_id,))
-    lineas = cursor.fetchall()
-    cursor.execute("SELECT referencia, nombre FROM inventario_tabla")
-    inventario = cursor.fetchall()
-    cursor.close()
-    conn.close()
+    pedido = obtener_pedido_cabecera(pedido_id)
+    lineas = obtener_lineas_pedido(pedido_id)
+    inventario = obtener_inventario()
+    nombres_columnas_lineas = VISTAS['lineas_pedido']['nombres_columnas']
     return render_template(
         'pedidos/modificar_pedido.html',
         pedido_id=pedido_id,
         pedido=pedido,
         lineas=lineas,
         inventario=inventario,
-        mensaje_error=mensaje_error
+        mensaje_error=mensaje_error,
+        nombres_columnas=obtener_nombres_columnas('pedidos'),
+        nombres_columnas_lineas=nombres_columnas_lineas 
     )

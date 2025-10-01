@@ -1,22 +1,18 @@
-{% set nombres_columnas = config.nombres_columnas if config and config.nombres_columnas else {} %}
-{% set nombre_vista = config.nombres_vistas['NOMBRE_VISTA'] if config and config.nombres_vistas and 'NOMBRE_VISTA' in config.nombres_vistas else 'Nombre Vista' %}
-
 <h2>{{ nombre_vista }}</h2>
-
-
 <form method="post" class="mb-4">
     <div class="row justify-content-between align-items-end border p-3 mb-3">
         <div class="col-md-4">
-            <label for="referencia_pedido">Referencia del pedido</label>
+            <label for="referencia_pedido">{{ nombres_columnas['referencia_pedido'] }}</label>
             <input
                 type="text"
                 class="form-control"
                 name="referencia_pedido"
                 required
+                placeholder="{{ nombres_columnas['referencia_pedido'] }}"
             >
         </div>
         <div class="col-md-4">
-            <label for="fecha_creacion">Fecha creación</label>
+            <label for="fecha_creacion">{{ nombres_columnas['fecha_creacion'] }}</label>
             <input
                 type="date"
                 class="form-control"
@@ -68,7 +64,7 @@
             </div>
         </div>
     </div>
-        <button type="button" class="btn-vista" onclick="agregarLinea()">Añadir línea</button>
+    <button type="button" class="btn-vista" onclick="agregarLinea()">Añadir línea</button>
 </form>
 <script>
 function agregarLinea() {

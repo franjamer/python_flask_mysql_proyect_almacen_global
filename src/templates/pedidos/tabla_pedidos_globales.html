@@ -24,14 +24,14 @@
                     <a href="{{ url_for('pedidos_bp.pedidos', pedido_id=pedido['id']) }}" class="btn-vista btn-info btn-sm">Ver</a>
                 </td>
                 <td>
-                    <a href="{{ url_for('pedidos_bp.modificar_pedido', pedido_id=pedido['id']) }}"
+                    <a href="{{ url_for('pedidos_bp.modificar_pedido_route', pedido_id=pedido['id']) }}"
                     class="btn-vista btn-warning btn-sm"
                     {% if not puede_crud_pedidos(session.get('rol')) %}disabled style="opacity:0.25;pointer-events:none;"{% endif %}>
                     Modificar
                     </a>
                 </td>
                 <td>
-                    <form method="post" action="{{ url_for('pedidos_bp.eliminar_pedido', pedido_id=pedido['id']) }}" style="display:inline;" onsubmit="return confirm('¿Seguro que deseas eliminar este pedido?');">
+                    <form method="post" action="{{ url_for('pedidos_bp.eliminar_pedido_route', pedido_id=pedido['id']) }}" style="display:inline;" onsubmit="return confirm('¿Seguro que deseas eliminar este pedido?');">
                         <button type="submit" class="btn-vista btn-danger btn-sm"
                             {% if not puede_eliminar_pedidos(session.get('rol')) %}disabled style="opacity:0.25;pointer-events:none;"{% endif %}>
                                 Eliminar
