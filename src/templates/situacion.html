@@ -2,7 +2,7 @@
 {% block content %}
 {% set nombres_columnas = config.nombres_columnas if config and config.nombres_columnas else {} %}
 {% set nombre_vista = config.nombres_vistas['situacion'] if config and config.nombres_vistas and 'situacion' in config.nombres_vistas else 'Situación' %}
-<a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
+<a href="{{ url_for('home_bp.menu') }}" class="btn-vista btn-secondary mb-3">← Volver al menú principal</a>
 
 <div class="container mt-4">
     <h2>{{ nombre_vista }}</h2>
@@ -40,7 +40,7 @@
                 <input type="text" class="form-control" name="altura" required>
             </div>
         </div>
-        <button type="submit" class="btn btn-success mt-2">Añadir</button>
+        <button type="submit" class="btn-vista btn-success mt-2">Añadir</button>
     </form>
     {% endif %}
 
@@ -70,7 +70,7 @@
                             {% if puede_eliminar() %}
                             <td>
                                 <form method="post" action="{{ url_for('situacion_bp.eliminar_situacion', id_situacion_tabla=pos.id_situacion_tabla) }}" style="display:inline;" onsubmit="return confirm('¿Eliminar esta posición?');">
-                                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                                    <button type="submit" class="btn-vista btn-danger btn-sm">Eliminar</button>
                                 </form>
                             </td>
                             {% endif %}

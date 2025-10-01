@@ -1,8 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-{% set nombres_columnas = config.nombres_columnas if config and config.nombres_columnas else {} %}
-{% set nombre_vista = config.nombres_vistas['inventario'] if config and config.nombres_vistas and 'inventario' in config.nombres_vistas else 'Inventario' %}
-<a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
+<a href="{{ url_for('home_bp.menu') }}" class="btn-vista btn-secondary mb-3">← Volver al menú principal</a>
 
 <div class="container mt-4">
     <h2>{{ nombre_vista }}</h2>
@@ -32,12 +30,12 @@
                 </select>
             </div>
         </div>
-        <button type="submit" class="btn btn-success mt-2">Añadir repuesto</button>
+        <button type="submit" class="btn-vista mt-2">Añadir repuesto</button>
     </form>
     {% endif %}
 
     {% if puede_crear_actualizar() %}
-    <button type="button" class="btn btn-primary mb-3" data-bs-toggle="modal" data-bs-target="#nuevaSituacionModal">
+    <button type="button" class="btn-vista mb-3" data-bs-toggle="modal" data-bs-target="#nuevaSituacionModal">
         Nueva situación
     </button>
     {% endif %}
@@ -46,12 +44,11 @@
         <table class="table table-bordered table-striped">
             <thead>
                 <tr>
-                    {% for col in columnas %}
-                    <th>{{ nombres_columnas.get(col, col|capitalize) }}</th>
+                    {% for campo in columnas %}
+                        <th>{{ nombres_columnas[campo] }}</th>
                     {% endfor %}
-                    <th>Ubicación</th>
                     {% if puede_crear_actualizar() or puede_eliminar() %}
-                    <th>Acciones</th>
+                        <th>Acciones</th>
                     {% endif %}
                 </tr>
             </thead>
@@ -59,20 +56,32 @@
                 {% for repuesto in repuestos %}
                 <tr>
                     {% for col in columnas %}
-                    <td>{{ repuesto[col] }}</td>
+                        {% if col == 'id_situacion_tabla' %}
+                            <td>
+                                {% set pos = posiciones | selectattr('id_situacion_tabla', 'equalto', repuesto.id_situacion_tabla) | first %}
+                                {% if pos %}
+                                    {{ pos.almacen }} - Est:{{ pos.estanteria }} Col:{{ pos.columna }} Alt:{{ pos.altura }} Lado:{{ pos.lado }}
+                                {% else %}
+                                    Sin ubicación
+                                {% endif %}
+                            </td>
+                        {% else %}
+                            <td>{{ repuesto[col] }}</td>
+                        {% endif %}
                     {% endfor %}
-                    <td>
-                        {{ repuesto.ubicacion if repuesto.ubicacion else 'Sin ubicación' }}
-                    </td>
                     {% if puede_crear_actualizar() or puede_eliminar() %}
                     <td>
                         <!-- Botón "Actualizar" -->
-                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modificarRepuestoModal{{ repuesto.id }}">
+                        {% if puede_crear_actualizar() %}
+                        <button type="button" class="btn-vista btn-sm" data-bs-toggle="modal" data-bs-target="#modificarRepuestoModal{{ repuesto.id }}">
                             Actualizar
                         </button>
+                        {% endif %}
+                        {% if puede_eliminar() %}
                         <form method="post" action="{{ url_for('inventario_bp.eliminar_repuesto', id=repuesto.id) }}" style="display:inline;" onsubmit="return confirm('¿Eliminar este repuesto?');">
-                            <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                            <button type="submit" class="btn-vista  btn-sm">Eliminar</button>
                         </form>
+                        {% endif %}
                     </td>
                     {% endif %}
                 </tr>
@@ -112,7 +121,7 @@
                         <label for="altura" class="form-label">Altura</label>
                         <input type="text" class="form-control" id="altura" name="altura" required>
                     </div>
-                    <button type="submit" class="btn btn-primary">Guardar</button>
+                    <button type="submit" class="btn-vista ">Guardar</button>
                 </form>
             </div>
         </div>
@@ -148,7 +157,7 @@
                             {% endfor %}
                         </select>
                     </div>
-                    <button type="submit" class="btn btn-primary">Guardar cambios</button>
+                    <button type="submit" class="btn-vista ">Guardar cambios</button>
                 </form>
             </div>
         </div>

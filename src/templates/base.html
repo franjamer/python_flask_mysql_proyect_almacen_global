@@ -10,10 +10,10 @@
         {% if config.estilo_menu %}
         <style>
         :root {
-            --color-texto-menu: {{ color_texto }};
-            --color-fondo-menu: {{ color_fondo }};
-            --tamano-texto-menu: {{ tamano_texto }}px;
-            --estilo-texto-menu: {{ estilo_texto }};
+            --color-texto: {{ color_texto }};
+            --color-fondo: {{ color_fondo }};
+            --tamano-texto: {{ tamano_texto }}px;
+            --estilo-texto: {{ estilo_texto }};
         }
         </style>
         {% endif %}
@@ -26,7 +26,7 @@
                 Perfil:
                 <strong>{{ session['perfil'] }}</strong>
             </span>
-            <a href="{{ url_for('logout') }}" class="btn btn-outline-danger me-3">Cerrar sesión</a>
+            <a href="{{ url_for('logout') }}" class=" btn-outline-danger me-3">Cerrar sesión</a>
         </nav>
         {% endif %}
         <div class="container">

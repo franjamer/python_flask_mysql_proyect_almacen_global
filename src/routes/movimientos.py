@@ -2,6 +2,8 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 import database as db
 from routes.roles import puede_eliminar_movimientos
 from .utilidades import asegurar_fila_minima_auto
+from .vistas_config import VISTAS
+from .configuracion_general import obtener_nombres_columnas
 
 # Crea el Blueprint para los movimientos
 movimientos_bp = Blueprint('movimientos_bp', __name__)
@@ -123,15 +125,18 @@ def movimientos():
         if conn:
             conn.close()
 
+    columnas = VISTAS['movimientos']['columnas']
+    nombres_columnas = obtener_nombres_columnas('movimientos')
+
     # Renderizar la plantilla
     return render_template(
         'movimientos.html',
-        movimientos=movimientos_lista,
+        columnas=columnas,
+        nombres_columnas=nombres_columnas,
+        movimientos_lista=movimientos_lista,
         inventario=inventario,
         operadores=operadores,
-        movimientos_api_url=url_for('movimientos_bp.api_operadores'),
-        mensaje_error=mensaje_error,
-        puede_eliminar_movimientos=puede_eliminar_movimientos
+        mensaje_error=mensaje_error
     )
 
 # Ruta para eliminar movimientos

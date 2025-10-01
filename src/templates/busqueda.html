@@ -4,7 +4,7 @@
 
 {% block content %}
 <h2>{{ config.nombres_vistas['busqueda'] if config and config.nombres_vistas and 'Busqueda' in config.nombres_vistas else 'Busqueda' }}</h2>
-<a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary m-1">
+<a href="{{ url_for('home_bp.menu') }}" class="btn-vista btn-secondary m-1">
     ← Volver al menú principal
 </a>
 <div class="d-flex flex-column align-items-center justify-content-center p-2">
@@ -39,7 +39,7 @@
                 <option value="desc" {% if request.args.get('orden') == 'desc' %}selected{% endif %}>Descendente</option>
             </select>
         </div>
-        <button type="submit" class="btn btn-primary">Buscar</button>
+        <button type="submit" class="btn-vista btn-primary">Buscar</button>
     </form>
     
     
@@ -47,15 +47,15 @@
 </div>
 
 <div class="container mt-5">
-    {% set nombres_columnas = config.nombres_columnas if config and config.nombres_columnas else {} %}
+    <h2 class="mb-4">Resultados de la búsqueda</h2>
     {% set nombre_vista = config.nombres_vistas['NOMBRE_VISTA'] if config and config.nombres_vistas and 'NOMBRE_VISTA' in config.nombres_vistas else 'Nombre Vista' %}
 
     <h2 class="mb-4">{{ nombre_vista }}</h2>
     <table class="table table-bordered table-dark table-striped">
         <thead>
             <tr>
-                {% for col in columnas %}
-                <th>{{ nombres_columnas.get(col, col) }}</th>
+                {% for campo in columnas %}
+                    <th>{{ nombres_columnas[campo] }}</th>
                 {% endfor %}
             </tr>
         </thead>

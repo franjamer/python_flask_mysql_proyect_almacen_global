@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">← Volver al menú principal</a>
+<a href="{{ url_for('home_bp.menu') }}" class="btn-vista btn-secondary mb-3">← Volver al menú principal</a>
 <div class="container mt-4">
     <h2 class="text-center mb-4">Mapa Interactivo de Almacenes</h2>
     <div id="almacenes" class="row justify-content-center">
@@ -39,7 +39,7 @@ function verEstanterias(almacen) {
             let html = `<h4>Estanterías en <b>${almacen}</b></h4><div class="row">`;
             estanterias.forEach(e => {
                 html += `<div class="col-md-2 mb-2">
-                    <button class="btn btn-outline-secondary w-100" onclick="verLados('${almacen}', '${e.estanteria}')">
+                    <button class="btn-vista btn-outline-secondary w-100" onclick="verLados('${almacen}', '${e.estanteria}')">
                         Estantería ${e.estanteria}
                     </button>
                 </div>`;
@@ -55,7 +55,7 @@ function verLados(almacen, estanteria) {
         .then(lados => {
             let html = `<h5>Lados de la estantería ${estanteria}:</h5>`;
             lados.forEach(l => {
-                html += `<button class="btn btn-info m-1" onclick="verColumnas('${almacen}', '${estanteria}', '${l.lado}')">${l.lado}</button>`;
+                html += `<button class="btn-vista btn-info m-1" onclick="verColumnas('${almacen}', '${estanteria}', '${l.lado}')">${l.lado}</button>`;
             });
             document.getElementById('vista-lados').innerHTML = html;
         });
@@ -67,7 +67,7 @@ function verColumnas(almacen, estanteria, lado) {
         .then(columnas => {
             let html = `<h5>Columnas en Lado ${lado}:</h5>`;
             columnas.forEach(c => {
-                html += `<button class="btn btn-secondary m-1" onclick="verAlturas('${almacen}', '${estanteria}', '${lado}', '${c.columna}')">Columna ${c.columna}</button>`;
+                html += `<button class="btn-vista btn-secondary m-1" onclick="verAlturas('${almacen}', '${estanteria}', '${lado}', '${c.columna}')">Columna ${c.columna}</button>`;
             });
             document.getElementById('vista-lados').innerHTML = html;
         });

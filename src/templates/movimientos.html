@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<a href="{{ url_for('home_bp.menu') }}" class="btn btn-secondary mb-3">
+<a href="{{ url_for('home_bp.menu') }}" class="btn-vista btn-secondary mb-3">
     ← Volver al menú principal
 </a>
 <div class="container mt-5">
@@ -65,7 +65,7 @@
                 >
             </div>
             <div class="col-md-12 mt-2">
-                <button type="submit" class="btn btn-success">Añadir movimiento</button>
+                <button type="submit" class="btn-vista btn-success">Añadir movimiento</button>
             </div>
         </div>
     </form>
@@ -73,51 +73,24 @@
     <table class="table table-sm table-bordered">
         <thead>
             <tr>
-                <th>ID</th>
-                <th>Referencia</th>
-                <th>Nombre repuesto</th>
-                <th>Tipo</th>
-                <th>Cantidad</th>
-                <th>Unidad</th>
-                <th>Código operador</th>
-                <th>Fecha</th>
-                <th>Stock tras movimiento</th>
-                <th>Eliminar</th>
+                {% for campo in columnas %}
+                    <th>{{ nombres_columnas[campo] }}</th>
+                {% endfor %}
             </tr>
         </thead>
         <tbody>
-            {% for mov in movimientos %}
+            {% for fila in movimientos_lista %}
             <tr>
-                <td>{{ mov['idmovimientos'] }}</td>
-                <td>{{ mov['referencia_pieza_repuesto'] }}</td>
-                <td>{{ mov['nombre_pieza_repuesto'] }}</td>
-                <td>{{ mov['tipo_de_movimiento'] }}</td>
-                <td>{{ mov['cantidad'] }}</td>
-                <td>{{ mov['unidad_de_cantidad'] }}</td>
-                <td>{{ mov['codigo_operador'] }}</td>
-                <td>{{ mov['fecha_movimiento'] }}</td>
-                <td>{{ mov['stock_tras_movimiento'] }}</td>
-                <td>
-                    <form method="post" action="{{ url_for('movimientos_bp.eliminar_movimiento', idmovimientos=mov.idmovimientos) }}" onsubmit="return confirm('¿Seguro que deseas eliminar este movimiento?');">
-                        {% if puede_eliminar_movimientos(session.get('rol')) %}
-                        <button type="submit" class="btn btn-danger btn-sm" style="opacity:0.9;">Eliminar</button>
-                        {% else %}
-                        <button
-                            type="submit"
-                            class="btn btn-danger btn-sm"
-                            disabled
-                            style="opacity:0.25;pointer-events:none;"
-                        >Eliminar</button>
-                        {% endif %}
-                    </form>
-                </td>
+                {% for campo in columnas %}
+                    <td>{{ fila[campo] }}</td>
+                {% endfor %}
             </tr>
             {% endfor %}
         </tbody>
     </table>
 </div>
 <!-- Botón para volver al menú principal -->
-<button class="btn btn-primary mb-3">
+<button class="btn-vista btn-primary mb-3">
     <a href="{{ url_for('home_bp.menu') }}" class="text-white">Volver al Menú</a>
 </button>
 <script>

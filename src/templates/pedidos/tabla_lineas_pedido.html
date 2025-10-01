@@ -30,13 +30,13 @@
                     {{ 'Sí' if linea[6] else 'No' }}
                 </td>
                 <td>
-                    <button type="submit" class="btn btn-warning btn-sm">Actualizar</button>
+                    <button type="submit" class="btn-vista btn-warning btn-sm">Actualizar</button>
                 </td>
             </form>
             <td>
                 {% if lineas|length > 1 %}
                 <form method="post" action="{{ url_for('pedidos_bp.eliminar_linea', linea_id=linea[0], pedido_id=request.args.get('pedido_id')) }}" style="display:inline;" onsubmit="return confirm('¿Seguro que deseas eliminar esta línea?');">
-                    <button type="submit" class="btn btn-danger btn-sm">Eliminar</button>
+                    <button type="submit" class="btn-vista btn-danger btn-sm">Eliminar</button>
                 </form>
                 {% endif %}
             </td>

@@ -1,4 +1,4 @@
-from .vistas_config import VISTAS
+from .vistas_config import VISTAS, guardar_vistas
 
 def obtener_nombres_columnas(vista):
     nombres_defecto = {campo: campo.replace('_', ' ').capitalize() for campo in VISTAS[vista]['columnas']}
@@ -12,3 +12,4 @@ def actualizar_nombres_columnas(vista, form):
         nuevo_valor = form.get(f'nombre_columna_{campo}')
         if nuevo_valor:
             VISTAS[vista]['nombres_columnas'][campo] = nuevo_valor
+    guardar_vistas(VISTAS)

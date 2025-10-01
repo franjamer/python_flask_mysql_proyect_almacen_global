@@ -1,29 +1,179 @@
 {
-  "inventario": [
-    "referencia", "nombre", "categoria", "subcategoria",
-    "caracteristicas_medidas", "fotos_planos", "empaquetado",
-    "stock", "stock_minimo", "stock_maximo", "id_situacion_tabla"
-  ],
-  "busqueda": [
-    "referencia", "nombre", "categoria", "almacen", "stock", "ubicacion", "id_situacion_tabla"
-  ],
-  "pedidos": [
-    "id_pedido", "fecha", "referencia", "cantidad", "estado", "proveedor"
-  ],
-  "movimientos": [
-    "id_movimiento", "fecha", "referencia", "cantidad", "tipo", "operador"
-  ],
-  "operadores": [
-    "id_operador", "nombre", "perfil", "activo"
-  ],
-  "perfiles": [
-    "id_perfil", "perfil", "descripcion"
-  ],
-  "situacion": [
-    "id_situacion_tabla", "almacen", "estanteria", "lado", "columna", "altura"
-  ],
-  "mapa_interactivo": [
-    "almacen", "estanteria", "lado", "columna", "altura"
-  ],
-  "menu": ["central", "titulo_principal", "titulo_secundario"]
+  "inventario": {
+    "columnas": [
+      "referencia",
+      "nombre",
+      "categoria",
+      "subcategoria",
+      "caracteristicas_medidas",
+      "Fotos Planos",
+      "empaquetado",
+      "stock",
+      "stock_minimo",
+      "stock_maximo",
+      "id_situacion_tabla"
+    ],
+    "estilos": {
+      "color_texto_menu": "#bfbfbf",
+      "color_fondo_menu": "#b3cef9",
+      "tamano_texto_menu": "16",
+      "estilo_texto_menu": "normal"
+    },
+    "nombres_columnas": {
+      "referencia": "Referencia",
+      "nombre": "Nombre",
+      "categoria": "Categoria",
+      "subcategoria": "Subcategoria",
+      "caracteristicas_medidas": "Caracteristicas medidas",
+      "Fotos Planos": "FootPrint",
+      "empaquetado": "Empaquetado",
+      "stock": "Stock",
+      "stock_minimo": "Stock minimo",
+      "stock_maximo": "Stock maximo",
+      "id_situacion_tabla": "Id situacion tabla"
+    }
+  },
+  "busqueda": {
+    "columnas": [
+      "referencia",
+      "nombre",
+      "categoria",
+      "almacen",
+      "stock",
+      "ubicacion",
+      "id_situacion_tabla"
+    ],
+    "estilos": {
+      "color_texto_menu": "#000000",
+      "color_fondo_menu": "#ffffff",
+      "tamano_texto_menu": "16",
+      "estilo_texto_menu": "normal"
+    },
+    "nombres_columnas": {
+      "referencia": "Referencia",
+      "nombre": "Nombre del Repuesto",
+      "categoria": "Categoria",
+      "almacen": "Almacen",
+      "stock": "Stock",
+      "ubicacion": "Ubicacion",
+      "id_situacion_tabla": "Id situacion tabla"
+    }
+  },
+  "menu": {
+    "columnas": [
+      "central",
+      "titulo_principal",
+      "titulo_secundario"
+    ],
+    "estilos": {
+      "color_texto_menu": "#000000",
+      "color_fondo_menu": "#f17e7e",
+      "tamano_texto_menu": "16",
+      "estilo_texto_menu": "normal"
+    }
+  },
+  "operadores": {
+    "columnas": [
+      "codigo_operador",
+      "nombre_completo",
+      "telefono",
+      "email",
+      "direccion",
+      "id_situacion_tabla"
+    ],
+    "estilos": {
+      "color_texto_menu": "#000000",
+      "color_fondo_menu": "#ffffff",
+      "tamano_texto_menu": "16",
+      "estilo_texto_menu": "normal"
+    }
+  },
+  "movimientos": {
+    "columnas": [
+      "referencia_pieza_repuesto",
+      "nombre_pieza_repuesto",
+      "tipo_de_movimiento",
+      "cantidad",
+      "unidad_de_cantidad",
+      "codigo_operador",
+      "fecha_movimiento",
+      "stock_tras_movimiento"
+    ],
+    "estilos": {
+      "color_texto_menu": "#000000",
+      "color_fondo_menu": "#ffffff",
+      "tamano_texto_menu": "16",
+      "estilo_texto_menu": "normal"
+    },
+    "nombres_columnas": {
+      "referencia_pieza_repuesto": "Referencia Repuesto",
+      "nombre_pieza_repuesto": "Nombre Repuesto",
+      "tipo_de_movimiento": "Tipo de movimiento",
+      "cantidad": "Cantidad",
+      "unidad_de_cantidad": "Unidad de cantidad",
+      "codigo_operador": "Codigo operador",
+      "fecha_movimiento": "Fecha movimiento",
+      "stock_tras_movimiento": "Stock tras movimiento"
+    }
+  },
+  "pedidos": {
+    "columnas": [
+      "id_pedido",
+      "fecha",
+      "referencia",
+      "cantidad",
+      "estado",
+      "proveedor"
+    ],
+    "estilos": {
+      "color_texto_menu": "#000000",
+      "color_fondo_menu": "#ffffff",
+      "tamano_texto_menu": "16",
+      "estilo_texto_menu": "normal"
+    }
+  },
+  "perfiles": {
+    "columnas": [
+      "id_perfil",
+      "perfil",
+      "descripcion"
+    ],
+    "estilos": {
+      "color_texto_menu": "#000000",
+      "color_fondo_menu": "#ffffff",
+      "tamano_texto_menu": "16",
+      "estilo_texto_menu": "normal"
+    }
+  },
+  "situacion": {
+    "columnas": [
+      "id_situacion_tabla",
+      "almacen",
+      "estanteria",
+      "lado",
+      "columna",
+      "altura"
+    ],
+    "estilos": {
+      "color_texto_menu": "#000000",
+      "color_fondo_menu": "#ffffff",
+      "tamano_texto_menu": "16",
+      "estilo_texto_menu": "normal"
+    }
+  },
+  "mapa_interactivo": {
+    "columnas": [
+      "almacen",
+      "estanteria",
+      "lado",
+      "columna",
+      "altura"
+    ],
+    "estilos": {
+      "color_texto_menu": "#000000",
+      "color_fondo_menu": "#ffffff",
+      "tamano_texto_menu": "16",
+      "estilo_texto_menu": "normal"
+    }
+  }
 }

@@ -13,22 +13,19 @@ from routes.roles import puede_eliminar_movimientos
 from routes.situacion import situacion_bp
 from routes.mapa import mapa_bp
 from routes.configuracion import configuracion_bp
-from routes.configuracion_carga import cargar_configuracion
 from routes.proveedores import proveedores_bp
 from routes.busqueda import busqueda_bp
-# from src import create_app
+
 # configuración de carpetas y path de la aplicación.
 template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
 template_dir = os.path.join(template_dir, 'src', 'templates')
-# app= create_app()
+
 # Inicialización de la aplicación Flask
 app = Flask(__name__, template_folder=template_dir)
 app.secret_key = 'FJMR_ADMIN'
 
-@app.context_processor
-def inject_config():
-    config = cargar_configuracion()
-    return dict(config=config)
+# Ya no usamos cargar_configuracion ni config.json/configuracion.json
+# Si necesitas pasar config global, hazlo desde cada blueprint o función
 
 # RUTA DE LOGIN
 @app.route('/login', methods=['GET', 'POST'])
@@ -76,16 +73,15 @@ app.register_blueprint(movimientos_bp)
 app.register_blueprint(pedidos_bp)
 app.register_blueprint(tablas_bp)
 app.register_blueprint(operadores_bp)
-app.register_blueprint(situacion_bp )
+app.register_blueprint(situacion_bp)
 app.register_blueprint(mapa_bp)
 app.register_blueprint(configuracion_bp)
 app.register_blueprint(proveedores_bp)
 app.register_blueprint(busqueda_bp)
+
 # Deshabilita el caché de plantillas para desarrollo
 app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.jinja_env.auto_reload = True
-
-
 
 if __name__ == '__main__':
     app.run(debug=True, port=4000)

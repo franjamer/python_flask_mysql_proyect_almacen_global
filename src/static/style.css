@@ -6,19 +6,19 @@
     --color-fondo: #fb0000;
     /* --color-principal: #fddcde; */
     --color-principal: #eeb6bb;
-    --color-menu-btn: #91cbff;
-    --color-menu-btn-hover: #b80000;
-    --color-menu-btn-before: #00bfffdf;
+    --color-btn: #91cbff;
+    --color-btn-hover: #b80000;
+    --color-btn-before: #00bfffdf;
     --color-titulo: #ff9900;
     --color-titulo-secundario: #e2bb60;
     --color-titulo-sombra: #8360ea;
     --color-titulo-sombra2: #ca8bbb;
     --fuente-principal: 'Georgia', serif;
     /* Agrega más variables según lo que quieras personalizar */
-    --color-texto-menu: #000000;
-    --color-fondo-menu: #f7b4b4;
-    --tamano-texto-menu: 16px;
-    --estilo-texto-menu: normal;
+    --color-texto: #000000;
+    --color-fondo: #f7b4b4;
+    --tamano-texto: 16px;
+    --estilo-texto: normal;
 }
 
 /* Colores y fuentes principales */
@@ -81,20 +81,20 @@ div.container {
 
 }
 
-.menu-btns {
+.btns {
     width: 100%;
     display: flex;
     flex-direction: column;
     gap: 40px;
-    color:var(--color-menu-btn)
+    color:var(--color-btn)
 }
 
-.menu-btn {
+.btn {
     display: block;
     width: 200px;
     height: 90px;
     margin: 0 auto;
-    background: var(--color-menu-btn);
+    background: var(--color-btn);
     color: #fb0000;
     font-size: 1.5rem;
     font-family: 'Georgia', serif;
@@ -108,26 +108,26 @@ div.container {
     transition: transform 0.1s;
 }
 
-.menu-btn::before {
+.btn::before {
     content: '';
     position: absolute;
     top: 0;
     left: 0;
     width: 80px;
     height: 30px;
-    background: var(--color-menu-btn-before, #ff0000);
+    background: var(--color-btn-before, #ff0000);
     border-radius: 50% 50% 0 0 / 80% 80% 0 0;
     z-index: 1;
 }
 
-.menu-btn span {
+.btn span {
     position: relative;
     z-index: 2;
 }
 
-.menu-btn:hover {
+.btn:hover {
     transform: scale(0.85);
-    background: var(--color-menu-btn-hover);
+    background: var(--color-btn-hover);
 }
 
 .main-content {
@@ -151,10 +151,10 @@ div.container {
 }
 
 .titulo-principal {
-    color: var(--color-texto-menu);
-    background: var(--color-fondo-menu);
-    font-size: var(--tamano-texto-menu);
-    font-style: var(--estilo-texto-menu);
+    color: var(--color-texto);
+    background: var(--color-fondo);
+    font-size: var(--tamano-texto);
+    font-style: var(--estilo-texto);
     /* text-shadow: 2px 2px 0 #d5eb11, 4px 4px 0 #eec381; */
     margin: 0px 0 250px 10px;
     text-align: center;
@@ -168,9 +168,9 @@ div.container {
 
 .titulo-secundario {
     color: var(--color-titulo-secundario);
-    background: var(--color-fondo-menu);
-    font-size: var(--tamano-texto-menu);
-    font-style: var(--estilo-texto-menu);
+    background: var(--color-fondo);
+    font-size: var(--tamano-texto);
+    font-style: var(--estilo-texto);
     /* color: var(--color-titulo-secundario); */
     /* font-size: 3vw; */
     font-family: 'Georgia', serif;
@@ -187,9 +187,9 @@ div.container {
 }
 .titulo-central {
     color: var(--color-titulo-secundario);
-    background: var(--color-fondo-menu);
-    font-size: var(--tamano-texto-menu);
-    font-style: var(--estilo-texto-menu);
+    background: var(--color-fondo);
+    font-size: var(--tamano-texto);
+    font-style: var(--estilo-texto);
     font-family: 'Georgia', serif;
     /* text-shadow: 2px 2px 0 #910000, 4px 4px 0 #ddaeae; */
     margin: 0px 0 250px 0;
@@ -230,25 +230,25 @@ td {
 
 .estilo-preview {
     color: var(--color-texto-menu);
-    background: var(--color-fondo-menu);
-    font-size: var(--tamano-texto-menu);
-    font-style: var(--estilo-texto-menu);
+    background: var(--color-fondo);
+    font-size: var(--tamano-texto);
+    font-style: var(--estilo-texto);
     padding: 2px 10px;
     border-radius: 4px;
     display: inline-block;
 }
 
 body, .container, .card, .navbar, .list-group-item {
-    color: var(--color-texto-menu);
-    background: var(--color-fondo-menu);
-    font-size: var(--tamano-texto-menu);
-    font-style: var(--estilo-texto-menu);
+    color: var(--color-texto);
+    background: var(--color-fondo);
+    font-size: var(--tamano-texto);
+    font-style: var(--estilo-texto);
 }
 h1, h2, h3, h4, h5, h6 {
     color: var(--color-titulo);
-    background: var(--color-fondo-menu);
-    font-size: var(--tamano-texto-menu);
-    font-style: var(--estilo-texto-menu);
+    background: var(--color-fondo);
+    font-size: var(--tamano-texto);
+    font-style: var(--estilo-texto);
     /* text-shadow: 2px 2px 0 var(--color-titulo-sombra), 4px 4px 0 var(--color-titulo-sombra2); */
     font-family: 'Georgia', serif;
 }
@@ -259,4 +259,28 @@ h2 {
 h1 {
     font-size: 3rem;
     margin: 10px 10px;
+}
+
+/* Botones de las vistas (no menú principal) */
+.btn-vista {
+    min-height: 38px;         /* Menos alto que el botón principal */
+    padding: 6px 16px;
+    font-size: 1em;
+    line-height: 1.2;
+    white-space: normal;      /* Permite salto de línea */
+    /* word-break: break-word;   Rompe palabras largas si es necesario */
+    background-color: var(--color-fondo, #ec838c);
+    color: var(--color-texto, #222);
+    border: 2px solid #939393;
+    border-radius: 6px;
+    text-align: center;
+    display: flexbox;
+    vertical-align: middle;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.btn-vista:hover {
+    background-color: #c29999;
+    color: #000;
 }

@@ -67,7 +67,7 @@
                             <div class="col-md-4 mb-3 d-flex flex-column justify-content-between">
                                 <label class="form-label">Texto central</label>
                                 <input type="text" class="form-control campo-editable mb-3" name="texto_menu_central" value="{{ config.textos_menu.central }}" required>
-                                <button type="submit" class="btn btn-success mt-auto" id="btn-aplicar" disabled>Aplicar cambios</button>
+                                <button type="submit" class="btn-vista  btn-success mt-auto" id="btn-aplicar" disabled>Aplicar cambios</button>
                             </div>
                         {% else %}
                             {% set total = campos|length %}
@@ -85,7 +85,7 @@
                                 {% endfor %}
                                 {% if col1|length <= col2|length and col1|length <= col3|length %}
                                     <div class="d-flex justify-content-center mt-4 bg-info border rounded py-3">
-                                        <button type="submit" class="btn btn-success" id="btn-aplicar" disabled>Aplicar cambios</button>
+                                        <button type="submit" class="btn-vista btn-success" id="btn-aplicar" disabled>Aplicar cambios</button>
                                     </div>
                                 {% endif %}
                             </div>

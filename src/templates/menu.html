@@ -3,17 +3,17 @@
 <div class="main-bg">
     <!-- sidebar izquierda -->
     <div class="sidebar">
-        <div class="menu-btns">
+        <div class="btns">
             <!-- Búsqueda: siempre activo -->
-            <a href="{{ url_for('busqueda_bp.busqueda') }}" class="menu-btn">Búsqueda</a>
+            <a href="{{ url_for('busqueda_bp.busqueda') }}" class="btn">Búsqueda</a>
             <!-- Movimientos: siempre activo -->
-            <a href="{{ url_for('home_bp.movimientos') }}" class="menu-btn">Movimientos</a>
+            <a href="{{ url_for('movimientos_bp.movimientos') }}" class="btn">Movimientos</a>
             <!-- Pedidos -->
             {% if session.get('rol') == 'admin' or session.get('rol') == 'pedidos' %}
-            <a href="{{ url_for('pedidos_bp.pedidos') }}" class="menu-btn">Pedidos</a>
+            <a href="{{ url_for('pedidos_bp.pedidos') }}" class="btn">Pedidos</a>
             {% else %}
             <a
-                class="menu-btn disabled-btn"
+                class="btn disabled-btn"
                 tabindex="-1"
                 aria-disabled="true"
                 onclick="return false;"
@@ -21,27 +21,27 @@
             {% endif %}
             <!-- Inventario -->
             {% if session.get('rol') == 'admin' %}
-            <a href="{{ url_for('inventario_bp.inventario') }}" class="menu-btn">Inventario</a>
+            <a href="{{ url_for('inventario_bp.inventario') }}" class="btn">Inventario</a>
             {% elif session.get('rol') == 'pedidos' %}
             <a
-                class="menu-btn disabled-btn"
+                class="btn disabled-btn"
                 tabindex="-1"
                 aria-disabled="true"
                 onclick="return false;"
             >Inventario</a>
             {% else %}
             <a
-                class="menu-btn disabled-btn"
+                class="btn disabled-btn"
                 tabindex="-1"
                 aria-disabled="true"
                 onclick="return false;"
             >Inventario</a>
             {% endif %}
             {% if session.get('rol')== 'admin' %}
-            <a href="#" class="menu-btn">Proveedores</a>
+            <a href="#" class="btn">Proveedores</a>
             {% else %}
             <a
-                class="menu-btn disabled-btn"
+                class="btn disabled-btn"
                 tabindex="-1"
                 aria-disabled="true"
                 onclick="return false;"
@@ -60,32 +60,32 @@
     </div>
     <!-- sidebar derecha -->
     <div class="sidebar">
-        <div class="menu-btns">
+        <div class="btns">
             {% if session.get('rol')== 'admin'%}
-            <a href="{{url_for('operadores_bp.ver_operadores')}}" class="menu-btn">Operadores</a>
+            <a href="{{url_for('operadores_bp.ver_operadores')}}" class="btn">Operadores</a>
             {% else %}
             <a
-                class="menu-btn disabled-btn"
+                class="btn disabled-btn"
                 tabindex="-1"
                 aria-disabled="true"
                 onclick="return false;"
             >Operadores</a>
             {% endif %}
             {% if session.get('rol')== 'admin' %}
-            <a href="{{url_for('home_bp.perfiles')}}" class="menu-btn">Perfiles</a>
+            <a href="{{url_for('home_bp.perfiles')}}" class="btn">Perfiles</a>
             {% else %}
             <a
-                class="menu-btn disabled-btn"
+                class="btn disabled-btn"
                 tabindex="-1"
                 aria-disabled="true"
                 onclick="return false;"
             >Perfiles</a>
             {% endif %}
             {% if session.get('rol')== 'admin' %}
-            <a href="{{url_for('situacion_bp.situacion')}}" class="menu-btn">Situación</a>
+            <a href="{{url_for('situacion_bp.situacion')}}" class="btn">Situación</a>
             {% else %}
             <a
-            class="menu-btn disabled-btn"
+            class="btn disabled-btn"
             tabindex="-1"
             aria-disabled="true"
             onclick="return false;"
@@ -93,8 +93,8 @@
             
             {% endif %}
             
-            <a class="menu-btn" href="{{ url_for('mapa_bp.mapa_interactivo') }}">Mapa Interactivo</a>
-            <a href="{{ url_for('configuracion_bp.configuracion') }}" class="menu-btn">
+            <a class="btn" href="{{ url_for('mapa_bp.mapa_interactivo') }}">Mapa Interactivo</a>
+            <a href="{{ url_for('configuracion_bp.configuracion') }}" class="btn">
                 Configuración
             </a>
 

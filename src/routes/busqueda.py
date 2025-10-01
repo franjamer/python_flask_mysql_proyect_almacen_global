@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request
-from routes.configuracion import cargar_configuracion
 import database as db
+from .vistas_config import VISTAS
+from .configuracion_general import obtener_nombres_columnas
 
 busqueda_bp = Blueprint('busqueda_bp', __name__)
 
@@ -11,17 +12,17 @@ def busqueda():
     busqueda = request.args.get('busqueda', '').strip()
     campo = request.args.get('campo', 'referencia')
     orden = request.args.get('orden', 'asc')
-    config = cargar_configuracion()
 
-    columnas = config.get('columnas_busqueda', ['referencia', 'nombre', 'categoria', 'stock', 'ubicacion'])
+    columnas = VISTAS['busqueda']['columnas']
+    nombres_columnas = obtener_nombres_columnas('busqueda')
     datos = []
 
     # Quita 'ubicacion' de la consulta SQL porque se construye en Python
     columnas_sql = [col for col in columnas if col != 'ubicacion']
     # Añade los campos necesarios para construir 'ubicacion'
-    for campo in ['almacen', 'estanteria', 'lado', 'columna', 'altura']:
-        if campo not in columnas_sql:
-            columnas_sql.append(campo)
+    for campo_extra in ['almacen', 'estanteria', 'lado', 'columna', 'altura']:
+        if campo_extra not in columnas_sql:
+            columnas_sql.append(campo_extra)
 
     if busqueda:
         conn = db.get_connection()
@@ -53,6 +54,9 @@ def busqueda():
     return render_template(
         'busqueda.html',
         columnas=columnas,
+        nombres_columnas=nombres_columnas,
         datos=datos,
-        config=config
+        busqueda=busqueda,
+        campo=campo,
+        orden=orden
     )

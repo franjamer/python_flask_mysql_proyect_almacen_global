@@ -2,22 +2,12 @@ from flask import Blueprint, render_template, request, redirect, url_for, sessio
 from .utilidades import asegurar_fila_minima_auto
 import database as db
 from routes.configuracion import cargar_configuracion
+from .configuracion_general import obtener_nombres_columnas
+from .vistas_config import VISTAS
 
 inventario_bp = Blueprint('inventario_bp', __name__)
 
-CAMPOS = [
-    'referencia',
-    'nombre',
-    'categoria',
-    'subcategoria',
-    'caracteristicas_medidas',
-    'fotos_planos',
-    'empaquetado',
-    'stock',
-    'stock_minimo',
-    'stock_maximo',
-    'id_situacion_tabla'
-]
+CAMPOS = VISTAS['inventario']['columnas']
 
 
 def puede_crear_actualizar():
@@ -87,6 +77,7 @@ def inventario():
 
     # Cargar configuración personalizada
     config = cargar_configuracion()
+    nombres_columnas = obtener_nombres_columnas('inventario')
 
     return render_template(
         'inventario.html',
@@ -96,7 +87,8 @@ def inventario():
         puede_crear_actualizar=puede_crear_actualizar,
         puede_eliminar=puede_eliminar,
         posiciones=posiciones,
-        config=config
+        config=config,
+        nombres_columnas=nombres_columnas
     )
 
 
