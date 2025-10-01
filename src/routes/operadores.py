@@ -1,5 +1,6 @@
-from flask import Blueprint, request, redirect, render_template,url_for, session
+from flask import Blueprint, request, redirect, render_template, url_for, session
 import database as db
+from .vistas_config import VISTAS
 
 operadores_bp = Blueprint('operadores_bp', __name__)
 
@@ -8,12 +9,19 @@ def ver_operadores():
     if not session.get('rol') == 'admin':
         return redirect(url_for('home_bp.menu'))
     conn = db.get_connection()
-    cursor = conn.cursor(dictionary=True)  # <-- Esto es clave
+    cursor = conn.cursor(dictionary=True)
     cursor.execute("SELECT * FROM operadores ORDER BY id_operador ASC")
     operadores = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('operadores.html', operadores=operadores)
+    columnas = VISTAS['operadores']['columnas']
+    nombres_columnas = VISTAS['operadores']['nombres_columnas']
+    return render_template(
+        'operadores.html',
+        operadores=operadores,
+        columnas=columnas,
+        nombres_columnas=nombres_columnas
+    )
 
 @operadores_bp.route('/añadir', methods=['POST'])
 def añadir():

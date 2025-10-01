@@ -1,87 +1,52 @@
 {% extends "base.html" %}
 {% block content %}
-{% set nombres_columnas = config.nombres_columnas if config and config.nombres_columnas else {} %}
-{% set nombre_vista = config.nombres_vistas['situacion'] if config and config.nombres_vistas and 'situacion' in config.nombres_vistas else 'Situación' %}
 <a href="{{ url_for('home_bp.menu') }}" class="btn-vista btn-secondary mb-3">← Volver al menú principal</a>
+<h1>Gestión de Situaciones</h1>
 
-<div class="container mt-4">
-    <h2>{{ nombre_vista }}</h2>
-    {% if mensaje_error %}
-        <div class="alert alert-danger">{{ mensaje_error }}</div>
-    {% endif %}
+{% if mensaje_error %}
+<div class="alert alert-danger">{{ mensaje_error }}</div>
+{% endif %}
 
-    {% if puede_crear_actualizar() %}
-    <h3>Añadir nueva posición</h3>
-    <form method="post" class="mb-4">
-        <div class="row">
-            <div class="col-md-2 mb-2">
-                <label class="form-label">{{ nombres_columnas.get('almacen', 'Almacén') }}</label>
-                <input type="text" class="form-control" name="almacen" required>
-            </div>
-            <div class="col-md-2 mb-2">
-                <label class="form-label">{{ nombres_columnas.get('estanteria', 'Estantería') }}</label>
-                <input type="text" class="form-control" name="estanteria" required>
-            </div>
-            <div class="col-md-2 mb-2">
-                <label class="form-label">{{ nombres_columnas.get('lado', 'Lado') }}</label>
-                <select name="lado" class="form-select" required>
-                    <option value="">Seleccionar</option>
-                    <option value="IZQ">IZQ</option>
-                    <option value="DER">DER</option>
-                    <option value="N/A">N/A</option>
-                </select>
-            </div>
-            <div class="col-md-2 mb-2">
-                <label class="form-label">{{ nombres_columnas.get('columna', 'Columna') }}</label>
-                <input type="text" class="form-control" name="columna" required>
-            </div>
-            <div class="col-md-2 mb-2">
-                <label class="form-label">{{ nombres_columnas.get('altura', 'Altura') }}</label>
-                <input type="text" class="form-control" name="altura" required>
-            </div>
+<form method="POST" action="{{ url_for('situacion_bp.situacion') }}">
+    <div class="row">
+        {% for campo in columnas %}
+        <div class="col">
+            <label for="{{ campo }}">{{ nombres_columnas[campo] }}</label>
+            <input type="text" class="form-control" name="{{ campo }}" id="{{ campo }}" required>
         </div>
-        <button type="submit" class="btn-vista btn-success mt-2">Añadir</button>
-    </form>
-    {% endif %}
-
-    {% if almacenes %}
-        {% for alm in almacenes %}
-            <h3>Almacén: {{ alm.almacen }}</h3>
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead>
-                        <tr>
-                            <th>{{ nombres_columnas.get('estanteria', 'Estantería') }}</th>
-                            <th>{{ nombres_columnas.get('columna', 'Columna') }}</th>
-                            <th>{{ nombres_columnas.get('altura', 'Altura') }}</th>
-                            <th>{{ nombres_columnas.get('lado', 'Lado') }}</th>
-                            {% if puede_eliminar() %}
-                            <th>Acciones</th>
-                            {% endif %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                    {% for pos in posiciones if pos.almacen == alm.almacen %}
-                        <tr>
-                            <td>{{ pos.estanteria }}</td>
-                            <td>{{ pos.columna }}</td>
-                            <td>{{ pos.altura }}</td>
-                            <td>{{ pos.lado }}</td>
-                            {% if puede_eliminar() %}
-                            <td>
-                                <form method="post" action="{{ url_for('situacion_bp.eliminar_situacion', id_situacion_tabla=pos.id_situacion_tabla) }}" style="display:inline;" onsubmit="return confirm('¿Eliminar esta posición?');">
-                                    <button type="submit" class="btn-vista btn-danger btn-sm">Eliminar</button>
-                                </form>
-                            </td>
-                            {% endif %}
-                        </tr>
-                    {% endfor %}
-                    </tbody>
-                </table>
-            </div>
         {% endfor %}
-    {% else %}
-        <p>No hay almacenes registrados.</p>
-    {% endif %}
-</div>
+        <div class="col">
+            <button type="submit" class="btn-vista btn-primary mt-4">Añadir situación</button>
+        </div>
+    </div>
+</form>
+
+<hr>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            {% for campo in columnas %}
+                <th>{{ nombres_columnas[campo] }}</th>
+            {% endfor %}
+            <th>Acciones</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pos in posiciones %}
+        <tr>
+            {% for campo in columnas %}
+                <td>{{ pos[campo] }}</td>
+            {% endfor %}
+            <td>
+                {% if puede_eliminar() %}
+                <form method="POST" action="{{ url_for('situacion_bp.eliminar_situacion', id_situacion_tabla=pos['id_situacion_tabla']) }}" style="display:inline;">
+                    <button type="submit" class="btn-vista btn-danger btn-sm">Eliminar</button>
+                </form>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
 {% endblock %}

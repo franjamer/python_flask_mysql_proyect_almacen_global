@@ -76,16 +76,18 @@
     "columnas": [
       "codigo_operador",
       "nombre_completo",
-      "telefono",
-      "email",
-      "direccion",
-      "id_situacion_tabla"
+      "puesto"
     ],
     "estilos": {
       "color_texto_menu": "#000000",
       "color_fondo_menu": "#ffffff",
       "tamano_texto_menu": "16",
       "estilo_texto_menu": "normal"
+    },
+    "nombres_columnas": {
+      "codigo_operador": "Código Operador",
+      "nombre_completo": "Nombre Completo Operador",
+      "puesto": "Puesto"
     }
   },
   "movimientos": {
@@ -133,7 +135,7 @@
       "id": "ID Pedido",
       "referencia_pedido": "Referencia Pedidos",
       "fecha_creacion": "Fecha",
-      "completo": "Pedido Completo?"
+      "completo": "Pedido Completado"
     }
   },
   "perfiles": {
@@ -156,7 +158,6 @@
   },
   "situacion": {
     "columnas": [
-      "id_situacion_tabla",
       "almacen",
       "estanteria",
       "lado",
@@ -168,6 +169,13 @@
       "color_fondo_menu": "#ffffff",
       "tamano_texto_menu": "16",
       "estilo_texto_menu": "normal"
+    },
+    "nombres_columnas": {
+      "almacen": "Almacén",
+      "estanteria": "Estantería",
+      "lado": "Lado",
+      "columna": "Columna",
+      "altura": "Altura"
     }
   },
   "mapa_interactivo": {
@@ -183,6 +191,13 @@
       "color_fondo_menu": "#ffffff",
       "tamano_texto_menu": "16",
       "estilo_texto_menu": "normal"
+    },
+    "nombres_columnas": {
+      "almacen": "Almacén",
+      "estanteria": "Estantería",
+      "lado": "Lado",
+      "columna": "Columna",
+      "altura": "Altura"
     }
   },
   "lineas_pedido": {

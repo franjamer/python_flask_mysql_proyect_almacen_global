@@ -1,5 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify
 import database as db
+from .vistas_config import VISTAS  # <-- Añade esto
+
 mapa_bp = Blueprint('mapa_bp', __name__)
 
 @mapa_bp.route('/mapa')
@@ -11,7 +13,14 @@ def mapa_interactivo():
     almacenes = cursor.fetchall()
     cursor.close()
     conn.close()
-    return render_template('mapa_interactivo.html', almacenes=almacenes)
+    columnas = VISTAS['situacion']['columnas']
+    nombres_columnas = VISTAS['situacion']['nombres_columnas']
+    return render_template(
+        'mapa_interactivo.html',
+        almacenes=almacenes,
+        columnas=columnas,
+        nombres_columnas=nombres_columnas
+    )
 
 @mapa_bp.route('/mapa/estanterias')
 def obtener_estanterias():

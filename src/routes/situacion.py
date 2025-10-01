@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 import database as db
 from routes.configuracion import cargar_configuracion
+from .vistas_config import VISTAS  # <-- Añade esto
 
 situacion_bp = Blueprint('situacion_bp', __name__)
 
@@ -40,11 +41,9 @@ def situacion():
                 conn.close()
                 return redirect(url_for('situacion_bp.situacion'))
 
-    # Obtener todos los almacenes
     cursor.execute("SELECT DISTINCT almacen FROM situacion_tabla ORDER BY almacen")
     almacenes = cursor.fetchall()
 
-    # Obtener todas las posiciones
     cursor.execute("SELECT * FROM situacion_tabla ORDER BY almacen, estanteria, columna, altura")
     posiciones = cursor.fetchall()
 
@@ -53,6 +52,8 @@ def situacion():
 
     # Cargar configuración personalizada
     config = cargar_configuracion()
+    columnas = VISTAS['situacion']['columnas']
+    nombres_columnas = VISTAS['situacion']['nombres_columnas']
 
     return render_template(
         'situacion.html',
@@ -61,6 +62,8 @@ def situacion():
         mensaje_error=mensaje_error,
         puede_crear_actualizar=puede_crear_actualizar,
         puede_eliminar=puede_eliminar,
+        columnas=columnas,
+        nombres_columnas=nombres_columnas,
         config=config
     )
 

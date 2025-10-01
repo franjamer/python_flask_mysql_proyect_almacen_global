@@ -80,7 +80,10 @@ function verAlturas(almacen, estanteria, lado, columna) {
             let html = `<h5>Alturas en Columna ${columna}:</h5>
             <table class="table table-bordered">
                 <thead>
-                    <tr><th>Altura</th><th>Repuestos</th></tr>
+                    <tr>
+                        <th>{{ nombres_columnas['altura'] }}</th>
+                        <th>Repuestos</th>
+                    </tr>
                 </thead>
                 <tbody>`;
             alturas.forEach(a => {
