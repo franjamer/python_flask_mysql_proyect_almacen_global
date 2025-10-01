@@ -29,16 +29,18 @@
                     {% endfor %}
                 </select>
             </div>
+            <div class="col-md-3 mb-2 d-flex align-items-end">
+                {% if puede_crear_actualizar() %}
+                    <button type="button" class="btn-vista mb-3" data-bs-toggle="modal" data-bs-target="#nuevaSituacionModal">
+                        Nueva Situación
+                    </button>
+                {% endif %}
         </div>
         <button type="submit" class="btn-vista mt-2">Añadir repuesto</button>
     </form>
     {% endif %}
 
-    {% if puede_crear_actualizar() %}
-    <button type="button" class="btn-vista mb-3" data-bs-toggle="modal" data-bs-target="#nuevaSituacionModal">
-        Nueva situación
-    </button>
-    {% endif %}
+    
 
     <div class="table-responsive">
         <table class="table table-bordered table-striped">

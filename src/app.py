@@ -17,8 +17,7 @@ from routes.proveedores import proveedores_bp
 from routes.busqueda import busqueda_bp
 
 # configuración de carpetas y path de la aplicación.
-template_dir = os.path.dirname(os.path.abspath(os.path.dirname(__file__)))
-template_dir = os.path.join(template_dir, 'src', 'templates')
+template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 
 # Inicialización de la aplicación Flask
 app = Flask(__name__, template_folder=template_dir)

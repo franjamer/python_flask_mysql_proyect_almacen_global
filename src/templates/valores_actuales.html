@@ -1,18 +1,30 @@
-<div class="p-3 border rounded" style="background: #f8f9fa;">
+{% set color_texto_val = color_texto|default('#000000') %}
+{% set color_fondo_val = color_fondo|default('#ffffff') %}
+{% set tamano_texto_val = tamano_texto|default('16') %}
+{% set estilo_texto_val = estilo_texto|default('normal') %}
+{% set font_style = 'italic' if estilo_texto_val == 'cursiva' else 'normal' %}
+{% set font_weight = 'bold' if estilo_texto_val == 'negrita' else 'normal' %}
+
+<div class="p-3 border rounded" style="
+    --color-texto: {{ color_texto_val }};
+    --color-fondo: {{ color_fondo_val }};
+    --tamano-texto: {{ tamano_texto_val }}px;
+    --font-style: {{ font_style }};
+    --font-weight: {{ font_weight }};
+    background: #f8f9fa;">
     <h5>Valores Actuales</h5>
     <ul class="list-unstyled">
-        <li><b>Color de texto:</b> <span style="color: {{ color_texto }};">{{ color_texto }}</span></li>
-        <li><b>Color de fondo:</b> <span style="background: {{ color_fondo }}; padding: 2px 10px;">{{ color_fondo }}</span></li>
-        <li><b>Tamaño de texto:</b> {{ tamano_texto }} px</li>
-        <li><b>Estilo de texto:</b> {{ estilo_texto|capitalize }}</li>
+        <li><b>Color de texto:</b>
+            <span style="color: var(--color-texto);">{{ color_texto_val }}</span>
+        </li>
+        <li><b>Color de fondo:</b>
+            <span style="background: var(--color-fondo); padding: 2px 10px;">{{ color_fondo_val }}</span>
+        </li>
+        <li><b>Tamaño de texto:</b> {{ tamano_texto_val }} px</li>
+        <li><b>Estilo de texto:</b> {{ estilo_texto_val|capitalize }}</li>
     </ul>
-    <div class="mt-3 p-2 text-center" style="
-        color: {{ color_texto }};
-        background-color: {{ color_fondo }};
-        font-size: {{ tamano_texto }}px;
-        font-style: {% if estilo_texto == 'cursiva' %}italic{% else %}normal{% endif %};
-        font-weight: {% if estilo_texto == 'negrita' %}bold{% else %}normal{% endif %};
-    ">
+    <div class="mt-3 p-2 text-center"
+         style="color: var(--color-texto); background-color: var(--color-fondo); font-size: var(--tamano-texto); font-style: var(--font-style); font-weight: var(--font-weight);">
         Previsualización
     </div>
 </div>

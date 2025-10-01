@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<a href="{{ url_for('home_bp.menu') }}" class="btn-vista btn-secondary mb-3">← Volver al menú principal</a>
+<h2>Modificar Pedido</h2>
+<form method="post">
+    <input type="hidden" name="pedido_id" value="{{ pedido_id }}">
+    <div class="mb-3">
+        <label for="referencia_pedido" class="form-label">Referencia Pedido</label>
+        <input type="text" class="form-control" id="referencia_pedido" name="referencia_pedido" value="{{ pedido[0] }}">
+    </div>
+    <div class="mb-3">
+        <label for="fecha_creacion" class="form-label">Fecha de creación</label>
+        <input type="date" class="form-control" id="fecha_creacion" name="fecha_creacion" value="{{ pedido[1] }}">
+    </div>
+    <h4>Líneas del pedido</h4>
+    {% include "pedidos/tabla_lineas_pedido.html" %}
+    <button type="submit" class="btn-vista btn-primary">Guardar cambios</button>
+</form>
+{% endblock %}

@@ -1,13 +1,18 @@
 # Inportación de las dependencias y variables necesarias
 from flask import Blueprint, render_template, request, redirect, url_for, session
-from .utils import validar_pedido, obtener_nombre_articulo
+from .pedidos_detalle import validar_pedido, obtener_nombre_articulo
 from routes.roles import puede_crud_pedidos, puede_eliminar_pedidos
 import database as db
+from .vistas_config import VISTAS
+from .configuracion_general import obtener_nombres_columnas
 
 pedidos_bp = Blueprint('pedidos_bp', __name__)
+
+columnas = VISTAS['pedidos']['columnas']
+nombres_columnas = obtener_nombres_columnas('pedidos')
+
+
 # ruta para crear pedido nuevo,minimo con una linea de pedido
-
-
 @pedidos_bp.route('/pedidos', methods=['GET', 'POST'])
 def pedidos():
     conn = db.get_connection()
@@ -62,8 +67,10 @@ def pedidos():
     cursor.execute("SELECT referencia, nombre FROM inventario_tabla")
     inventario = cursor.fetchall()
     cursor.execute(
-        "SELECT * FROM pedidos_global_tabla ORDER BY id DESC LIMIT 50")
-    pedidos = cursor.fetchall()
+        "SELECT id, referencia_pedido, fecha_creacion, completo FROM pedidos_global_tabla ORDER BY id DESC LIMIT 50")
+    pedidos_raw = cursor.fetchall()
+    columnas = VISTAS['pedidos']['columnas']
+    pedidos = [dict(zip(columnas, pedido)) for pedido in pedidos_raw]
     pedido_id = request.args.get('pedido_id')
     lineas = []
     if pedido_id:
@@ -80,7 +87,9 @@ def pedidos():
         lineas=lineas,
         mensaje_error=mensaje_error,
         puede_crud_pedidos=puede_crud_pedidos,
-        puede_eliminar_pedidos=puede_eliminar_pedidos
+        puede_eliminar_pedidos=puede_eliminar_pedidos,
+        columnas=columnas,
+        nombres_columnas=nombres_columnas
     )
 
 
@@ -126,9 +135,9 @@ def actualizar_linea(linea_id):
     cursor.close()
     conn.close()
     return redirect(url_for('pedidos_bp.pedidos', pedido_id=pedido_id_db))
+
+
 # ruta para eliminar un pedido
-
-
 @pedidos_bp.route('/eliminar_pedido/<int:pedido_id>', methods=['POST'])
 def eliminar_pedido(pedido_id):
     if not puede_eliminar_pedidos(session.get('rol')):
@@ -143,9 +152,10 @@ def eliminar_pedido(pedido_id):
     cursor.close()
     conn.close()
     return redirect(url_for('pedidos_bp.pedidos'))
+
+
+
 # ruta para eliminar una linea de un pedido, de más de una linea
-
-
 @pedidos_bp.route('/eliminar_linea/<int:linea_id>', methods=['POST'])
 def eliminar_linea(linea_id):
     if not puede_eliminar_pedidos(session.get('rol')):
@@ -170,9 +180,10 @@ def eliminar_linea(linea_id):
     cursor.close()
     conn.close()
     return redirect(url_for('pedidos_bp.pedidos', pedido_id=pedido_id_db))
+
+
+
 # ruta para modificar un pedido
-
-
 @pedidos_bp.route('/modificar_pedido/<int:pedido_id>', methods=['GET', 'POST'])
 def modificar_pedido(pedido_id):
     if not puede_crud_pedidos(session.get('rol')):
@@ -238,7 +249,7 @@ def modificar_pedido(pedido_id):
     cursor.close()
     conn.close()
     return render_template(
-        'modificar_pedido.html',
+        'pedidos/modificar_pedido.html',
         pedido_id=pedido_id,
         pedido=pedido,
         lineas=lineas,

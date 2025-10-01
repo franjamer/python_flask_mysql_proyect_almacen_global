@@ -118,18 +118,22 @@
   },
   "pedidos": {
     "columnas": [
-      "id_pedido",
-      "fecha",
-      "referencia",
-      "cantidad",
-      "estado",
-      "proveedor"
+      "id",
+      "referencia_pedido",
+      "fecha_creacion",
+      "completo"
     ],
     "estilos": {
       "color_texto_menu": "#000000",
       "color_fondo_menu": "#ffffff",
       "tamano_texto_menu": "16",
       "estilo_texto_menu": "normal"
+    },
+    "nombres_columnas": {
+      "id": "ID",
+      "referencia_pedido": "Referencia",
+      "fecha_creacion": "Fecha",
+      "completo": "Completo"
     }
   },
   "perfiles": {
@@ -143,6 +147,11 @@
       "color_fondo_menu": "#ffffff",
       "tamano_texto_menu": "16",
       "estilo_texto_menu": "normal"
+    },
+    "nombres_columnas": {
+      "id_perfil": "Id perfil",
+      "perfil": "Nombre de Perfil",
+      "descripcion": "Descripcion"
     }
   },
   "situacion": {
