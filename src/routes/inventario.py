@@ -4,6 +4,7 @@ import database as db
 from routes.configuracion import cargar_configuracion
 from .configuracion_general import obtener_nombres_columnas
 from .vistas_config import VISTAS
+from .configuracion_estilos import cargar_estilos_por_vista
 
 inventario_bp = Blueprint('inventario_bp', __name__)
 
@@ -79,6 +80,8 @@ def inventario():
     config = cargar_configuracion()
     nombres_columnas = obtener_nombres_columnas('inventario')
 
+    estilos_por_vista = cargar_estilos_por_vista()
+
     return render_template(
         'inventario.html',
         repuestos=repuestos,
@@ -88,7 +91,9 @@ def inventario():
         puede_eliminar=puede_eliminar,
         posiciones=posiciones,
         config=config,
-        nombres_columnas=nombres_columnas
+        nombres_columnas=nombres_columnas,
+        vista='inventario',
+        estilos_por_vista=estilos_por_vista
     )
 
 

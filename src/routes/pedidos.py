@@ -9,6 +9,7 @@ from .pedidos_db import (
 from routes.roles import puede_crud_pedidos, puede_eliminar_pedidos
 from .vistas_config import VISTAS
 from .configuracion_general import obtener_nombres_columnas
+from routes.configuracion_estilos import cargar_estilos_por_vista
 
 pedidos_bp = Blueprint('pedidos_bp', __name__)
 
@@ -41,6 +42,7 @@ def pedidos():
         lineas = obtener_lineas_pedido(pedido_id)
 
     nombres_columnas_lineas = VISTAS['lineas_pedido']['nombres_columnas']
+    estilos_por_vista = cargar_estilos_por_vista()
 
     return render_template(
         'pedidos.html',
@@ -53,7 +55,9 @@ def pedidos():
         columnas=columnas,
         nombres_columnas=nombres_columnas,
         nombre_vista=nombre_vista,
-        nombres_columnas_lineas=nombres_columnas_lineas
+        nombres_columnas_lineas=nombres_columnas_lineas,
+        vista='pedidos',
+        estilos_por_vista=estilos_por_vista
     )
 
 @pedidos_bp.route('/actualizar_linea/<int:linea_id>', methods=['POST'])

@@ -3,18 +3,19 @@
 {% block title %}{{ config.nombres_vistas['busqueda'] if config and config.nombres_vistas and 'busqueda' in config.nombres_vistas else 'Búsqueda' }}{% endblock %}
 
 {% block content %}
-<h2>{{ config.nombres_vistas['busqueda'] if config and config.nombres_vistas and 'Busqueda' in config.nombres_vistas else 'Busqueda' }}</h2>
-<a href="{{ url_for('home_bp.menu') }}" class="btn-vista btn-secondary m-1">
-    ← Volver al menú principal
-</a>
-<div class="d-flex flex-column align-items-center justify-content-center p-2">
-
-    <form method="GET" action="{{ url_for('busqueda_bp.busqueda') }}" class="mb-2">
-        <div class="mb-2">
-            <input type="text" name="busqueda" class="form-control" placeholder="Introduce el término a buscar" value="{{ request.args.get('busqueda', '') }}">
-        </div>
-        <div class="mb-2">
-            <label class="me-3">Buscar por:</label>
+<div>
+    <h2 class="CH">{{ config.nombres_vistas['busqueda'] if config and config.nombres_vistas and 'Busqueda' in config.nombres_vistas else 'Busqueda' }}</h2>
+    <a href="{{ url_for('home_bp.menu') }}" class="btn-vista btn-secondary m-1">
+        ← Volver al menú principal
+    </a>
+    <div class="d-flex flex-column align-items-center justify-content-center p-2">
+        
+        <form method="GET" action="{{ url_for('busqueda_bp.busqueda') }}" class="mb-2">
+            <div class="mb-2">
+                <input type="text" name="busqueda" class="form-control" placeholder="Introduce el término a buscar" value="{{ request.args.get('busqueda', '') }}">
+            </div>
+            <div class="mb-2">
+                <label class="me-3">Buscar por:</label>
             <div class="form-check form-check-inline">
                 <input class="form-check-input" type="radio" name="campo" id="referencia" value="referencia" {% if request.args.get('campo', 'referencia') == 'referencia' %}checked{% endif %}>
                 <label class="form-check-label" for="referencia">Referencia</label>
@@ -44,30 +45,31 @@
     
     
 
-</div>
+    </div>
 
-<div class="container mt-5">
-    <h2 class="mb-4">Resultados de la búsqueda</h2>
-    {% set nombre_vista = config.nombres_vistas['NOMBRE_VISTA'] if config and config.nombres_vistas and 'NOMBRE_VISTA' in config.nombres_vistas else 'Nombre Vista' %}
-
-    <h2 class="mb-4">{{ nombre_vista }}</h2>
-    <table class="table table-bordered table-dark table-striped">
-        <thead>
-            <tr>
-                {% for campo in columnas %}
+    <div class="container mt-5">
+        <h2 class="mb-4 CH">Resultados de la búsqueda</h2>
+        {% set nombre_vista = config.nombres_vistas['NOMBRE_VISTA'] if config and config.nombres_vistas and 'NOMBRE_VISTA' in config.nombres_vistas else 'Nombre Vista' %}
+        
+        <h2 class="mb-4 CH">{{ nombre_vista }}</h2>
+        <table class="table table-bordered table-dark table-striped">
+            <thead>
+                <tr>
+                    {% for campo in columnas %}
                     <th>{{ nombres_columnas[campo] }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for fila in datos %}
+                <tr>
+                    {% for col in columnas %}
+                    <td>{{ fila[col] }}</td>
+                    {% endfor %}
+                </tr>
                 {% endfor %}
-            </tr>
-        </thead>
-        <tbody>
-            {% for fila in datos %}
-            <tr>
-                {% for col in columnas %}
-                <td>{{ fila[col] }}</td>
-                {% endfor %}
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    
+            </tbody>
+        </table>
+    </div>    
+</div>
 {% endblock %}

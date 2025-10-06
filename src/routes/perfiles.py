@@ -1,6 +1,7 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session
 import database as db
 from .vistas_config import VISTAS
+from routes.configuracion_estilos import cargar_estilos_por_vista
 
 perfiles_bp = Blueprint('perfiles_bp', __name__)
 
@@ -14,11 +15,15 @@ def mostrar_perfiles():
     conn.close()
     columnas = VISTAS['perfiles']['columnas']
     nombres_columnas = VISTAS['perfiles']['nombres_columnas']
+    vista='perfiles'
+    estilos_por_vista = cargar_estilos_por_vista()
     return render_template(
         'perfiles.html',
         perfiles=perfiles,
         columnas=columnas,
-        nombres_columnas=nombres_columnas
+        nombres_columnas=nombres_columnas,
+        vista=vista,
+        estilos_por_vista=estilos_por_vista
     )
 
 @perfiles_bp.route('/perfiles', methods=['POST'])

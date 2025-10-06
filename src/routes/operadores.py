@@ -1,6 +1,7 @@
 from flask import Blueprint, request, redirect, render_template, url_for, session
 import database as db
 from .vistas_config import VISTAS
+from routes.configuracion_estilos import cargar_estilos_por_vista
 
 operadores_bp = Blueprint('operadores_bp', __name__)
 
@@ -16,11 +17,15 @@ def ver_operadores():
     conn.close()
     columnas = VISTAS['operadores']['columnas']
     nombres_columnas = VISTAS['operadores']['nombres_columnas']
+    estilos_por_vista = cargar_estilos_por_vista()
     return render_template(
         'operadores.html',
         operadores=operadores,
         columnas=columnas,
-        nombres_columnas=nombres_columnas
+        nombres_columnas=nombres_columnas,
+        estilos_por_vista=estilos_por_vista,
+        vista='operadores'
+
     )
 
 @operadores_bp.route('/añadir', methods=['POST'])

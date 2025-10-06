@@ -2,6 +2,7 @@ from flask import Blueprint, render_template, request
 import database as db
 from .vistas_config import VISTAS
 from .configuracion_general import obtener_nombres_columnas
+from .configuracion_estilos import cargar_estilos_por_vista
 
 busqueda_bp = Blueprint('busqueda_bp', __name__)
 
@@ -16,7 +17,7 @@ def busqueda():
     columnas = VISTAS['busqueda']['columnas']
     nombres_columnas = obtener_nombres_columnas('busqueda')
     datos = []
-
+    
     # Quita 'ubicacion' de la consulta SQL porque se construye en Python
     columnas_sql = [col for col in columnas if col != 'ubicacion']
     # Añade los campos necesarios para construir 'ubicacion'
@@ -51,12 +52,15 @@ def busqueda():
             altura = fila.get('altura', '')
             fila['ubicacion'] = f"{almacen}-{estanteria}-{lado}-{columna_val}-{altura}"
 
+    estilos_por_vista = cargar_estilos_por_vista()
     return render_template(
         'busqueda.html',
         columnas=columnas,
         nombres_columnas=nombres_columnas,
         datos=datos,
-        busqueda=busqueda,
+        busqueda=busqueda,        
         campo=campo,
-        orden=orden
+        orden=orden,
+        vista='busqueda',
+        estilos_por_vista=estilos_por_vista
     )

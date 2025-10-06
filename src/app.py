@@ -15,6 +15,8 @@ from routes.mapa import mapa_bp
 from routes.configuracion import configuracion_bp
 from routes.proveedores import proveedores_bp
 from routes.busqueda import busqueda_bp
+from routes.configuracion_estilos import estilos_bp
+import json
 
 # configuración de carpetas y path de la aplicación.
 template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
@@ -23,8 +25,15 @@ template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templat
 app = Flask(__name__, template_folder=template_dir)
 app.secret_key = 'FJMR_ADMIN'
 
-# Ya no usamos cargar_configuracion ni config.json/configuracion.json
-# Si necesitas pasar config global, hazlo desde cada blueprint o función
+# Cargar configuración desde archivo JSON
+def cargar_estilos():
+    with open('src/estilos_config.json') as f:
+        return json.load(f)
+
+@app.context_processor
+# Inyecta los estilos en todas las plantillas
+def inject_estilos():
+    return dict(estilos=cargar_estilos())
 
 # RUTA DE LOGIN
 @app.route('/login', methods=['GET', 'POST'])
@@ -77,6 +86,7 @@ app.register_blueprint(mapa_bp)
 app.register_blueprint(configuracion_bp)
 app.register_blueprint(proveedores_bp)
 app.register_blueprint(busqueda_bp)
+app.register_blueprint(estilos_bp)
 
 # Deshabilita el caché de plantillas para desarrollo
 app.config['TEMPLATES_AUTO_RELOAD'] = True

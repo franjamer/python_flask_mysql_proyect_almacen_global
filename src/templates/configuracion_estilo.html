@@ -1,18 +1,42 @@
 <div class="container">
-    <!-- Nav tabs para subpestañas -->
-    <ul class="nav nav-tabs mb-3" id="estiloSubTabs" role="tablist">
-        <li class="nav-item" role="presentation">
-            <a class="nav-link {% if subpestana == 'global' %}active{% endif %}" href="?pestana=estilos&subpestana=global&vista={{ vista }}">Global</a>
-        </li>
-        <li class="nav-item" role="presentation">
-            <a class="nav-link {% if subpestana == 'local' %}active{% endif %}" href="?pestana=estilos&subpestana=local&vista={{ vista }}">Local</a>
-        </li>
-    </ul>
-    <div>
-        {% if subpestana == 'global' %}
-            {% include "configuracion_estilo_global.html" %}
-        {% elif subpestana == 'local' %}
-            {% include "configuracion_estilo_local.html" %}
-        {% endif %}
-    </div>
+    <h3>Personalización de Estilos por Vista</h3>
+    <form method="post" action="{{ url_for('configuracion_bp.configuracion', pestana='estilos') }}">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Vista</th>
+                    <th>Color de Fondo(background-color)</th>
+                    <th>Color de Texto</th>
+                    <th>Color Botón</th>
+                    <th>Fuente</th>
+                    <th>Tamaño Texto</th>
+                    <!-- Añade más columnas según tus variables -->
+                </tr>
+            </thead>
+            <tbody>
+                {% for vista, estilos in estilos_por_vista.items() %}
+                <tr>
+                    <td>{{ vista|capitalize }}</td>
+                    <td>
+                        <input type="color" name="{{ vista }}-color-fondo" value="{{ estilos['color-fondo'] }}">
+                    </td>
+                    <td>
+                        <input type="color" name="{{ vista }}-color-texto" value="{{ estilos['color-texto'] }}">
+                    </td>
+                    <td>
+                        <input type="color" name="{{ vista }}-color-btn" value="{{ estilos['color-btn'] }}">
+                    </td>
+                    <td>
+                        <input type="text" name="{{ vista }}-fuente-principal" value="{{ estilos['fuente-principal'] }}">
+                    </td>
+                    <td>
+                        <input type="text" name="{{ vista }}-tamano-texto" value="{{ estilos['tamano-texto'] }}">
+                    </td>
+                    <!-- Más parámetros aquí -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <button type="submit" class="btn-vista btn-primary">Guardar Cambios</button>
+    </form>
 </div>

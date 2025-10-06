@@ -1,7 +1,8 @@
 from flask import Blueprint, render_template, request, redirect, url_for, session, flash
 import database as db
 from routes.configuracion import cargar_configuracion
-from .vistas_config import VISTAS  # <-- Añade esto
+from .vistas_config import VISTAS  
+from routes.configuracion_estilos import cargar_estilos_por_vista
 
 situacion_bp = Blueprint('situacion_bp', __name__)
 
@@ -54,7 +55,7 @@ def situacion():
     config = cargar_configuracion()
     columnas = VISTAS['situacion']['columnas']
     nombres_columnas = VISTAS['situacion']['nombres_columnas']
-
+    estilos_por_vista = cargar_estilos_por_vista()
     return render_template(
         'situacion.html',
         almacenes=almacenes,
@@ -64,7 +65,9 @@ def situacion():
         puede_eliminar=puede_eliminar,
         columnas=columnas,
         nombres_columnas=nombres_columnas,
-        config=config
+        config=config,
+        vista='situacion',
+        estilos_por_vista=estilos_por_vista
     )
 
 @situacion_bp.route('/situacion/eliminar/<id_situacion_tabla>', methods=['POST'])

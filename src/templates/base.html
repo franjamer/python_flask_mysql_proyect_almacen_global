@@ -6,20 +6,17 @@
         <title>{% block title %}Mi App{% endblock %}</title>
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
         <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-        <!-- En base.html, dentro del <head> -->
-        {% if config.estilo_menu %}
         <style>
-        :root {
-            --color-texto: {{ color_texto }};
-            --color-fondo: {{ color_fondo }};
-            --tamano-texto: {{ tamano_texto }}px;
-            --estilo-texto: {{ estilo_texto }};
+        {% if vista and estilos_por_vista and estilos_por_vista.get(vista) %}
+        .{{ vista }}-vista {
+            {% for param, valor in estilos_por_vista[vista].items() if valor %}
+            --{{ param }}: {{ valor }};
+            {% endfor %}
         }
-        </style>
         {% endif %}
+        </style>
     </head>
-    <body>
-        <!-- En tu base.html, dentro del body, por ejemplo arriba del bloque content -->
+    <body class="{{ vista }}-vista">
         {% if session.get('perfil') %}
         <nav class="navbar navbar-light bg-light justify-content-between">
             <span class="navbar-text ms-3">

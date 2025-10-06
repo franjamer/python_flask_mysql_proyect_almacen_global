@@ -1,3 +1,5 @@
+# Funciones para gestionar permisos basados en roles
+
 def puede_ver_pedidos(rol):
     return rol in ['admin', 'pedidos']
 

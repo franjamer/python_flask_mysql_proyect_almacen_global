@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="main-bg">
+<div class="main-bg menu-vista">
     <!-- sidebar izquierda -->
     <div class="sidebar">
         <div class="btns">
@@ -50,9 +50,12 @@
         </div>
     </div>
     <!-- contenido central -->
+     <!--valor del titulo principal y valor por defecto si falta-->
      {% set texto_principal = config.textos_menu.titulo_principal if config and config.textos_menu and 'titulo_principal' in config.textos_menu else 'Almacén de Repuestos' %}
+     <!--valor del titulo secundario y valor por defecto si falta-->
      {% set texto_secundario = config.textos_menu.titulo_secundario if config and config.textos_menu and 'titulo_secundario' in config.textos_menu else 'Montijo' %}
-        {% set texto_central = config.textos_menu.central if config and config.textos_menu and 'central' in config.textos_menu else 'Gestión de Almacén' %}
+    <!--valor del texto central y valor por defecto si falta-->
+     {% set texto_central = config.textos_menu.central if config and config.textos_menu and 'central' in config.textos_menu else 'Gestión de Almacén' %}
     <div class="main-content">
         <h1 class="titulo-principal">{{ texto_principal }}</h1>
         <h2 class="titulo-central">{{ texto_central }}</h2>
@@ -72,7 +75,7 @@
             >Operadores</a>
             {% endif %}
             {% if session.get('rol')== 'admin' %}
-            <a href="{{url_for('home_bp.perfiles')}}" class="btn">Perfiles</a>
+            <a href="{{url_for('perfiles_bp.mostrar_perfiles')}}" class="btn">Perfiles</a>
             {% else %}
             <a
                 class="btn disabled-btn"

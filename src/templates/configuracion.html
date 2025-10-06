@@ -1,8 +1,8 @@
 {% extends "base.html" %}
 {% block content %}
-<a href="{{ url_for('home_bp.menu') }}" class="btn-vista btn-secondary mb-3">← Volver al menú principal</a>
-<div class="container mt-4">
-    <ul class="nav nav-tabs mb-3" id="configTabs" role="tablist">
+<a href="{{ url_for('home_bp.menu') }}" class="btn-vista btn-secondary mb-2">← Volver al menú principal</a>
+<div class="container mt-2">
+    <ul class="nav nav-tabs mb-2" id="configTabs" role="tablist">
         <li class="nav-item" role="presentation">
             <a class="nav-link {% if pestana == 'general' %}active{% endif %}" href="?pestana=general&vista={{ vista }}">General</a>
         </li>

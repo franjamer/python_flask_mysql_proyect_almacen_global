@@ -4,6 +4,7 @@ from routes.roles import puede_eliminar_movimientos
 from .utilidades import asegurar_fila_minima_auto
 from .vistas_config import VISTAS
 from .configuracion_general import obtener_nombres_columnas
+from .configuracion_estilos import cargar_estilos_por_vista
 
 # Crea el Blueprint para los movimientos
 movimientos_bp = Blueprint('movimientos_bp', __name__)
@@ -127,6 +128,7 @@ def movimientos():
 
     columnas = VISTAS['movimientos']['columnas']
     nombres_columnas = obtener_nombres_columnas('movimientos')
+    estilos_por_vista= cargar_estilos_por_vista()
 
     # Renderizar la plantilla
     return render_template(
@@ -136,7 +138,9 @@ def movimientos():
         movimientos_lista=movimientos_lista,
         inventario=inventario,
         operadores=operadores,
-        mensaje_error=mensaje_error
+        mensaje_error=mensaje_error,
+        vista='movimientos',
+        estilos_por_vista=estilos_por_vista  # Aplicar estilos personalizados
     )
 
 # Ruta para eliminar movimientos

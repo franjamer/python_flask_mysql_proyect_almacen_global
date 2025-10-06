@@ -1,7 +1,7 @@
 from flask import Blueprint, render_template, request, jsonify
 import database as db
 from .vistas_config import VISTAS  # <-- Añade esto
-
+from routes.configuracion_estilos import cargar_estilos_por_vista
 mapa_bp = Blueprint('mapa_bp', __name__)
 
 @mapa_bp.route('/mapa')
@@ -15,11 +15,14 @@ def mapa_interactivo():
     conn.close()
     columnas = VISTAS['situacion']['columnas']
     nombres_columnas = VISTAS['situacion']['nombres_columnas']
+    estilos_por_vista = cargar_estilos_por_vista()
     return render_template(
         'mapa_interactivo.html',
         almacenes=almacenes,
         columnas=columnas,
-        nombres_columnas=nombres_columnas
+        nombres_columnas=nombres_columnas,
+        vista='mapa',
+        estilos_por_vista=estilos_por_vista
     )
 
 @mapa_bp.route('/mapa/estanterias')
