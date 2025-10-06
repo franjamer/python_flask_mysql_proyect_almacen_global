@@ -1,47 +1,61 @@
 {% extends "base.html" %}
 {% block content %}
-<h1>Proveedores</h1>
-
-<!-- Formulario para añadir proveedor -->
-<form method="post" class="mb-4">
-    <div class="form-group">
-        <label>Nombre</label>
-        <input type="text" name="nombre" class="form-control" required>
-    </div>
-    <div class="form-group">
-        <label>Contacto</label>
-        <input type="text" name="contacto" class="form-control" required>
-    </div>
-    <div class="form-group">
-        <label>Teléfono</label>
-        <input type="text" name="telefono" class="form-control" required>
-    </div>
-    <div class="form-group">
-        <label>Email</label>
-        <input type="email" name="email" class="form-control" required>
-    </div>
-    <button type="submit" class="btn-vista btn-primary">Añadir proveedor</button>
-</form>
-
-<!-- Tabla de proveedores -->
-<table class="table">
-    <thead>
-        <tr>
-            <th>Nombre</th>
-            <th>Contacto</th>
-            <th>Teléfono</th>
-            <th>Email</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for proveedor in proveedores %}
-        <tr>
-            <td>{{ proveedor.nombre }}</td>
-            <td>{{ proveedor.contacto }}</td>
-            <td>{{ proveedor.telefono }}</td>
-            <td>{{ proveedor.email }}</td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="container mt-4">
+    <h2>Gestión de Proveedores</h2>
+    <!-- Formulario para añadir proveedor -->
+    <form method="post" class="mb-4">
+        <div class="row g-2">
+            <div class="col-md-2">
+                <input type="text" name="nombre_prov" class="form-control" placeholder="Nombre" required>
+            </div>
+            <div class="col-md-2">
+                <input type="email" name="email_prov" class="form-control" placeholder="Email">
+            </div>
+            <div class="col-md-2">
+                <input type="text" name="telefono_prov" class="form-control" placeholder="Teléfono">
+            </div>
+            <div class="col-md-2">
+                <input type="text" name="contacto_prov" class="form-control" placeholder="Persona de Contacto">
+            </div>
+            <div class="col-md-2">
+                <input type="url" name="web_prov" class="form-control" placeholder="Web">
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Añadir Proveedor</button>
+            </div>
+        </div>
+    </form>
+    <form method="get" class="mb-2">
+        <button type="submit" class="btn btn-secondary">Actualizar</button>
+    </form>
+    <!-- Tabla de proveedores -->
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Teléfono</th>
+                <th>Contacto</th>
+                <th>Web</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for prov in proveedores %}
+            <tr>
+                <td>{{ prov.id_prov }}</td>
+                <td>{{ prov.nombre_prov }}</td>
+                <td>{{ prov.email_prov }}</td>
+                <td>{{ prov.telefono_prov }}</td>
+                <td>{{ prov.contacto_prov }}</td>
+                <td>
+                    {% if prov.web_prov %}
+                        <a href="{{ prov.web_prov }}" target="_blank">{{ prov.web_prov }}</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
 {% endblock %}

@@ -14,19 +14,19 @@ def proveedores():
 
     # Alta de proveedor
     if request.method == 'POST':
-        nombre = request.form['nombre_proveedor']
-        contacto = request.form['persona_contacto_proveedor']
-        telefono = request.form['telefono_proveedor']
-        email = request.form['direccion_proveedor']
-        ciudad = request.form['ciudad_proveedor']
+        nombre = request.form['nombre_prov']
+        email = request.form['email_prov']
+        telefono = request.form['telefono_prov']
+        contacto = request.form['contacto_prov']
+        web = request.form['web_prov']
         cursor.execute(
-            "INSERT INTO proveedor_tabla (nombre, contacto, telefono, email, ciudad) VALUES (%s, %s, %s, %s, %s)",
-            (nombre, contacto, telefono, email, ciudad)
+            "INSERT INTO proveedores (nombre_prov, email_prov, telefono_prov, contacto_prov, web_prov) VALUES (%s, %s, %s, %s, %s)",
+            (nombre, email, telefono, contacto, web)
         )
         conn.commit()
         flash('Proveedor añadido correctamente.', 'success')
 
-    cursor.execute("SELECT * FROM proveedor_tabla ORDER BY id_proveedor ASC")
+    cursor.execute("SELECT * FROM proveedores ORDER BY id_prov ASC")
     proveedores = cursor.fetchall()
     cursor.close()
     conn.close()

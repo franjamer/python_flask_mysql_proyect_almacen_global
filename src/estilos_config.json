@@ -36,7 +36,7 @@
   },
   "pedidos": {
     "color-titulo": "#ff00ff",
-    "color-fondo": "#bbb35d",
+    "color-fondo": "#fffbcc",
     "color-texto": "#222222",
     "color-btn": "#1538ea",
     "fuente-principal": "'Arial', sans-serif",
