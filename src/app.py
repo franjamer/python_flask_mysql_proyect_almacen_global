@@ -24,6 +24,7 @@ template_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templat
 # Inicialización de la aplicación Flask
 app = Flask(__name__, template_folder=template_dir)
 app.secret_key = 'FJMR_ADMIN'
+app.config['DEBUG'] = False
 
 # Cargar configuración desde archivo JSON
 def cargar_estilos():
@@ -94,5 +95,7 @@ app.jinja_env.auto_reload = True
 
 if __name__ == '__main__':
     app.run(debug=True, port=4000)
+
+
 
 
