@@ -25,6 +25,16 @@
                 role="tab"
             >Estilo menú principal</button>
         </li>
+        <li class="nav-item" role="presentation">
+            <button
+                class="nav-link"
+                id="setup-reset-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#setup-reset"
+                type="button"
+                role="tab"
+            >Setup / Reset</button>
+        </li>
     </ul>
     <div class="tab-content">
         <!-- Pestaña General: aquí va TODO lo que ya tienes -->
@@ -86,6 +96,9 @@
                     value="guardar_estilo"
                 >Guardar estilo</button>
             </form>
+        </div>
+        <div class="tab-pane fade" id="setup-reset" role="tabpanel">
+            {% include 'configuracion_setup_reset.html' %}
         </div>
     </div>
     <!-- Explorador de ficheros de configuración -->

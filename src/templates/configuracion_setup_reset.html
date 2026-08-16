@@ -1,0 +1,55 @@
+<div class="card">
+    <div class="card-header bg-light">
+        <b>Setup / Reset de registros</b>
+    </div>
+    <div class="card-body">
+        <p>Solo el perfil <b>Admin</b> puede realizar estas acciones.</p>
+        <!-- Exportar registros -->
+        <form method="post" class="mb-3">
+            <input type="hidden" name="accion" value="export_registros">
+            <div class="mb-2">Seleccione tablas a exportar:</div>
+            <div class="mb-2">
+                {% for t in ['perfiles','operadores','situacion_tabla','inventario_tabla','movimientos_tabla','pedidos_global_tabla','lineas_pedido_tabla','proveedor_tabla'] %}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="tables" id="exp_{{ t }}" value="{{ t }}">
+                    <label class="form-check-label" for="exp_{{ t }}">{{ t }}</label>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-primary">Exportar registros</button>
+        </form>
+
+        <!-- Importar registros -->
+        <form method="post" enctype="multipart/form-data" class="mb-3">
+            <input type="hidden" name="accion" value="import_registros">
+            <div class="mb-2">
+                <label class="form-label">Fichero JSON de importación</label>
+                <input type="file" name="import_file" class="form-control" accept="application/json" required>
+            </div>
+            <div class="form-check mb-2">
+                <input class="form-check-input" type="checkbox" name="replace" id="replace" value="1">
+                <label class="form-check-label" for="replace">Reemplazar registros existentes (DELETE antes de INSERT)</label>
+            </div>
+            <button type="submit" class="btn btn-success">Importar registros</button>
+        </form>
+
+        <!-- Eliminar registros -->
+        <form method="post" class="mb-3" onsubmit="return confirm('¿Eliminar TODOS los registros de las tablas seleccionadas?');">
+            <input type="hidden" name="accion" value="eliminar_registros">
+            <div class="mb-2">Seleccione tablas a vaciar:</div>
+            <div class="mb-2">
+                {% for t in ['perfiles','operadores','situacion_tabla','inventario_tabla','movimientos_tabla','pedidos_global_tabla','lineas_pedido_tabla','proveedor_tabla'] %}
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" name="tables" id="del_{{ t }}" value="{{ t }}">
+                    <label class="form-check-label" for="del_{{ t }}">{{ t }}</label>
+                </div>
+                {% endfor %}
+            </div>
+            <button type="submit" class="btn btn-danger">Eliminar registros</button>
+        </form>
+
+        <div class="mt-3">
+            <small class="text-muted">Exportaciones e importaciones se guardan en la carpeta personal_config como JSON.</small>
+        </div>
+    </div>
+</div>

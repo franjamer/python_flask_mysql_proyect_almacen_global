@@ -56,17 +56,44 @@
                         </div>
                         <div class="card-body">
                             {% if vista == 'menu' %}
-                                <div class="mb-3">
-                                    <label class="form-label">Título principal</label>
-                                    <input type="text" class="form-control campo-editable" name="texto_menu_titulo_principal" value="{{ config.textos_menu.titulo_principal }}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Título secundario</label>
-                                    <input type="text" class="form-control campo-editable" name="texto_menu_titulo_secundario" value="{{ config.textos_menu.titulo_secundario }}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label class="form-label">Texto central</label>
-                                    <input type="text" class="form-control campo-editable" name="texto_menu_central" value="{{ config.textos_menu.central }}" required>
+                                    <input type="hidden" name="accion" value="guardar_ui">
+                                    <div class="mb-3">
+                                        <label class="form-label">Título principal</label>
+                                        <input type="text" class="form-control campo-editable" id="texto_menu_titulo_principal" name="texto_menu_titulo_principal" value="{{ config.textos_menu.titulo_principal }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Título secundario</label>
+                                        <input type="text" class="form-control campo-editable" id="texto_menu_titulo_secundario" name="texto_menu_titulo_secundario" value="{{ config.textos_menu.titulo_secundario }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Texto central</label>
+                                        <input type="text" class="form-control campo-editable" id="texto_menu_central" name="texto_menu_central" value="{{ config.textos_menu.central }}" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Color del texto</label>
+                                        <input type="color" class="form-control form-control-color campo-editable" id="color_texto_menu" name="color_texto_menu" value="{{ config.estilo_menu.color_texto_menu if config.estilo_menu and config.estilo_menu.color_texto_menu else '#fb0000' }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Color de fondo</label>
+                                        <input type="color" class="form-control form-control-color campo-editable" id="color_fondo_menu" name="color_fondo_menu" value="{{ config.estilo_menu.color_fondo_menu if config.estilo_menu and config.estilo_menu.color_fondo_menu else '#eeb6bb' }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Tamaño del texto principal (px)</label>
+                                        <input type="number" class="form-control campo-editable" id="tamano_texto_menu" name="tamano_texto_menu" min="10" max="100" value="{{ config.estilo_menu.tamano_texto_menu if config.estilo_menu and config.estilo_menu.tamano_texto_menu else '48' }}">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Marca de agua (imagen PNG/JPG)</label>
+                                        <input type="file" class="form-control" name="marca_agua_menu" accept="image/png, image/jpeg">
+                                    </div>
+                                <div class="card mt-3">
+                                    <div class="card-body">
+                                        <h5>Previsualización</h5>
+                                        <div id="preview_menu" style="padding:20px; border-radius:8px; text-align:center;">
+                                            <h1 id="preview_titulo_principal">{{ config.textos_menu.titulo_principal }}</h1>
+                                            <h3 id="preview_titulo_secundario">{{ config.textos_menu.titulo_secundario }}</h3>
+                                            <p id="preview_central">{{ config.textos_menu.central }}</p>
+                                        </div>
+                                    </div>
                                 </div>
                             {% else %}
                                 {% for campo in campos %}

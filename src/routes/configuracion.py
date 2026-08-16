@@ -1,7 +1,8 @@
-from flask import Blueprint, render_template, request,session, redirect, url_for, flash
+from flask import Blueprint, render_template, request,session, redirect, url_for, flash, send_from_directory
 import json
 import os
 import time
+from utils.data_admin import export_tables, save_export_to_file, import_data, delete_tables_data, TABLAS_PERMITIDAS
 
 configuracion_bp = Blueprint('configuracion_bp', __name__)
 
@@ -78,7 +79,8 @@ def listar_archivos_config():
 
 @configuracion_bp.route('/configuracion', methods=['GET', 'POST'])
 def configuracion():
-    if session.get('perfil') != 'Admin':
+    # Permitir acceso si perfil == 'Admin' o rol == 'admin'
+    if not (session.get('perfil') == 'Admin' or session.get('rol') == 'admin'):
         flash('Acceso denegado: solo el perfil Admin puede acceder a configuración.', 'error')
         return redirect(url_for('home_bp.menu'))
 
@@ -92,17 +94,83 @@ def configuracion():
         archivo = request.form.get('archivo_config')
         nombre_guardar = request.form.get('nombre_guardar', '').strip()
 
-        # Guardar solo los estilos del menú principal
-        if accion == 'guardar_estilo':
-            if 'estilo_menu' not in config:
-                config['estilo_menu'] = {}
-            config['estilo_menu']['color_texto_menu'] = request.form.get('color_texto_menu', '#fb0000')
-            config['estilo_menu']['color_fondo_menu'] = request.form.get('color_fondo_menu', '#eeb6bb')
-            config['estilo_menu']['tamano_texto_menu'] = request.form.get('tamano_texto_menu', '48')
-            # Si tienes imagen de marca de agua, añade aquí la lógica para guardarla
-            guardar_configuracion(config)
-            flash('Estilo guardado correctamente.', 'success')
-            return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+        # Setup / Reset: exportar, importar y eliminar registros (usa helpers)
+        if accion in ('export_registros', 'import_registros', 'eliminar_registros'):
+            # Exportar
+            if accion == 'export_registros':
+                tablas = request.form.getlist('tables') or request.form.getlist('tables[]')
+                if not tablas:
+                    flash('No se seleccionaron tablas para exportar.', 'error')
+                    return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+                # conectar y exportar
+                import database as db
+                conn = db.get_connection()
+                if conn is None:
+                    flash('No se pudo conectar a la base de datos para exportar.', 'error')
+                    return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+                resultado = export_tables(conn, tablas)
+                conn.close()
+                nombre, ruta = save_export_to_file(resultado, PERSONAL_CONFIG_DIR)
+                flash(f'Exportación guardada: {nombre}', 'success')
+                return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+
+            # Importar
+            if accion == 'import_registros':
+                import_file = request.files.get('import_file')
+                replace = request.form.get('replace') in ('1', 'on', 'true')
+                if not import_file:
+                    flash('No se ha subido ningún fichero para importar.', 'error')
+                    return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+                try:
+                    data = json.load(import_file)
+                except Exception as e:
+                    flash(f'Error leyendo JSON: {e}', 'error')
+                    return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+                import database as db
+                conn = db.get_connection()
+                if conn is None:
+                    flash('No se pudo conectar a la base de datos para importar.', 'error')
+                    return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+                try:
+                    import_data(conn, data, replace=replace)
+                    flash('Importación completada.', 'success')
+                except Exception as e:
+                    flash(f'Error durante la importación: {e}', 'error')
+                finally:
+                    conn.close()
+                return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+
+            # Eliminar registros
+            if accion == 'eliminar_registros':
+                tablas = request.form.getlist('tables') or request.form.getlist('tables[]')
+                if not tablas:
+                    flash('No se seleccionaron tablas para eliminar.', 'error')
+                    return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+                import database as db
+                conn = db.get_connection()
+                if conn is None:
+                    flash('No se pudo conectar a la base de datos para eliminar registros.', 'error')
+                    return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+                try:
+                    # automatic backup before delete
+                    backup = export_tables(conn, tablas)
+                    nombre_backup, _ = save_export_to_file(backup, PERSONAL_CONFIG_DIR, prefix='backup_before_delete')
+                    delete_tables_data(conn, tablas)
+                    flash(f'Registros eliminados correctamente. Backup: {nombre_backup}', 'success')
+                except Exception as e:
+                    flash(f'Error al eliminar registros: {e}', 'error')
+                finally:
+                    conn.close()
+                return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+
+        # download exported file
+        if request.form.get('accion_descargar'):
+            filename = request.form.get('file_name')
+            # security: ensure file in personal dir
+            if not filename or '..' in filename:
+                flash('Nombre de archivo no válido.', 'error')
+                return redirect(url_for('configuracion_bp.configuracion', vista=vista))
+            return redirect(url_for('configuracion_bp.download_export', filename=filename))
 
         # Guardar toda la configuración en un archivo nuevo
         if accion == 'guardar_todo':
@@ -138,15 +206,18 @@ def configuracion():
                 os.remove(ruta)
                 flash('Archivo eliminado.', 'success')
             return redirect(url_for('configuracion_bp.configuracion', vista=vista))
-        # Actualiza la configuración with los datos del formulario
+        # Actualiza la configuración con los datos del formulario
         config['nombres_columnas'] = request.form.get('nombres_columnas', type=dict) or config.get('nombres_columnas', {})
         config['nombres_vistas'] = request.form.get('nombres_vistas', type=dict) or config.get('nombres_vistas', {})
         config['textos_menu'] = request.form.get('textos_menu', type=dict) or config.get('textos_menu', {})
-        # Alternativamente, puedes procesar cada campo individualmente si no usas JS para enviar el dict
+        # Procesar campos individuales cuando no se envía un dict
         for campo in campos:
             config['nombres_columnas'][campo] = request.form.get(f'nombre_columna_{campo}', campo)
         for vista_nombre in ['inventario', 'busqueda', 'mapa_interactivo']:
             config['nombres_vistas'][vista_nombre] = request.form.get(f'nombre_vista_{vista_nombre}', vista_nombre)
+        # Campos de texto del menú principal
+        config['textos_menu']['titulo_principal'] = request.form.get('texto_menu_titulo_principal', config['textos_menu'].get('titulo_principal', ''))
+        config['textos_menu']['titulo_secundario'] = request.form.get('texto_menu_titulo_secundario', config['textos_menu'].get('titulo_secundario', ''))
         if 'central' in VISTAS_CONFIG.get(vista, []):
             config['textos_menu']['central'] = request.form.get('texto_menu_central', config['textos_menu'].get('central', ''))
         guardar_configuracion(config)
@@ -160,3 +231,15 @@ def configuracion():
         vistas=VISTAS_CONFIG,
         archivos_config=archivos_config
     )
+
+
+@configuracion_bp.route('/configuracion/download/<path:filename>')
+def download_export(filename):
+    if not (session.get('perfil') == 'Admin' or session.get('rol') == 'admin'):
+        flash('Acceso denegado.', 'error')
+        return redirect(url_for('home_bp.menu'))
+    # security: ensure filename safe
+    if not filename or '..' in filename:
+        flash('Nombre de archivo no válido.', 'error')
+        return redirect(url_for('configuracion_bp.configuracion'))
+    return send_from_directory(PERSONAL_CONFIG_DIR, filename, as_attachment=True)

@@ -1,0 +1,557 @@
+{
+  "perfiles": [
+    {
+      "id_perfil": 1,
+      "perfil": "Admin",
+      "password": "Admin",
+      "rol": "admin"
+    },
+    {
+      "id_perfil": 2,
+      "perfil": "Mañana",
+      "password": "Mañana",
+      "rol": "operador"
+    },
+    {
+      "id_perfil": 3,
+      "perfil": "Tarde",
+      "password": "Tarde",
+      "rol": "operador"
+    },
+    {
+      "id_perfil": 4,
+      "perfil": "Noche",
+      "password": "Noche",
+      "rol": "operador"
+    },
+    {
+      "id_perfil": 5,
+      "perfil": "Central",
+      "password": "Central",
+      "rol": "operador"
+    },
+    {
+      "id_perfil": 6,
+      "perfil": "Pedidos",
+      "password": "Pedidos",
+      "rol": "pedidos"
+    },
+    {
+      "id_perfil": 15,
+      "perfil": "Externa",
+      "password": "Externa",
+      "rol": "operador"
+    },
+    {
+      "id_perfil": 17,
+      "perfil": "Superadmin",
+      "password": "superadmin",
+      "rol": "admin"
+    }
+  ],
+  "operadores": [
+    {
+      "id_operador": 20,
+      "codigo_operador": "FJMR",
+      "nombre_completo": "Francisco Javier Menayo Ramos",
+      "puesto": "electricista",
+      "username": null
+    },
+    {
+      "id_operador": 21,
+      "codigo_operador": "JCR",
+      "nombre_completo": "Juan Carlos Rincón Díaz",
+      "puesto": "mecánico",
+      "username": null
+    },
+    {
+      "id_operador": 22,
+      "codigo_operador": "JDLO",
+      "nombre_completo": "Juan De La O",
+      "puesto": "mecánico",
+      "username": null
+    },
+    {
+      "id_operador": 23,
+      "codigo_operador": "FerDi",
+      "nombre_completo": "Fernando Díaz",
+      "puesto": "electricista",
+      "username": null
+    },
+    {
+      "id_operador": 25,
+      "codigo_operador": "JG",
+      "nombre_completo": "Javier Gutierrez",
+      "puesto": "electricista",
+      "username": null
+    },
+    {
+      "id_operador": 26,
+      "codigo_operador": "Antonio",
+      "nombre_completo": "Antonio Borreguero",
+      "puesto": "mecánico",
+      "username": null
+    },
+    {
+      "id_operador": 27,
+      "codigo_operador": "Sergio",
+      "nombre_completo": "Sergio",
+      "puesto": "electricista",
+      "username": null
+    },
+    {
+      "id_operador": 28,
+      "codigo_operador": "JAPI",
+      "nombre_completo": "Jose Antonio Pitón",
+      "puesto": "mecánico",
+      "username": null
+    },
+    {
+      "id_operador": 29,
+      "codigo_operador": "Vicen",
+      "nombre_completo": "Vicente",
+      "puesto": "mecánico",
+      "username": null
+    },
+    {
+      "id_operador": 30,
+      "codigo_operador": "Manolo",
+      "nombre_completo": "Manolo",
+      "puesto": "mecánico",
+      "username": null
+    },
+    {
+      "id_operador": 31,
+      "codigo_operador": "Roberto",
+      "nombre_completo": "Roberto",
+      "puesto": "electricista",
+      "username": null
+    }
+  ],
+  "situacion_tabla": [
+    {
+      "id_situacion_tabla": 1,
+      "almacen": "Principal",
+      "estanteria": "1",
+      "lado": "IZQ",
+      "columna": 1,
+      "altura": 1,
+      "situacion_combinada": "Principal_1_IZQ_1_1"
+    },
+    {
+      "id_situacion_tabla": 2,
+      "almacen": "Principal",
+      "estanteria": "1",
+      "lado": "N/A",
+      "columna": 1,
+      "altura": 1,
+      "situacion_combinada": "Principal_1_N/A_1_1"
+    },
+    {
+      "id_situacion_tabla": 4,
+      "almacen": "Principal",
+      "estanteria": "11",
+      "lado": "N/A",
+      "columna": 1,
+      "altura": 3,
+      "situacion_combinada": null
+    },
+    {
+      "id_situacion_tabla": 5,
+      "almacen": "Principal",
+      "estanteria": "12",
+      "lado": "N/A",
+      "columna": 1,
+      "altura": 4,
+      "situacion_combinada": null
+    },
+    {
+      "id_situacion_tabla": 6,
+      "almacen": "Principal",
+      "estanteria": "13",
+      "lado": "N/A",
+      "columna": 1,
+      "altura": 3,
+      "situacion_combinada": null
+    },
+    {
+      "id_situacion_tabla": 13,
+      "almacen": "Principal",
+      "estanteria": "13",
+      "lado": "N/A",
+      "columna": 1,
+      "altura": 2,
+      "situacion_combinada": null
+    },
+    {
+      "id_situacion_tabla": 20,
+      "almacen": "CAJA 1",
+      "estanteria": "MESITA",
+      "lado": "N/A",
+      "columna": 0,
+      "altura": 0,
+      "situacion_combinada": null
+    },
+    {
+      "id_situacion_tabla": 21,
+      "almacen": "CAJA 2",
+      "estanteria": "Estanteria",
+      "lado": "N/A",
+      "columna": 1,
+      "altura": 2,
+      "situacion_combinada": null
+    },
+    {
+      "id_situacion_tabla": 22,
+      "almacen": "CAJA 3",
+      "estanteria": "Estanteria",
+      "lado": "N/A",
+      "columna": 1,
+      "altura": 2,
+      "situacion_combinada": null
+    },
+    {
+      "id_situacion_tabla": 23,
+      "almacen": "Oficina",
+      "estanteria": "ESTANTERIA",
+      "lado": "N/A",
+      "columna": 1,
+      "altura": 2,
+      "situacion_combinada": null
+    },
+    {
+      "id_situacion_tabla": 24,
+      "almacen": "Principal",
+      "estanteria": "2",
+      "lado": "N/A",
+      "columna": 1,
+      "altura": 2,
+      "situacion_combinada": null
+    }
+  ],
+  "inventario_tabla": [
+    {
+      "id": 38,
+      "referencia": "C191626",
+      "nombre": "6mm 5.5mm Round button 50 mA surface Mount,vertical 6mm SPST",
+      "categoria": "Pulsadores",
+      "subcategoria": "smd",
+      "caracteristicas_medidas": "6x5.5",
+      "fotos_planos": "6x5.5mm",
+      "empaquetado": "unitario",
+      "stock": 6,
+      "stock_minimo": 1,
+      "stock_maximo": 1,
+      "id_situacion_tabla": 1,
+      "id_prov": null
+    },
+    {
+      "id": 39,
+      "referencia": "C328592",
+      "nombre": "1n4007w 1A Independient 1kV 1.1v@1A sod-123fl Diodes-general Purpose ROHS",
+      "categoria": "Diodos",
+      "subcategoria": "General",
+      "caracteristicas_medidas": "1",
+      "fotos_planos": "SOD-123",
+      "empaquetado": "unidad",
+      "stock": 38,
+      "stock_minimo": 10,
+      "stock_maximo": 50,
+      "id_situacion_tabla": 2,
+      "id_prov": null
+    },
+    {
+      "id": 40,
+      "referencia": "C20616319",
+      "nombre": "2n222A 40V 625mW 600mA NPN TO-92 Bipolar bjt ROHS",
+      "categoria": "Transistores",
+      "subcategoria": "BJT_NPN",
+      "caracteristicas_medidas": "TO_92",
+      "fotos_planos": "TO-92",
+      "empaquetado": "unitario",
+      "stock": 36,
+      "stock_minimo": 10,
+      "stock_maximo": 100,
+      "id_situacion_tabla": 4,
+      "id_prov": null
+    },
+    {
+      "id": 41,
+      "referencia": "C136460",
+      "nombre": "Resistencia 10KOhms 200V+-5 1206",
+      "categoria": "Resistencias",
+      "subcategoria": "SMD",
+      "caracteristicas_medidas": "1206",
+      "fotos_planos": "1206",
+      "empaquetado": "Reel",
+      "stock": 90,
+      "stock_minimo": 10,
+      "stock_maximo": 200,
+      "id_situacion_tabla": 5,
+      "id_prov": null
+    },
+    {
+      "id": 42,
+      "referencia": "c2907440",
+      "nombre": "Resistencia 1 KOhms 200V",
+      "categoria": "Resistencias",
+      "subcategoria": "SMD",
+      "caracteristicas_medidas": "1206",
+      "fotos_planos": "A",
+      "empaquetado": "Reel",
+      "stock": 90,
+      "stock_minimo": 10,
+      "stock_maximo": 200,
+      "id_situacion_tabla": 4,
+      "id_prov": null
+    },
+    {
+      "id": 43,
+      "referencia": "c976324",
+      "nombre": "DIP Switch 2 bit spst slide KF1001-02P-R0-FL-ON-01B 2Bit SPST Slide(Standard),Plugin DIPsWITCHES ROHS",
+      "categoria": "Interruptores",
+      "subcategoria": "TH",
+      "caracteristicas_medidas": "PLUGIN DIP",
+      "fotos_planos": "A",
+      "empaquetado": "UNITARIO",
+      "stock": 6,
+      "stock_minimo": 1,
+      "stock_maximo": 10,
+      "id_situacion_tabla": 13,
+      "id_prov": null
+    },
+    {
+      "id": 44,
+      "referencia": "C311517",
+      "nombre": "Capacitor 100uF 10V",
+      "categoria": "Condensador",
+      "subcategoria": "SMD",
+      "caracteristicas_medidas": "A-3216",
+      "fotos_planos": "A",
+      "empaquetado": "REEL",
+      "stock": 19,
+      "stock_minimo": 5,
+      "stock_maximo": 20,
+      "id_situacion_tabla": 13,
+      "id_prov": null
+    },
+    {
+      "id": 45,
+      "referencia": "c7187",
+      "nombre": "Capacitor 4.7uF 16v +-10%",
+      "categoria": "Condensador",
+      "subcategoria": "SMD",
+      "caracteristicas_medidas": "A-3216",
+      "fotos_planos": "A",
+      "empaquetado": "Reel",
+      "stock": 11,
+      "stock_minimo": 1,
+      "stock_maximo": 100,
+      "id_situacion_tabla": 2,
+      "id_prov": null
+    },
+    {
+      "id": 46,
+      "referencia": "c2688239",
+      "nombre": "ams1117-3.3v 1A positive 12v sot223-3l",
+      "categoria": "Regulador de Voltaje",
+      "subcategoria": "reel",
+      "caracteristicas_medidas": "SOT-223-3L",
+      "fotos_planos": "A",
+      "empaquetado": "Reel",
+      "stock": 8,
+      "stock_minimo": 1,
+      "stock_maximo": 20,
+      "id_situacion_tabla": 4,
+      "id_prov": 1
+    },
+    {
+      "id": 47,
+      "referencia": "c310817",
+      "nombre": "interruptor 100mA 3polos-1fila",
+      "categoria": "Interruptor",
+      "subcategoria": "TH",
+      "caracteristicas_medidas": "streiht",
+      "fotos_planos": "a",
+      "empaquetado": "Blister",
+      "stock": 13,
+      "stock_minimo": 1,
+      "stock_maximo": 10,
+      "id_situacion_tabla": 4,
+      "id_prov": 1
+    },
+    {
+      "id": 48,
+      "referencia": "c2921034",
+      "nombre": "bc817-10",
+      "categoria": "TRANSISTOR",
+      "subcategoria": "BJT_NPN",
+      "caracteristicas_medidas": "SOT-23",
+      "fotos_planos": "A",
+      "empaquetado": "SMD",
+      "stock": 42,
+      "stock_minimo": 10,
+      "stock_maximo": 100,
+      "id_situacion_tabla": 4,
+      "id_prov": 1
+    },
+    {
+      "id": 49,
+      "referencia": "C489160",
+      "nombre": "BC817-40 45V 300mW 250@100mA, 1V 500 mASOT-23 Bipolar Transistors-BJT ROHS",
+      "categoria": "Transistor BJT",
+      "subcategoria": "SMD",
+      "caracteristicas_medidas": "SOT-23",
+      "fotos_planos": "A",
+      "empaquetado": "REEL",
+      "stock": 16,
+      "stock_minimo": 1,
+      "stock_maximo": 20,
+      "id_situacion_tabla": 2,
+      "id_prov": 1
+    },
+    {
+      "id": 50,
+      "referencia": "C84681",
+      "nombre": "CH340C 2Mps Transceiver USB 2.0 SOP-16 USB ICs ROHS",
+      "categoria": "TRANSCEPTOR",
+      "subcategoria": "SMD",
+      "caracteristicas_medidas": "SOP-16",
+      "fotos_planos": "A",
+      "empaquetado": "REEL",
+      "stock": 3,
+      "stock_minimo": 1,
+      "stock_maximo": 20,
+      "id_situacion_tabla": 13,
+      "id_prov": 1
+    },
+    {
+      "id": 51,
+      "referencia": "C128319",
+      "nombre": "CAPACITOR 1uF 25V+-10% TANTALIO",
+      "categoria": "Condensador",
+      "subcategoria": "smd",
+      "caracteristicas_medidas": "A-3216",
+      "fotos_planos": "A",
+      "empaquetado": "REEL",
+      "stock": 8,
+      "stock_minimo": 1,
+      "stock_maximo": 20,
+      "id_situacion_tabla": 6,
+      "id_prov": 1
+    },
+    {
+      "id": 52,
+      "referencia": "C17702043",
+      "nombre": "AMS1117-3.3V 1A 12V",
+      "categoria": "Regulador de Voltaje",
+      "subcategoria": "SMD",
+      "caracteristicas_medidas": "SOT-223",
+      "fotos_planos": "SOT-223",
+      "empaquetado": "REEL",
+      "stock": 9,
+      "stock_minimo": 1,
+      "stock_maximo": 20,
+      "id_situacion_tabla": 20,
+      "id_prov": 1
+    },
+    {
+      "id": 55,
+      "referencia": "C313517",
+      "nombre": "Condensador Tantalio 100uFTLJA 107M010R1400 100uF 10V 1.4 Ohms@100kH +-20% CASE-A-3216  Tantalum Capacitors ROHS",
+      "categoria": "Condensador",
+      "subcategoria": "smd",
+      "caracteristicas_medidas": "3216",
+      "fotos_planos": "a",
+      "empaquetado": "reel",
+      "stock": 13,
+      "stock_minimo": 2,
+      "stock_maximo": 20,
+      "id_situacion_tabla": 20,
+      "id_prov": 1
+    },
+    {
+      "id": 57,
+      "referencia": "C2848909",
+      "nombre": "G-Switch 500mA Through Hole SPDT 250V Black Through Hole,11.6x4.1mm Slide Switches ROHS",
+      "categoria": "Interruptores",
+      "subcategoria": "deslizantes DPST",
+      "caracteristicas_medidas": "11.6x4.1mm",
+      "fotos_planos": "0",
+      "empaquetado": "blister",
+      "stock": 5,
+      "stock_minimo": 0,
+      "stock_maximo": 10,
+      "id_situacion_tabla": null,
+      "id_prov": null
+    },
+    {
+      "id": 58,
+      "referencia": "C136684",
+      "nombre": "K2-1102DP-E4SW-04 Korean Hroparts Elec 12V 6mm Round Button 6mm SPST 50mA Through Hole-4P,6x6mm Tactile Switches ROHS",
+      "categoria": "Pulsadores",
+      "subcategoria": "SPST",
+      "caracteristicas_medidas": "6X6mm",
+      "fotos_planos": "nada",
+      "empaquetado": "blister",
+      "stock": 30,
+      "stock_minimo": 1,
+      "stock_maximo": 50,
+      "id_situacion_tabla": null,
+      "id_prov": null
+    },
+    {
+      "id": 59,
+      "referencia": "C22395784",
+      "nombre": "SS8050S FOSAN 25V 300mW 1.5A NPN SOT-23 Single Bipolar Transistors ROHS",
+      "categoria": "Transistores",
+      "subcategoria": "NPN SMD",
+      "caracteristicas_medidas": "SOT23-3",
+      "fotos_planos": "SOT23-3",
+      "empaquetado": "Reel",
+      "stock": 100,
+      "stock_minimo": 1,
+      "stock_maximo": 101,
+      "id_situacion_tabla": null,
+      "id_prov": null
+    },
+    {
+      "id": 60,
+      "referencia": "C5120796",
+      "nombre": "AMS1117-3.3V MSKSEMI Positive Fixed 3.3V SOT-89 Voltage Regulators - Linear, Low Drop Out (LDO) Regulators ROHS",
+      "categoria": "Reguladores",
+      "subcategoria": "3.3v smd",
+      "caracteristicas_medidas": "sot-89",
+      "fotos_planos": "sot-89",
+      "empaquetado": "Reel",
+      "stock": 10,
+      "stock_minimo": 1,
+      "stock_maximo": 11,
+      "id_situacion_tabla": null,
+      "id_prov": null
+    },
+    {
+      "id": 61,
+      "referencia": "C136813",
+      "nombre": "CA45B-A-16V-10uF-K CEC(Zhenhua XinYun) 10uF 16V 3Ω@100kHz ±10% CASE-A-3216-16(mm) Tantalum Capacitors ROHS",
+      "categoria": "Condensadores",
+      "subcategoria": "SMD Polarizados",
+      "caracteristicas_medidas": "3.2x1.6mm",
+      "fotos_planos": "3216",
+      "empaquetado": "Reel",
+      "stock": 40,
+      "stock_minimo": 1,
+      "stock_maximo": 41,
+      "id_situacion_tabla": null,
+      "id_prov": null
+    }
+  ],
+  "movimientos_tabla": [
+    {
+      "idmovimientos": 4,
+      "nombre_pieza_repuesto": "Capacitor 4.7uF 16v +-10%",
+      "tipo_de_movimiento": "entrada",
+      "cantidad": 8,
+      "unidad_de_cantidad": "",
+      "codigo_operador": "FJMR",
+      "fecha_movimiento": 
