@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="main-bg">
+<div class="main-bg" style="display:flex; flex-direction:row; align-items:stretch;">
     <!-- sidebar izquierda -->
     <div class="sidebar">
         <div class="menu-btns">
@@ -53,10 +53,101 @@
      {% set texto_principal = config.textos_menu.titulo_principal if config and config.textos_menu and 'titulo_principal' in config.textos_menu else 'Almacén de Repuestos' %}
      {% set texto_secundario = config.textos_menu.titulo_secundario if config and config.textos_menu and 'titulo_secundario' in config.textos_menu else 'Montijo' %}
         {% set texto_central = config.textos_menu.central if config and config.textos_menu and 'central' in config.textos_menu else 'Gestión de Almacén' %}
-    <div class="main-content">
-        <h1 class="titulo-principal">{{ texto_principal }}</h1>
-        <h2 class="titulo-central">{{ texto_central }}</h2>
-        <h2 class="titulo-secundario">{{ texto_secundario }}</h2>
+    {# compute estilo values #}
+    {% set color_texto = config.estilo_menu.color_texto_menu if config and config.estilo_menu and config.estilo_menu.color_texto_menu else '#fb0000' %}
+    {% set color_fondo = config.estilo_menu.color_fondo_menu if config and config.estilo_menu and config.estilo_menu.color_fondo_menu else 'transparent' %}
+    {% set tamano_titulo = config.estilo_menu.tamano_texto_menu if config and config.estilo_menu and config.estilo_menu.tamano_texto_menu else '48' %}
+    {% set marca = config.estilo_menu.marca_agua_menu if config and config.estilo_menu and config.estilo_menu.marca_agua_menu else None %}
+    <div class="main-content" style="flex:1; position:relative; background: {{ color_fondo }}; display:flex; align-items:stretch; justify-content:center; min-height:360px; padding:0;">
+        {% if marca %}
+        <img src="{{ url_for('static', filename='marca_agua/' ~ marca) }}" alt="Marca de agua" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain; opacity:0.25; pointer-events:none;">
+        {% endif %}
+        <div style="position:relative; z-index:1; text-align:center; padding:20px; width:100%; height:100%;">
+            {# cada texto tiene su propio contenedor (stack vertical) centrado dentro del área central #}
+            {% set tp = config.estilo_menu.get('titulo_principal') if config and config.estilo_menu and config.estilo_menu.get('titulo_principal') else {} %}
+            {% set tc = config.estilo_menu.get('central') if config and config.estilo_menu and config.estilo_menu.get('central') else {} %}
+            {% set ts = config.estilo_menu.get('titulo_secundario') if config and config.estilo_menu and config.estilo_menu.get('titulo_secundario') else {} %}
+
+            {% set tp_valign = tp.get('valign') if tp and tp.get('valign') else 'center' %}
+            {% set tp_halign = tp.get('halign') if tp and tp.get('halign') else 'center' %}
+            {% set tp_size = tp.get('size') if tp and tp.get('size') else tamano_titulo %}
+            {% set tp_color = tp.get('color') if tp and tp.get('color') else color_texto %}
+            {% set tp_bg = tp.get('bg') if tp and tp.get('bg') else 'transparent' %}
+
+            {% set tc_valign = tc.get('valign') if tc and tc.get('valign') else 'center' %}
+            {% set tc_halign = tc.get('halign') if tc and tc.get('halign') else 'center' %}
+            {% set tc_size = tc.get('size') if tc and tc.get('size') else ((tamano_titulo|int)//2) %}
+            {% set tc_color = tc.get('color') if tc and tc.get('color') else color_texto %}
+            {% set tc_bg = tc.get('bg') if tc and tc.get('bg') else 'transparent' %}
+
+            {% set ts_valign = ts.get('valign') if ts and ts.get('valign') else 'center' %}
+            {% set ts_halign = ts.get('halign') if ts and ts.get('halign') else 'center' %}
+            {% set ts_size = ts.get('size') if ts and ts.get('size') else ((tamano_titulo|int)//3) %}
+            {% set ts_color = ts.get('color') if ts and ts.get('color') else color_texto %}
+            {% set ts_bg = ts.get('bg') if ts and ts.get('bg') else 'transparent' %}
+
+            {# contenedor centrado que contiene las tres 'ranuras' verticales #}
+            <div style="width:65%; max-width:900px; margin:0 auto; display:flex; flex-direction:column; gap:18px; align-items:stretch; justify-content:space-between; height:100%; border:1px dashed rgba(0,0,0,0.08); padding:6px;">
+                {# cada ranura es un contenedor relativo donde colocamos el texto en 9 posiciones posibles #}
+                {% macro pos_style(v_align, h_align, color, bg, size) -%}
+                    {% set s = [] %}
+                    {# vertical: top -> top:0; center -> top:50% + translateY(-50%); bottom -> bottom:0 #}
+                    {% if v_align == 'top' %}
+                        {% set _ = s.append('top:0') %}
+                        {% set _ty = '' %}
+                    {% elif v_align == 'center' %}
+                        {% set _ = s.append('top:50%') %}
+                        {% set _ty = 'translateY(-50%)' %}
+                    {% else %}
+                        {% set _ = s.append('bottom:0') %}
+                        {% set _ty = '' %}
+                    {% endif %}
+                    {# horizontal: left -> left:0; center -> left:50% + translateX(-50%); right -> right:0 #}
+                    {% if h_align == 'left' %}
+                        {% set _ = s.append('left:0') %}
+                        {% set _tx = '' %}
+                    {% elif h_align == 'center' %}
+                        {% set _ = s.append('left:50%') %}
+                        {% set _tx = 'translateX(-50%)' %}
+                    {% else %}
+                        {% set _ = s.append('right:0') %}
+                        {% set _tx = '' %}
+                    {% endif %}
+                    {# construir transform combinando X/Y si existen #}
+                    {% set _transform = '' %}
+                    {% if _tx and _ty %}
+                        {% set _transform = 'transform: ' ~ _tx ~ ' ' ~ _ty %}
+                    {% elif _tx %}
+                        {% set _transform = 'transform: ' ~ _tx %}
+                    {% elif _ty %}
+                        {% set _transform = 'transform: ' ~ _ty %}
+                    {% endif %}
+                    {% if _transform %}{% set _ = s.append(_transform) %}{% endif %}
+                    {% set _ = s.append('color:' ~ color) %}
+                    {% set _ = s.append('background:' ~ bg) %}
+                    {% set _ = s.append('font-size:' ~ (size|string) ~ 'px') %}
+                    {{- s|select('string')|join('; ') -}}
+                {%- endmacro %}
+
+                <div class="cont_principal" style="position:relative; flex:1; overflow:hidden; border:3px solid #000; box-sizing:border-box;">
+                    <div style="position:absolute; {{ pos_style(tp_valign, tp_halign, tp_color, tp_bg, tp_size) }};">
+                        {{ texto_principal }}
+                    </div>
+                </div>
+
+                <div class="cont_central" style="position:relative; flex:1; overflow:hidden; border:3px solid #000; box-sizing:border-box;">
+                    <div style="position:absolute; {{ pos_style(tc_valign, tc_halign, tc_color, tc_bg, tc_size) }};">
+                        {{ texto_central }}
+                    </div>
+                </div>
+
+                <div class="cont_secundario" style="position:relative; flex:1; overflow:hidden; border:3px solid #000; box-sizing:border-box;">
+                    <div style="position:absolute; {{ pos_style(ts_valign, ts_halign, ts_color, ts_bg, ts_size) }};">
+                        {{ texto_secundario }}
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <!-- sidebar derecha -->
     <div class="sidebar">

@@ -50,6 +50,7 @@
             <!-- Columna derecha: campos editables -->
             <div class="col-md-6">
                 <form id="form-campos" method="post" autocomplete="off">
+                    <input type="hidden" name="vista" value="{{ vista }}">
                     <div class="card">
                         <div class="card-header bg-light">
                             <b>Editar {{ vista|replace('_', ' ')|capitalize }}</b>
@@ -57,6 +58,7 @@
                         <div class="card-body">
                             {% if vista == 'menu' %}
                                     <input type="hidden" name="accion" value="guardar_ui">
+                                    <input type="hidden" name="vista" value="menu">
                                     <div class="mb-3">
                                         <label class="form-label">Título principal</label>
                                         <input type="text" class="form-control campo-editable" id="texto_menu_titulo_principal" name="texto_menu_titulo_principal" value="{{ config.textos_menu.titulo_principal }}" required>
@@ -81,6 +83,43 @@
                                         <label class="form-label">Tamaño del texto principal (px)</label>
                                         <input type="number" class="form-control campo-editable" id="tamano_texto_menu" name="tamano_texto_menu" min="10" max="100" value="{{ config.estilo_menu.tamano_texto_menu if config.estilo_menu and config.estilo_menu.tamano_texto_menu else '48' }}">
                                     </div>
+                                    <!-- Per-text style controls -->
+                                    <h6>Estilos por texto</h6>
+                                    {% for key, label in [('titulo_principal','Título principal'), ('central','Texto central'), ('titulo_secundario','Título secundario')] %}
+                                    <div class="border rounded p-2 mb-2">
+                                        <strong>{{ label }}</strong>
+                                        <div class="row g-2 mt-2">
+                                            <div class="col-md-3">
+                                                <label class="form-label">Color texto</label>
+                                                <input type="color" class="form-control form-control-color campo-editable" id="{{ key }}_color" name="{{ key }}_color" value="{{ (config.estilo_menu[key].color if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu[key].get('color') else '#000000') }}">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <label class="form-label">Fondo</label>
+                                                <input type="color" class="form-control form-control-color campo-editable" id="{{ key }}_bg" name="{{ key }}_bg" value="{{ (config.estilo_menu[key].bg if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu[key].get('bg') else 'transparent') }}">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label">Tamaño (px)</label>
+                                                <input type="number" class="form-control campo-editable" id="{{ key }}_size" name="{{ key }}_size" min="8" max="200" value="{{ (config.estilo_menu[key].size if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu[key].get('size') else (48 if key=='titulo_principal' else 24)) }}">
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label">Vertical</label>
+                                                <select class="form-select campo-editable" id="{{ key }}_valign" name="{{ key }}_valign">
+                                                    <option value="top" {% if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu[key].get('valign')=='top' %}selected{% endif %}>Superior</option>
+                                                    <option value="center" {% if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu[key].get('valign')=='center' %}selected{% endif %}>Central</option>
+                                                    <option value="bottom" {% if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu[key].get('valign')=='bottom' %}selected{% endif %}>Inferior</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <label class="form-label">Horizontal</label>
+                                                <select class="form-select campo-editable" id="{{ key }}_halign" name="{{ key }}_halign">
+                                                    <option value="left" {% if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu[key].get('halign')=='left' %}selected{% endif %}>Izquierda</option>
+                                                    <option value="center" {% if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu[key].get('halign')=='center' %}selected{% endif %}>Centro</option>
+                                                    <option value="right" {% if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu[key].get('halign')=='right' %}selected{% endif %}>Derecha</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endfor %}
                                     <div class="mb-3">
                                         <label class="form-label">Marca de agua (imagen PNG/JPG)</label>
                                         <input type="file" class="form-control" name="marca_agua_menu" accept="image/png, image/jpeg">
@@ -88,10 +127,13 @@
                                 <div class="card mt-3">
                                     <div class="card-body">
                                         <h5>Previsualización</h5>
-                                        <div id="preview_menu" style="padding:20px; border-radius:8px; text-align:center;">
-                                            <h1 id="preview_titulo_principal">{{ config.textos_menu.titulo_principal }}</h1>
-                                            <h3 id="preview_titulo_secundario">{{ config.textos_menu.titulo_secundario }}</h3>
-                                            <p id="preview_central">{{ config.textos_menu.central }}</p>
+                                        <div id="preview_menu" style="position:relative;padding:20px; border-radius:8px; text-align:center; min-height:160px; display:flex; flex-direction:column; justify-content:center; align-items:center;">
+                                            <img id="preview_watermark" src="{% if config.estilo_menu and config.estilo_menu.marca_agua_menu %}{{ url_for('static', filename='marca_agua/' ~ config.estilo_menu.marca_agua_menu) }}{% endif %}" alt="" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain; opacity:0.25; pointer-events:none;">
+                                            <div style="position:relative; z-index:2;">
+                                                <h1 id="preview_titulo_principal" style="margin:0; color:{{ config.estilo_menu.color_texto_menu if config.estilo_menu and config.estilo_menu.color_texto_menu else '#fb0000' }}; font-size: {{ config.estilo_menu.tamano_texto_menu if config.estilo_menu and config.estilo_menu.tamano_texto_menu else '48' }}px">{{ config.textos_menu.titulo_principal }}</h1>
+                                                <h3 id="preview_titulo_secundario" style="margin:0; color:{{ config.estilo_menu.color_texto_menu if config.estilo_menu and config.estilo_menu.color_texto_menu else '#fb0000' }}">{{ config.textos_menu.titulo_secundario }}</h3>
+                                                <p id="preview_central" style="color:{{ config.estilo_menu.color_texto_menu if config.estilo_menu and config.estilo_menu.color_texto_menu else '#fb0000' }}">{{ config.textos_menu.central }}</p>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -146,4 +188,78 @@ document.getElementById('btn-restablecer').onclick = function() {
         window.location.href = "{{ url_for('configuracion_bp.configuracion', vista=vista) }}?reset=1";
     }
 };
+// Live preview updates for menu fields and estilo
+const previewTitulo = document.getElementById('preview_titulo_principal');
+const previewTitulo2 = document.getElementById('preview_titulo_secundario');
+const previewCentral = document.getElementById('preview_central');
+const previewDiv = document.getElementById('preview_menu');
+const previewWatermark = document.getElementById('preview_watermark');
+
+function applyPosition(el, valign, halign){
+    if(!el) return;
+    el.style.position = 'absolute';
+    // vertical
+    if(valign=='top') { el.style.top = '10%'; el.style.transform = 'translate(0,0)'; el.style.bottom = 'auto'; }
+    else if(valign=='center') { el.style.top = '50%'; el.style.transform = 'translate(-50%, -50%)'; el.style.bottom = 'auto'; }
+    else { el.style.bottom = '10%'; el.style.top = 'auto'; el.style.transform = 'translate(0,0)'; }
+    // horizontal
+    if(halign=='left'){ el.style.left = '10%'; el.style.right = 'auto'; if(el.style.transform.includes('-50%')) el.style.transform = el.style.transform.replace('translate(-50%, -50%)','translate(0, -50%)'); }
+    else if(halign=='center'){ el.style.left = '50%'; el.style.right = 'auto'; if(!el.style.transform.includes('-50%')) el.style.transform = 'translate(-50%, -50%)'; }
+    else { el.style.right = '10%'; el.style.left = 'auto'; if(el.style.transform.includes('-50%')) el.style.transform = el.style.transform.replace('translate(-50%, -50%)','translate(0, -50%)'); }
+}
+
+function safeGet(id){ return document.getElementById(id) }
+
+['texto_menu_titulo_principal','texto_menu_titulo_secundario','texto_menu_central'].forEach(id=>{
+    const el = safeGet(id);
+    if(el){ el.addEventListener('input', e=>{
+        if(id==='texto_menu_titulo_principal') previewTitulo.textContent = e.target.value;
+        if(id==='texto_menu_titulo_secundario') previewTitulo2.textContent = e.target.value;
+        if(id==='texto_menu_central') previewCentral.textContent = e.target.value;
+    }) }
+});
+
+const colorTexto = safeGet('color_texto_menu');
+const colorFondo = safeGet('color_fondo_menu');
+const tamanoTexto = safeGet('tamano_texto_menu');
+if(colorTexto){ colorTexto.addEventListener('input', e=>{
+    previewTitulo.style.color = e.target.value; previewTitulo2.style.color = e.target.value; previewCentral.style.color = e.target.value;
+}); }
+if(colorFondo){ colorFondo.addEventListener('input', e=>{ previewDiv.style.background = e.target.value; }); }
+if(tamanoTexto){ tamanoTexto.addEventListener('input', e=>{ previewTitulo.style.fontSize = e.target.value + 'px'; }); }
+
+// File input preview
+const fileInput = document.querySelector('input[name="marca_agua_menu"]');
+if(fileInput){
+    fileInput.addEventListener('change', function(ev){
+        const f = ev.target.files && ev.target.files[0];
+        if(!f) return;
+        const reader = new FileReader();
+        reader.onload = function(e){
+            previewWatermark.src = e.target.result;
+        };
+        reader.readAsDataURL(f);
+    });
+}
+// per-text controls wiring
+['titulo_principal','central','titulo_secundario'].forEach(key=>{
+    const colorEl = safeGet(key+'_color');
+    const bgEl = safeGet(key+'_bg');
+    const sizeEl = safeGet(key+'_size');
+    const valignEl = safeGet(key+'_valign');
+    const halignEl = safeGet(key+'_halign');
+    const previewEl = (key==='titulo_principal')? previewTitulo : (key==='central')? previewCentral : previewTitulo2;
+    if(colorEl) colorEl.addEventListener('input', e=>{ previewEl.style.color = e.target.value; });
+    if(bgEl) bgEl.addEventListener('input', e=>{ previewEl.style.background = e.target.value; });
+    if(sizeEl) sizeEl.addEventListener('input', e=>{ previewEl.style.fontSize = e.target.value + 'px'; });
+    function updatePos(){
+        const v = valignEl ? valignEl.value : 'center';
+        const h = halignEl ? halignEl.value : 'center';
+        applyPosition(previewEl, v, h);
+    }
+    if(valignEl) valignEl.addEventListener('change', updatePos);
+    if(halignEl) halignEl.addEventListener('change', updatePos);
+    // initial apply
+    updatePos();
+});
 </script>

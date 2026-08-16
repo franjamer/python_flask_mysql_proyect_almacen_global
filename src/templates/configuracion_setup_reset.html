@@ -7,6 +7,11 @@
         <!-- Exportar registros -->
         <form method="post" class="mb-3">
             <input type="hidden" name="accion" value="export_registros">
+            <div class="mb-2">
+                <label class="form-label">Nombre de fichero (opcional)</label>
+                <input type="text" name="export_filename" class="form-control" placeholder="mi_exportacion_YYYYMMDD" maxlength="100">
+                <small class="text-muted">Si no se indica, se generará un nombre automático.</small>
+            </div>
             <div class="mb-2">Seleccione tablas a exportar:</div>
             <div class="mb-2">
                 {% for t in ['perfiles','operadores','situacion_tabla','inventario_tabla','movimientos_tabla','pedidos_global_tabla','lineas_pedido_tabla','proveedor_tabla'] %}

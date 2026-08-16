@@ -1,0 +1,131 @@
+{
+  "perfiles": [
+    {
+      "id_perfil": 1,
+      "perfil": "Admin",
+      "password": "Admin",
+      "rol": "admin"
+    },
+    {
+      "id_perfil": 2,
+      "perfil": "Mañana",
+      "password": "Mañana",
+      "rol": "operador"
+    },
+    {
+      "id_perfil": 3,
+      "perfil": "Tarde",
+      "password": "Tarde",
+      "rol": "operador"
+    },
+    {
+      "id_perfil": 4,
+      "perfil": "Noche",
+      "password": "Noche",
+      "rol": "operador"
+    },
+    {
+      "id_perfil": 5,
+      "perfil": "Central",
+      "password": "Central",
+      "rol": "operador"
+    },
+    {
+      "id_perfil": 6,
+      "perfil": "Pedidos",
+      "password": "Pedidos",
+      "rol": "pedidos"
+    },
+    {
+      "id_perfil": 15,
+      "perfil": "Externa",
+      "password": "Externa",
+      "rol": "operador"
+    },
+    {
+      "id_perfil": 17,
+      "perfil": "Superadmin",
+      "password": "superadmin",
+      "rol": "admin"
+    }
+  ],
+  "operadores": [
+    {
+      "id_operador": 20,
+      "codigo_operador": "FJMR",
+      "nombre_completo": "Francisco Javier Menayo Ramos",
+      "puesto": "electricista",
+      "username": null
+    },
+    {
+      "id_operador": 21,
+      "codigo_operador": "JCR",
+      "nombre_completo": "Juan Carlos Rincón Díaz",
+      "puesto": "mecánico",
+      "username": null
+    },
+    {
+      "id_operador": 22,
+      "codigo_operador": "JDLO",
+      "nombre_completo": "Juan De La O",
+      "puesto": "mecánico",
+      "username": null
+    },
+    {
+      "id_operador": 23,
+      "codigo_operador": "FerDi",
+      "nombre_completo": "Fernando Díaz",
+      "puesto": "electricista",
+      "username": null
+    },
+    {
+      "id_operador": 25,
+      "codigo_operador": "JG",
+      "nombre_completo": "Javier Gutierrez",
+      "puesto": "electricista",
+      "username": null
+    },
+    {
+      "id_operador": 26,
+      "codigo_operador": "Antonio",
+      "nombre_completo": "Antonio Borreguero",
+      "puesto": "mecánico",
+      "username": null
+    },
+    {
+      "id_operador": 27,
+      "codigo_operador": "Sergio",
+      "nombre_completo": "Sergio",
+      "puesto": "electricista",
+      "username": null
+    },
+    {
+      "id_operador": 28,
+      "codigo_operador": "JAPI",
+      "nombre_completo": "Jose Antonio Pitón",
+      "puesto": "mecánico",
+      "username": null
+    },
+    {
+      "id_operador": 29,
+      "codigo_operador": "Vicen",
+      "nombre_completo": "Vicente",
+      "puesto": "mecánico",
+      "username": null
+    },
+    {
+      "id_operador": 30,
+      "codigo_operador": "Manolo",
+      "nombre_completo": "Manolo",
+      "puesto": "mecánico",
+      "username": null
+    },
+    {
+      "id_operador": 31,
+      "codigo_operador": "Roberto",
+      "nombre_completo": "Roberto",
+      "puesto": "electricista",
+      "username": null
+    }
+  ]
+}

@@ -1,13 +1,13 @@
 {
   "nombres_columnas": {
-    "referencia": "referencia",
-    "nombre": "nombre",
-    "categoria": "categoria",
-    "subcategoria": "subcategoria",
-    "caracteristicas_medidas": "caracteristicas_medidas",
-    "fotos_planos": "fotos_planos",
-    "empaquetado": "empaquetado",
-    "stock": "stock",
+    "referencia": "Referencia",
+    "nombre": "Descripcion Completa",
+    "categoria": "Tipo",
+    "subcategoria": "Montaje",
+    "caracteristicas_medidas": "Empaquetado",
+    "fotos_planos": "Datasheet",
+    "empaquetado": "Encapsulado",
+    "stock": "Existencias",
     "stock_minimo": "stock_minimo",
     "stock_maximo": "stock_maximo",
     "id_situacion_tabla": "id_situacion_tabla",
@@ -35,9 +35,9 @@
     "ubicacion": "Ubicacion"
   },
   "textos_menu": {
-    "central": "central",
-    "titulo_principal": "principal",
-    "titulo_secundario": "secundario"
+    "central": "ENEL-CALDERERIAS INDÁLICAS",
+    "titulo_principal": "Repuestos Almacén Vidco",
+    "titulo_secundario": "Gestión de Stocks"
   },
   "nombres_vistas": {
     "inventario": "inventario",
@@ -51,30 +51,8 @@
     "menu": "Menu"
   },
   "estilo_menu": {
-    "color_texto_menu": "#f4ecec",
-    "color_fondo_menu": "#737373",
-    "tamano_texto_menu": "30",
-    "marca_agua_menu": "1786916989_logo_enel_green_power.jpg",
-    "titulo_principal": {
-      "color": "#f2bd4a",
-      "bg": "#ee8844",
-      "size": "30",
-      "valign": "top",
-      "halign": "center"
-    },
-    "central": {
-      "color": "#050505",
-      "bg": "#c2c2c2",
-      "size": "20",
-      "valign": "center",
-      "halign": "center"
-    },
-    "titulo_secundario": {
-      "color": "#000000",
-      "bg": "#ec7979",
-      "size": "15",
-      "valign": "bottom",
-      "halign": "center"
-    }
+    "color_texto_menu": "#fb0000",
+    "color_fondo_menu": "#eeb6bb",
+    "tamano_texto_menu": "48"
   }
 }

@@ -44,36 +44,43 @@
         <!-- Pestaña Estilo menú principal -->
         <div class="tab-pane fade" id="estilo" role="tabpanel">
             <form method="post" enctype="multipart/form-data" id="form-estilo">
+                <input type="hidden" name="accion" value="guardar_estilo">
                 <div class="row">
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Color del texto</label>
-                        <input
-                            type="color"
-                            class="form-control form-control-color"
-                            name="color_texto_menu"
-                            value="{{ config.estilo_menu.color_texto_menu if config.estilo_menu and config.estilo_menu.color_texto_menu else '#fb0000' }}"
-                        >
+                    {% for key, label in [('titulo_principal','Título principal'), ('central','Texto central'), ('titulo_secundario','Título secundario')] %}
+                    <div class="col-md-4 mb-3">
+                        <div class="card p-2">
+                            <strong>{{ label }}</strong>
+                            <div class="mt-2">
+                                <label class="form-label">Color texto</label>
+                                <input type="color" class="form-control form-control-color" name="{{ key }}_color" value="{{ (config.estilo_menu.get(key).get('color') if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu.get(key).get('color') else '#000000') }}">
+                            </div>
+                            <div class="mt-2">
+                                <label class="form-label">Fondo</label>
+                                <input type="color" class="form-control form-control-color" name="{{ key }}_bg" value="{{ (config.estilo_menu.get(key).get('bg') if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu.get(key).get('bg') else 'transparent') }}">
+                            </div>
+                            <div class="mt-2">
+                                <label class="form-label">Tamaño (px)</label>
+                                <input type="number" class="form-control" name="{{ key }}_size" min="8" max="200" value="{{ (config.estilo_menu.get(key).get('size') if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu.get(key).get('size') else (48 if key=='titulo_principal' else 24)) }}">
+                            </div>
+                            <div class="mt-2">
+                                <label class="form-label">Vertical</label>
+                                <select class="form-select" name="{{ key }}_valign">
+                                    <option value="top" {% if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu.get(key).get('valign')=='top' %}selected{% endif %}>Superior</option>
+                                    <option value="center" {% if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu.get(key).get('valign')=='center' %}selected{% endif %}>Central</option>
+                                    <option value="bottom" {% if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu.get(key).get('valign')=='bottom' %}selected{% endif %}>Inferior</option>
+                                </select>
+                            </div>
+                            <div class="mt-2">
+                                <label class="form-label">Horizontal</label>
+                                <select class="form-select" name="{{ key }}_halign">
+                                    <option value="left" {% if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu.get(key).get('halign')=='left' %}selected{% endif %}>Izquierda</option>
+                                    <option value="center" {% if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu.get(key).get('halign')=='center' %}selected{% endif %}>Centro</option>
+                                    <option value="right" {% if config.estilo_menu and config.estilo_menu.get(key) and config.estilo_menu.get(key).get('halign')=='right' %}selected{% endif %}>Derecha</option>
+                                </select>
+                            </div>
+                        </div>
                     </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Color de fondo</label>
-                        <input
-                            type="color"
-                            class="form-control form-control-color"
-                            name="color_fondo_menu"
-                            value="{{ config.estilo_menu.color_fondo_menu if config.estilo_menu and config.estilo_menu.color_fondo_menu else '#eeb6bb' }}"
-                        >
-                    </div>
-                    <div class="col-md-6 mb-3">
-                        <label class="form-label">Tamaño del texto principal (px)</label>
-                        <input
-                            type="number"
-                            class="form-control"
-                            name="tamano_texto_menu"
-                            min="10"
-                            max="100"
-                            value="{{ config.estilo_menu.tamano_texto_menu if config.estilo_menu and config.estilo_menu.tamano_texto_menu else '48' }}"
-                        >
-                    </div>
+                    {% endfor %}
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Marca de agua (imagen PNG/JPG)</label>
                         <input
@@ -89,12 +96,7 @@
                         {% endif %}
                     </div>
                 </div>
-                <button
-                    type="submit"
-                    class="btn btn-success mt-2"
-                    name="accion"
-                    value="guardar_estilo"
-                >Guardar estilo</button>
+                <button type="submit" class="btn btn-success mt-2">Guardar estilo</button>
             </form>
         </div>
         <div class="tab-pane fade" id="setup-reset" role="tabpanel">

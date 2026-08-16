@@ -49,14 +49,34 @@ def export_tables(conn, tables):
     return result
 
 
-def save_export_to_file(data, folder, prefix='export_registros'):
+def save_export_to_file(data, folder, prefix='export_registros', filename=None, suffix=None):
     if not os.path.exists(folder):
         os.makedirs(folder)
-    filename = f"{prefix}_{int(datetime.utcnow().timestamp())}.json"
-    path = os.path.join(folder, filename)
+    # sanitize provided filename (no path parts)
+    if filename:
+        # remove extension and unsafe chars
+        base = os.path.basename(filename)
+        base = os.path.splitext(base)[0]
+        # allow only alnum, -, _, and spaces
+        safe = ''.join(c for c in base if c.isalnum() or c in ('-', '_', ' ')).strip()
+        if not safe:
+            safe = prefix
+        # append timestamp in compact numeric form YYYYMMDDHHMMSS
+        ts = datetime.utcnow().strftime('%Y%m%d%H%M%S')
+        if suffix:
+            filename_final = f"{safe}_{suffix}_{ts}.json"
+        else:
+            filename_final = f"{safe}_{ts}.json"
+    else:
+        ts = datetime.utcnow().strftime('%Y%m%d%H%M%S')
+        if suffix:
+            filename_final = f"{prefix}_{suffix}_{ts}.json"
+        else:
+            filename_final = f"{prefix}_{ts}.json"
+    path = os.path.join(folder, filename_final)
     with open(path, 'w', encoding='utf-8') as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
-    return filename, path
+    return filename_final, path
 
 
 def import_data(conn, data, replace=False):

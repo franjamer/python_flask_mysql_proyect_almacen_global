@@ -1,4 +1,5 @@
 from flask import Blueprint, render_template, request,session, redirect, url_for, flash, send_from_directory
+from werkzeug.utils import secure_filename
 import json
 import os
 import time
@@ -85,7 +86,8 @@ def configuracion():
         return redirect(url_for('home_bp.menu'))
 
     config = cargar_configuracion()
-    vista = request.args.get('vista', 'inventario')
+    # read 'vista' from POST or GET (request.values covers both)
+    vista = request.values.get('vista', 'inventario')
     campos = VISTAS_CONFIG.get(vista, [])
     archivos_config = listar_archivos_config()
 
@@ -93,6 +95,58 @@ def configuracion():
         accion = request.form.get('accion')
         archivo = request.form.get('archivo_config')
         nombre_guardar = request.form.get('nombre_guardar', '').strip()
+
+        # Normalize and save estilo_menu fields when present so both forms update the same config
+        if accion in ('guardar_estilo', 'guardar_ui', 'guardar_todo'):
+            if 'estilo_menu' not in config:
+                config['estilo_menu'] = {}
+            # support per-text styling for titulo_principal, central, titulo_secundario
+            for key in ('titulo_principal', 'central', 'titulo_secundario'):
+                prefix = key
+                # gather fields if present
+                color = request.form.get(f'{prefix}_color')
+                bg = request.form.get(f'{prefix}_bg')
+                size = request.form.get(f'{prefix}_size')
+                valign = request.form.get(f'{prefix}_valign')
+                halign = request.form.get(f'{prefix}_halign')
+                # only set sub-dict if any of these present
+                if any((color, bg, size, valign, halign)):
+                    if key not in config['estilo_menu'] or not isinstance(config['estilo_menu'][key], dict):
+                        config['estilo_menu'][key] = {}
+                    if color is not None:
+                        config['estilo_menu'][key]['color'] = color
+                    if bg is not None:
+                        config['estilo_menu'][key]['bg'] = bg
+                    if size is not None and size != '':
+                        config['estilo_menu'][key]['size'] = size
+                    if valign is not None:
+                        config['estilo_menu'][key]['valign'] = valign
+                    if halign is not None:
+                        config['estilo_menu'][key]['halign'] = halign
+            # marca_agua handling: save uploaded file to static/marca_agua
+            archivo_marca = None
+            if 'marca_agua_menu' in request.files:
+                archivo_m = request.files.get('marca_agua_menu')
+                if archivo_m and archivo_m.filename:
+                    # ensure dir exists
+                    marca_dir = os.path.join(os.path.dirname(__file__), '../../static/marca_agua')
+                    if not os.path.exists(marca_dir):
+                        os.makedirs(marca_dir)
+                    fname = secure_filename(archivo_m.filename)
+                    # prefix with timestamp to avoid collisions
+                    fname_final = f"{int(time.time())}_{fname}"
+                    ruta_m = os.path.join(marca_dir, fname_final)
+                    try:
+                        archivo_m.save(ruta_m)
+                        config['estilo_menu']['marca_agua_menu'] = fname_final
+                    except Exception:
+                        flash('Error guardando la imagen de marca de agua.', 'error')
+            archivo_marca = config['estilo_menu'].get('marca_agua_menu')
+            # If the action is guardar_estilo we save immediately and return
+            if accion == 'guardar_estilo':
+                guardar_configuracion(config)
+                flash('Estilo del menú guardado correctamente.', 'success')
+                return redirect(url_for('configuracion_bp.configuracion', vista=vista))
 
         # Setup / Reset: exportar, importar y eliminar registros (usa helpers)
         if accion in ('export_registros', 'import_registros', 'eliminar_registros'):
@@ -110,7 +164,9 @@ def configuracion():
                     return redirect(url_for('configuracion_bp.configuracion', vista=vista))
                 resultado = export_tables(conn, tablas)
                 conn.close()
-                nombre, ruta = save_export_to_file(resultado, PERSONAL_CONFIG_DIR)
+                # allow custom filename from form
+                custom_name = request.form.get('export_filename', '').strip()
+                nombre, ruta = save_export_to_file(resultado, PERSONAL_CONFIG_DIR, filename=custom_name or None, suffix='registros')
                 flash(f'Exportación guardada: {nombre}', 'success')
                 return redirect(url_for('configuracion_bp.configuracion', vista=vista))
 
@@ -154,7 +210,7 @@ def configuracion():
                 try:
                     # automatic backup before delete
                     backup = export_tables(conn, tablas)
-                    nombre_backup, _ = save_export_to_file(backup, PERSONAL_CONFIG_DIR, prefix='backup_before_delete')
+                    nombre_backup, _ = save_export_to_file(backup, PERSONAL_CONFIG_DIR, prefix='backup_before_delete', suffix='registros')
                     delete_tables_data(conn, tablas)
                     flash(f'Registros eliminados correctamente. Backup: {nombre_backup}', 'success')
                 except Exception as e:
@@ -182,13 +238,13 @@ def configuracion():
             config['estilo_menu']['tamano_texto_menu'] = request.form.get('tamano_texto_menu', config['estilo_menu'].get('tamano_texto_menu', '48'))
             # Si tienes imagen de marca de agua, añade aquí la lógica para guardarla
 
-            if nombre_guardar:
-                nombre = f"{nombre_guardar}.json"
+            # determine suffix based on vista
+            if vista == 'menu':
+                suf = 'main-menu'
             else:
-                nombre = f"config_{int(time.time())}.json"
-            ruta = os.path.join(PERSONAL_CONFIG_DIR, nombre)
-            with open(ruta, 'w', encoding='utf-8') as f:
-                json.dump(config, f, ensure_ascii=False, indent=2)
+                suf = 'campos'
+            # use save_export_to_file to get consistent filename behavior
+            nombre, ruta = save_export_to_file(config, PERSONAL_CONFIG_DIR, prefix='config', filename=nombre_guardar or None, suffix=suf)
             flash(f'Configuración guardada como {nombre}.', 'success')
             return redirect(url_for('configuracion_bp.configuracion', vista=vista))
         # Cargar configuración desde archivo
