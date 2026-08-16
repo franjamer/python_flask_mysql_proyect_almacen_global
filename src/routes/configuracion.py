@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, request,session, redirect, url_for, flash, send_from_directory
+from flask import Blueprint, render_template, request,session, redirect, url_for, flash, send_from_directory, current_app
 from werkzeug.utils import secure_filename
 import json
 import os
@@ -128,8 +128,8 @@ def configuracion():
             if 'marca_agua_menu' in request.files:
                 archivo_m = request.files.get('marca_agua_menu')
                 if archivo_m and archivo_m.filename:
-                    # ensure dir exists
-                    marca_dir = os.path.join(os.path.dirname(__file__), '../../static/marca_agua')
+                    # save into the Flask static folder so url_for('static', ...) can serve it
+                    marca_dir = os.path.join(current_app.static_folder, 'marca_agua')
                     if not os.path.exists(marca_dir):
                         os.makedirs(marca_dir)
                     fname = secure_filename(archivo_m.filename)
